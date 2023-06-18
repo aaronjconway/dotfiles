@@ -5,11 +5,8 @@ function peco_find_files
     set peco_flags --layout=bottom-up --query "$argv"
   end
 
-  find ~ -type f|peco $peco_flags|read foo
+  fdfind . /home/aaron -td --hidden --follow|peco $peco_flags|read foo
 
-  if [ $foo ]
-    commandline $foo
-  else
-    commandline ''
-  end
+  commandline $foo
+  commandline -f execute
 end
