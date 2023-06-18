@@ -15,6 +15,14 @@ alias g git
 alias vim "/usr/local/nvim/bin/nvim"
 alias nvim "/usr/local/nvim/bin/nvim"
 
+# tmux binds 
+alias t "tmux"
+alias tk "tmux kill-session"
+alias tv "tmux splitw -h"
+alias ts "tmux  list"
+alias tco "tmux list-commands | peco"
+alias tkeys "tmux list-keys | peco"
+
 set -gx EDITOR "/usr/local/nvim/bin/nvim"
 set -gx VISUAL "/usr/local/nvim/bin/nvim"
 
