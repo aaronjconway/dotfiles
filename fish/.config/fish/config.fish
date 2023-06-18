@@ -26,26 +26,12 @@ alias tkeys "tmux list-keys | peco"
 set -gx EDITOR "/usr/local/nvim/bin/nvim"
 set -gx VISUAL "/usr/local/nvim/bin/nvim"
 
-set -gx PATH bin $PATH
-set -gx PATH ~/bin $PATH
-set -gx PATH ~/.local/bin $PATH
-
-# NodeJS
-set -gx PATH node_modules/.bin $PATH
+# nvm
+set -gx PATH /home/aaron/.local/share/nvm/v20.3.0/bin $PATH
 
 # Go
 set -g GOPATH $HOME/go
 set -gx PATH $GOPATH/bin $PATH
-
-# NVM
-function __check_rvm --on-variable PWD --description 'Do nvm stuff'
-  status --is-command-substitution; and return
-
-  if test -f .nvmrc; and test -r .nvmrc;
-    nvm use
-  else
-  end
-end
 
 switch (uname)
   case Darwin
@@ -60,3 +46,6 @@ set LOCAL_CONFIG (dirname (status --current-filename))/config-local.fish
 if test -f $LOCAL_CONFIG
   source $LOCAL_CONFIG
 end
+
+
+set PATH /home/aaron/.local/share/nvm/v20.3.0/bin/node $PATH
