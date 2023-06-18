@@ -16,8 +16,8 @@ export VISUAL="/usr/local/nvim/bin/nvim"
 export EDITOR="/usr/local/nvim/bin/nvim"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-export FZF_DEFAULT_COMMAND="fd --hidden"
-export FZF_CTRL_T_COMMAND="fd --hidden"
+export FZF_DEFAULT_COMMAND="fdfind --hidden"
+export FZF_CTRL_T_COMMAND="fdfind --hidden"
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
