@@ -15,7 +15,8 @@ alias g git
 alias vim "/usr/local/nvim/bin/nvim"
 alias nvim "/usr/local/nvim/bin/nvim"
 
-set -gx EDITOR nvim
+set -gx EDITOR "/usr/local/nvim/bin/nvim"
+set -gx VISUAL "/usr/local/nvim/bin/nvim"
 
 set -gx PATH bin $PATH
 set -gx PATH ~/bin $PATH
