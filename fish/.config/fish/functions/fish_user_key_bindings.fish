@@ -1,13 +1,14 @@
 function fish_user_key_bindings
-  # peco
-  bind \cr peco_select_history # Bind for peco select history to Ctrl+R
+  # history
+  bind \cr fzf_select_history 
 
   # lazy git
-  bind \cg lazygit # Bind for peco select history to Ctrl+R
+  bind \cg lazygit 
 
-  # find files 
-  bind \cf peco_find_files
+  # find files
+  bind \cf fzf_find_files
 
-  # prevent iterm2 from closing when typing Ctrl-D (EOF)
-  bind \cd delete-char
+  # find folders
+  bind \cd fzf_find_dir
+
 end
