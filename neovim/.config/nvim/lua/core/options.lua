@@ -1,6 +1,8 @@
 --remove any other autocmd's with
 vim.cmd("autocmd!")
 
+vim.o.colorcolumn = "80"
+
 vim.wo.fillchars = 'eob: '
 vim.wo.signcolumn = 'yes'
 
@@ -19,8 +21,7 @@ vim.opt.undofile = true
 vim.opt.cursorline = true
 
 vim.opt.winblend = 0
-vim.opt.wildoptions = 'pum'
-vim.opt.pumblend = 5
+vim.opt.wildoptions = 'fuzzy'
 
 -- line number
 vim.wo.number = true

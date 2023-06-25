@@ -1,7 +1,6 @@
 
 set fish_greeting ""
 
-# aliases
 alias la "exa -la"
 
 set TERM 'xterm-256color'
@@ -11,6 +10,10 @@ set -gx FZF_DEFAULT_OPTS '--color=hl+:#b83232,bg+:#FFE5B4,fg+:#282C34,gutter:-1'
 
 alias nvim "/usr/local/bin/nvim"
 alias vim "nvim"
+alias v "nvim"
+alias vd "nvim ."
+
+## wsl term config
 alias terminal_config "vim /mnt/c/Users/ajcon/AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json"
 
 #look for any man page

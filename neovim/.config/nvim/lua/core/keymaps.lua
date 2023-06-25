@@ -15,7 +15,7 @@ keymap('n', '<leader>w', ':w!<CR>')
 keymap('n', '<leader>s', ':source<CR>')
 keymap('n', '<leader>n', ':lua CreateTabWithInput()<CR>', { silent = true, noremap = true })
 keymap('n', '<C-i>', '<C-i>', { silent = true, noremap = true })
-keymap('n', '<leader>l', ':LspInfo<CR>', { silent = true, noremap = true })
+keymap('n', '<leader>ll', ':LspInfo<CR>', { silent = true, noremap = true })
 keymap('n', '<leader>m', ':Mason<CR>', { silent = true, noremap = true })
 
 

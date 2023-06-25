@@ -17,8 +17,13 @@ end
 vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
   { 'Mofiqul/vscode.nvim' },
+  {
+    "iamcco/markdown-preview.nvim",
+    run = function() vim.fn["mkdp#util#install"]() end,
+  },
   { 'jose-elias-alvarez/null-ls.nvim' },
-  { 'MunifTanjim/prettier.nvim' },
+
+  -- { 'MunifTanjim/prettier.nvim' },
   { 'tpope/vim-surround' },
   { 'numToStr/Comment.nvim' },
   { "folke/neodev.nvim",              opts = {} },
@@ -27,6 +32,7 @@ require('lazy').setup({
     dependencies = { 'mfussenegger/nvim-dap' },
   },
   { 'simrat39/rust-tools.nvim' },
+
   {
     'VonHeikemen/lsp-zero.nvim',
     branch = 'v2.x',
@@ -56,8 +62,7 @@ require('lazy').setup({
       },
       { 'saadparwaiz1/cmp_luasnip' },
     }
-  },
-  {
+  },  {
     'nvim-lualine/lualine.nvim',
     dependencies = { 'nvim-tree/nvim-web-devicons', opt = true }
   },
@@ -77,44 +82,49 @@ require('lazy').setup({
   },
   { "nvim-treesitter/playground" },
   {
+    "folke/which-key.nvim",
+    event = "VeryLazy",
+    init = function()
+      vim.o.timeout = true
+      vim.o.timeoutlen = 300
+    end,
+  },
+  {
     'windwp/nvim-autopairs',
-    event = "InsertEnter",
-    opts = {
-
-      performance = {
-        rtp = {
-          disabled_plugins = {
-            "2html_plugin",
-            "tohtml",
-            "getscript",
-            "getscriptPlugin",
-            "gzip",
-            "logipat",
-            "netrw",
-            "netrwPlugin",
-            "netrwSettings",
-            "netrwFileHandlers",
-            "matchit",
-            "tar",
-            "tarPlugin",
-            "rrhelper",
-            "spellfile_plugin",
-            "vimball",
-            "vimballPlugin",
-            "zip",
-            "zipPlugin",
-            "tutor",
-            "rplugin",
-            "syntax",
-            "synmenu",
-            "optwin",
-            "compiler",
-            "bugreport",
-            "ftplugin",
-            "editorconfig",
-          },
+  },
+}, {
+  opts = {
+    performance = {
+      rtp = {
+        disabled_plugins = {
+          "2html_plugin",
+          "tohtml",
+          "getscript",
+          "getscriptPlugin",
+          "gzip",
+          "logipat",
+          "netrw",
+          "netrwPlugin",
+          "netrwSettings",
+          "netrwFileHandlers",
+          "matchit",
+          "tar",
+          "tarPlugin",
+          "rrhelper",
+          "spellfile_plugin",
+          "vimball",
+          "vimballPlugin",
+          "zip",
+          "zipPlugin",
+          "tutor",
+          "rplugin",
+          "synmenu",
+          "optwin",
+          "compiler",
+          "bugreport",
+          "ftplugin",
         },
       },
-    }
-  }
+    },
+  },
 })
