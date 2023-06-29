@@ -1,5 +1,5 @@
 local actions = require('telescope.actions')
-
+local wk = require('which-key')
 require('telescope').setup {
   defaults = {
     mappings = {
@@ -11,27 +11,20 @@ require('telescope').setup {
     },
   },
 }
-pcall(require('telescope').load_extension, 'fzf')
 
-
-vim.keymap.set('n', '<leader>sf',
-  function()
-    require('telescope.builtin').find_files({ hidden = 'true' })
-  end,
-  { desc = 'old files' })
-
-vim.keymap.set('n', '<leader>sr', require('telescope.builtin').oldfiles, { desc = 'old files' })
-
---use lua func with hidden opt on live grep
-vim.keymap.set('n', '<leader>sg',
-
-  function()
-    require('telescope.builtin').live_grep({ hidden = true })
-  end,
-
-  --opts
-  { desc = 'live grep' }
+wk.register(
+  {
+    s = {
+      name = 'Search',
+      f = { ":Telescope find_files<CR>", 'find files' },
+      F = { ":Telescope find_files hidden=true<CR>", 'find files' },
+      o = { ":Telescope oldfiles hidden=true<CR>", 'old files' },
+      p = { ":Telescope projects<CR>", 'projects' },
+      t = { ":Telescope<CR>", 'Telescope' },
+      g = { ":Telescope live_grep hidden=true<CR>", 'grep' },
+      b = { ":Telescope buffers<CR>", 'buffers' },
+      c = { ":Telescope commands<CR>", 'commands' },
+    }
+  },
+  { prefix = '<leader>' }
 )
-
-vim.keymap.set('n', '<leader>sb', require('telescope.builtin').buffers, { desc = 'search buffers' })
-vim.keymap.set('n', '<leader>st', ':Telescope<CR>', { desc = 'Telescope' })

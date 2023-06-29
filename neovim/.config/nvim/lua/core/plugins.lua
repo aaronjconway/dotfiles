@@ -17,20 +17,32 @@ end
 vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
   { 'Mofiqul/vscode.nvim' },
+  { 'stevearc/oil.nvim' },
   {
     "iamcco/markdown-preview.nvim",
     run = function() vim.fn["mkdp#util#install"]() end,
   },
+  --lsp help
   { 'jose-elias-alvarez/null-ls.nvim' },
 
-  -- { 'MunifTanjim/prettier.nvim' },
+  --misc
   { 'tpope/vim-surround' },
   { 'numToStr/Comment.nvim' },
+
+  --lua help
   { "folke/neodev.nvim",              opts = {} },
+
+  --dap
+  { 'mfussenegger/nvim-dap' },
+  { 'rcarriga/nvim-dap-ui' },
+  { 'mxsdev/nvim-dap-vscode-js' },
+  { 'theHamsta/nvim-dap-virtual-text' },
   {
-    'rcarriga/nvim-dap-ui',
-    dependencies = { 'mfussenegger/nvim-dap' },
+    "microsoft/vscode-node-debug2",
+    build = "npm install && NODE_OPTIONS=--no-experimental-fetch npm run build"
   },
+
+  --rust
   { 'simrat39/rust-tools.nvim' },
 
   {
@@ -40,12 +52,7 @@ require('lazy').setup({
 
       -- LSP Support
       { 'neovim/nvim-lspconfig' },
-      {
-        'williamboman/mason.nvim',
-        build = function()
-          pcall(vim.cmd, 'MasonUpdate')
-        end,
-      },
+      { 'williamboman/mason.nvim' },
       { 'williamboman/mason-lspconfig.nvim' },
 
       -- Autocompletion
@@ -62,15 +69,28 @@ require('lazy').setup({
       },
       { 'saadparwaiz1/cmp_luasnip' },
     }
-  },  {
-    'nvim-lualine/lualine.nvim',
-    dependencies = { 'nvim-tree/nvim-web-devicons', opt = true }
-  },
-  { 'akinsho/bufferline.nvim', version = "*" },
+  }, {
+  'nvim-lualine/lualine.nvim',
+  dependencies = { 'nvim-tree/nvim-web-devicons', opt = true }
+},
+  { 'nvim-telescope/telescope-ui-select.nvim' },
   {
     'nvim-telescope/telescope.nvim',
     branch = '0.1.x',
-    dependencies = { 'nvim-lua/plenary.nvim' }
+    dependencies = { 'nvim-lua/plenary.nvim',
+      {
+        "ahmedkhalf/project.nvim",
+        opts = {},
+        event = "VeryLazy",
+        config = function(_, opts)
+          require("project_nvim").setup(opts)
+          require("telescope").load_extension("projects")
+        end,
+        keys = {
+          { "<leader>sp", "<Cmd>Telescope projects<CR>", desc = "Projects" },
+        },
+      },
+    }
   },
   {
     -- Highlight, edit, and navigate code
