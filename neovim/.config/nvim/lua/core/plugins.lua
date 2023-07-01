@@ -17,7 +17,75 @@ end
 vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
   { 'Mofiqul/vscode.nvim' },
-  { 'stevearc/oil.nvim' },
+  { 'folke/trouble.nvim' },
+  {
+    "folke/flash.nvim",
+    event = "VeryLazy",
+    ---@type Flash.Config
+    opts = {
+
+      highlight = {
+        -- show a backdrop with hl FlashBackdrop
+        backdrop = false,
+
+        -- Highlight the search matches
+        matches = false,
+        -- extmark priority
+        priority = 5000,
+        groups = {
+          match = "FlashMatch",
+          current = "FlashCurrent",
+          backdrop = "FlashBackdrop",
+          label = "FlashLabel",
+        },
+      },
+      modes = {
+        char = { enabled = false }
+      },
+    },
+    keys = {
+      {
+        "s",
+        mode = { "n", "x", "o" },
+        function()
+          require("flash").jump()
+        end,
+        desc = "Flash",
+      },
+      {
+        "S",
+        mode = { "n", "o", "x" },
+        function()
+          require("flash").treesitter()
+        end,
+        desc = "Flash Treesitter",
+      },
+      {
+        "r",
+        mode = "o",
+        function()
+          require("flash").remote()
+        end,
+        desc = "Remote Flash",
+      },
+      {
+        "R",
+        mode = { "o", "x" },
+        function()
+          require("flash").treesitter_search()
+        end,
+        desc = "Flash Treesitter Search",
+      },
+      {
+        "<c-s>",
+        mode = { "c" },
+        function()
+          require("flash").toggle()
+        end,
+        desc = "Toggle Flash Search",
+      },
+    },
+  },
   {
     "iamcco/markdown-preview.nvim",
     run = function() vim.fn["mkdp#util#install"]() end,

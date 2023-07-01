@@ -10,6 +10,7 @@ wk.register(
     Q = { ":qa!<CR>", 'Quit Hard' },
     w = { ":w<CR>", 'save nice' },
     W = { ":wq!<CR>", 'save nice' },
+    e = { ":Ntree<CR>", 'Ntree' },
 
     --have to do double since telescope uses s
     ss = { ":source<CR>", 'Source' },

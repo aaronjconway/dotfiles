@@ -4,7 +4,7 @@ function fzf_find_dir_ranger
 
 
   if test $foo
-    cd $foo && ranger
+    cd $foo
     commandline -f repaint
   end
 end

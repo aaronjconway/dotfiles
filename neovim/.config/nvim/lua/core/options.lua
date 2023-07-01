@@ -11,9 +11,6 @@ vim.o.mouse = 'a'
 --not sure why need
 vim.o.termguicolors = true
 
---netrw/ntree
-vim.g.netrw_liststyle = 3
-
 
 --good undo
 vim.opt.undofile = true

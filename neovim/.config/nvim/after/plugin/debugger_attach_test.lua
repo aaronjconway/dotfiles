@@ -28,4 +28,3 @@ local function launch()
     skipFiles = { '<node_internals>/**/*.js' },
   })
 end
-

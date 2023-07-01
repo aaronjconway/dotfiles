@@ -60,13 +60,36 @@ lsp.format_on_save({
   servers = {
     ['lua_ls'] = { 'lua' },
     ['tsserver'] = { 'javascript', 'typescript' },
+    ['null_ls'] = { 'javascript', 'typescript', 'jsx', 'tsx', 'astro' },
     ['bashls'] = { 'bash', 'shell', 'zsh' },
+    ['marksman'] = { 'markdown' },
+    ['astro'] = { 'astro' },
   }
 })
 
 
 lspconfig.tsserver.setup({})
+lspconfig.tailwindcss.setup({})
 lspconfig.astro.setup({})
+lspconfig.marksman.setup({})
+
+lspconfig.cssls.setup({
+  settings = {
+    css = {
+      validate = true,
+      lint     = { unknownAtRules = "ignore" }
+    },
+    less = {
+      validate = true,
+      lint     = { unknownAtRules = "ignore" }
+    },
+    scss = {
+      validate = true,
+      lint     = { unknownAtRules = "ignore" }
+    },
+  }
+}
+)
 
 lspconfig.html.setup({
 
@@ -87,12 +110,14 @@ lspconfig.lua_ls.setup({
 
 lsp.setup()
 
--- --make sure to call null AFTER lsp.setup()
--- local null_ls = require('null-ls')
--- null_ls.setup({
---   sources = {
---     null_ls.builtins.diagnostics.eslint.with({
---       diagnostics_format = '[eslint] #{m}\n(#{c})'
---     })
---   }
--- })
+--make sure to call null AFTER lsp.setup()
+local null_ls = require('null-ls')
+
+null_ls.setup({
+  sources = {
+    null_ls.builtins.formatting.prettierd,
+    null_ls.builtins.diagnostics.eslint.with({
+      diagnostics_format = '[eslint] #{m}\n(#{c})'
+    })
+  }
+})
