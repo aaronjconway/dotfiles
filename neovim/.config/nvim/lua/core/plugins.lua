@@ -17,6 +17,7 @@ end
 vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
   { 'Mofiqul/vscode.nvim' },
+  { 'wuelnerdotexe/vim-astro' },
   { 'folke/trouble.nvim' },
   {
     "folke/flash.nvim",

@@ -59,5 +59,5 @@ vim.opt.timeoutlen = 250
 --clipboard
 vim.opt.clipboard:prepend { 'unnamed', 'unnamedplus' }
 
--- Add asterisks in block comments
-vim.opt.formatoptions:append { 'r' }
+-- dont' add comment when using o
+vim.opt.formatoptions:remove("c,r,o,/")

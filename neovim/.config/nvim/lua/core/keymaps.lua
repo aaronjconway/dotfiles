@@ -15,6 +15,9 @@ vim.keymap.set("n", "<C-u>", "<C-u>zz")
 vim.keymap.set("n", "n", "nzzzv")
 vim.keymap.set("n", "N", "Nzzzv")
 
+--swap windows
+vim.keymap.set("n", "<C-l>", "<C-w>w")
+
 --don't do anything on space
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 

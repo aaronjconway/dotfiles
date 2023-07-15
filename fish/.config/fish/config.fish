@@ -24,8 +24,8 @@ alias t "tmux"
 alias tk "tmux kill-session"
 alias tv "tmux splitw -h"
 alias ts "tmux  list"
-alias tco "~/projects/playground/tmux_commands.sh"
 alias tkeys "tmux list-keys | fzf"
+alias ratehawk "~/development/playground/scripts/ratehawk_dev.sh"
 
 #ranger
 alias r "ranger" 
@@ -41,8 +41,10 @@ set -gx EDITOR "/usr/local/bin/nvim"
 set -gx VISUAL "/usr/local/bin/nvim"
 
 # Go
-set -x -U GOPATH $HOME/go
-set -gx PATH $GOPATH/bin $PATH
+
+set -x PATH $PATH /usr/local/go/bin
+set -x GOPATH $HOME/go
+set -x PATH $PATH $GOPATH/bin
 
 set -gx PATH ~/.local/bin $PATH
 

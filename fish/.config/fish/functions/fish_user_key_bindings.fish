@@ -12,6 +12,6 @@ function fish_user_key_bindings
   bind \cf fzf_find_files
 
   # find folders with ranger
-  bind \cO fzf_find_dir_ranger
+  bind \cO fzf_find_dir 
 
 end

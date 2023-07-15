@@ -14,22 +14,13 @@ lsp.ensure_installed({
 lsp.on_attach(function(_, bufnr)
   lsp.default_keymaps({ buffer = bufnr })
 
-  -- --this is so cool
-  -- vim.diagnostic.config({
-  --   virtual_text = {
-  --     format =
-  --         function(diagnostic)
-  --             return string.format('[' .. client.name .. ']' .. " %s", diagnostic.message)
-  --         end
-  --   }
-  -- })
-
   wk.register(
     {
       l = {
         name = 'LSP',
-        --{command, name}
         l = { ':LspInfo<CR>', 'Lsp Info' },
+
+        -- enable or disable diagnostics
         t = { function()
           if vim.diagnostic.is_disabled() then
             vim.diagnostic.enable()
@@ -39,7 +30,8 @@ lsp.on_attach(function(_, bufnr)
             print('Diagnostics Disabled')
           end
         end, 'Disable Diagnostics' },
-        d = { function() vim.lsp.buf.definition() end, 'Definition' },
+
+        d = { function() vim.lsp.buf.definition() end, 'definition' },
         h = { function() vim.lsp.buf.hover() end, 'Hover' },
         j = { function() vim.diagnostic.goto_next() end, 'Goto' },
         c = { function() vim.lsp.buf.code_action() end, 'Code Action' },
@@ -60,18 +52,20 @@ lsp.format_on_save({
   servers = {
     ['lua_ls'] = { 'lua' },
     ['tsserver'] = { 'javascript', 'typescript' },
-    ['null_ls'] = { 'javascript', 'typescript', 'jsx', 'tsx', 'astro' },
+    -- ['null_ls'] = { 'html', 'astro', 'javascript', 'typescript', 'jsx', 'tsx' },
     ['bashls'] = { 'bash', 'shell', 'zsh' },
     ['marksman'] = { 'markdown' },
     ['astro'] = { 'astro' },
+    ['svelte'] = { 'svelte' },
   }
 })
 
 
 lspconfig.tsserver.setup({})
-lspconfig.tailwindcss.setup({})
 lspconfig.astro.setup({})
+lspconfig.tailwindcss.setup({})
 lspconfig.marksman.setup({})
+lspconfig.svelte.setup({})
 
 lspconfig.cssls.setup({
   settings = {
@@ -92,7 +86,6 @@ lspconfig.cssls.setup({
 )
 
 lspconfig.html.setup({
-
   filetypes = { 'jsx', 'javascript', 'typescript', 'tsx', }
 })
 
@@ -110,14 +103,14 @@ lspconfig.lua_ls.setup({
 
 lsp.setup()
 
---make sure to call null AFTER lsp.setup()
-local null_ls = require('null-ls')
-
-null_ls.setup({
-  sources = {
-    null_ls.builtins.formatting.prettierd,
-    null_ls.builtins.diagnostics.eslint.with({
-      diagnostics_format = '[eslint] #{m}\n(#{c})'
-    })
-  }
-})
+-- --make sure to call null AFTER lsp.setup()
+-- local null_ls = require('null-ls')
+--
+-- null_ls.setup({
+--   sources = {
+--     null_ls.builtins.formatting.prettier,
+--     null_ls.builtins.diagnostics.eslint.with({
+--       diagnostics_format = '[eslint] #{m}\n(#{c})'
+--     })
+--   }
+-- })
