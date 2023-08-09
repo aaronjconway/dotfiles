@@ -51,17 +51,20 @@ lsp.format_on_save({
   },
   servers = {
     ['lua_ls'] = { 'lua' },
+    ['cssls'] = { 'css' },
     ['tsserver'] = { 'javascript', 'typescript' },
-    -- ['null_ls'] = { 'html', 'astro', 'javascript', 'typescript', 'jsx', 'tsx' },
+    ['null_ls'] = { 'html', 'astro', 'javascript', 'typescript', 'jsx', 'tsx' },
     ['bashls'] = { 'bash', 'shell', 'zsh' },
     ['marksman'] = { 'markdown' },
     ['astro'] = { 'astro' },
     ['svelte'] = { 'svelte' },
+    ['gopls'] = { 'go' },
   }
 })
 
 
 lspconfig.tsserver.setup({})
+lspconfig.gopls.setup({})
 lspconfig.astro.setup({})
 lspconfig.tailwindcss.setup({})
 lspconfig.marksman.setup({})
