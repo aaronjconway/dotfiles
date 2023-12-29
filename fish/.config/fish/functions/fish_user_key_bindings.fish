@@ -1,9 +1,13 @@
 function fish_user_key_bindings
-  # historr
+  # histor
   bind \cr fzf_select_history 
+  
+  bind \t accept-autosuggestion
+  bind \cH backward-kill-path-component
 
-  # historr
+  # histor
   bind \cv fish_open_vim 
+
 
   # lazy git
   bind \cg lazygit 

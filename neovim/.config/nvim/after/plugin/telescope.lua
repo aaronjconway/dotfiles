@@ -1,6 +1,17 @@
 local actions = require('telescope.actions')
 local wk = require('which-key')
+
+-- Enable telescope fzf native, if installed
+pcall(require('telescope').load_extension, 'fzf')
+pcall(require('telescope').load_extension, 'neoclip')
+
 require('telescope').setup {
+  extensions = {
+    file_browser = {
+      theme = 'ivy',
+    }
+  },
+
   defaults = {
     file_ignore_patterns = { "node_modules" },
     mappings = {
@@ -13,19 +24,32 @@ require('telescope').setup {
   },
 }
 
+require('telescope').load_extension 'file_browser'
+
 wk.register(
   {
     s = {
       name = 'Search',
-      o = { ":Telescope find_files<CR>", 'find files' },
+      f = { ":Telescope find_files<CR>", 'find files' },
+      h = { ":Telescope help_tags<CR>", 'help tags' },
+      k = { ":Telescope keymaps<CR>", 'keymaps' },
       F = { ":Telescope find_files hidden=true<CR>", 'find files' },
-      f = { ":Telescope oldfiles hidden=true<CR>", 'old files' },
+      o = { ":Telescope oldfiles hidden=true<CR>", 'old files' },
       p = { ":Telescope projects<CR>", 'projects' },
       t = { ":Telescope<CR>", 'Telescope' },
       g = { ":Telescope live_grep hidden=true<CR>", 'grep' },
-      b = { ":Telescope buffers<CR>", 'buffers' },
+      b = { ":Telescope file_browser<CR>", 'file_browser' },
       c = { ":Telescope commands<CR>", 'commands' },
     }
   },
   { prefix = '<leader>' }
 )
+
+
+vim.keymap.set('n', '<leader>/', function()
+  -- You can pass additional configuration to telescope to change theme, layout, etc.
+  require('telescope.builtin').current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
+    winblend = 10,
+    previewer = false,
+  })
+end, { desc = '[/] Fuzzily search in current buffer' })

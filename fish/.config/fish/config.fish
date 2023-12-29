@@ -1,13 +1,31 @@
+set -x RANGER_LOAD_DEFAULT_RC FALSE
+
 
 set fish_greeting ""
 
-alias la "exa -la"
+set fish_default_key_bindings
 
+#exa
+alias l "exa -la"
+
+#tab for complete
+alias l "exa -la"
+
+#downloads folder on the 
+alias downloads 'cd /mnt/c/Users/ajcon/Downloads/'
+
+#kasey home loans one drive
+alias khl 'cd /mnt/c/Users/ajcon/OneDrive - Kasey Home Loans/'
+
+#python
+alias python "python3"
+alias py "python3"
+
+# set colors for things
+set -gx FZF_DEFAULT_OPTS '--color=hl+:#b83232,bg+:#FFE5B4,fg+:#282C34,gutter:-1'
 set TERM 'xterm-256color'
 
-# set fzf background color
-set -gx FZF_DEFAULT_OPTS '--color=hl+:#b83232,bg+:#FFE5B4,fg+:#282C34,gutter:-1'
-
+#alias
 alias nvim "/usr/local/bin/nvim"
 alias vim "nvim"
 alias v "nvim"
@@ -29,6 +47,9 @@ alias ratehawk "~/development/playground/scripts/ratehawk_dev.sh"
 
 #ranger
 alias r "ranger" 
+
+#kasey home loans onedrive
+alias khl  'cd /mnt/c/Users/ajcon/OneDrive\ -\ Kasey\ Home\ Loans/'
 
 #fish_config
 alias fconfig "vim ~/dotfiles/fish/.config/fish/config.fish"
@@ -52,3 +73,5 @@ set -x N_PREFIX "$HOME/n"; contains "$N_PREFIX/bin" $PATH; or set -a PATH "$N_PR
 
 # Generated for envman. Do not edit.
 test -s "$HOME/.config/envman/load.fish"; and source "$HOME/.config/envman/load.fish"
+
+set -x N_PREFIX "$HOME/n"; contains "$N_PREFIX/bin" $PATH; or set -a PATH "$N_PREFIX/bin"  # Added by n-install (see http://git.io/n-install-repo).

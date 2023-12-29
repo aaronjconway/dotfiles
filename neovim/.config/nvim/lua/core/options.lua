@@ -1,63 +1,55 @@
---remove any other autocmd's with
-vim.cmd("autocmd!")
+-- Set highlight on search
+vim.o.hlsearch = false
 
-vim.o.colorcolumn = "80"
+vim.o.colorcolumn = 80
 
-vim.wo.fillchars = 'eob: '
-vim.wo.signcolumn = 'yes'
-
-vim.o.mouse = 'a'
-
---not sure why need
-vim.o.termguicolors = true
-
-
---good undo
-vim.opt.undofile = true
-
-vim.opt.cursorline = true
-
-vim.opt.winblend = 0
-vim.opt.wildoptions = 'fuzzy'
-
--- line number
+-- Make line numbers default
 vim.wo.number = true
 vim.wo.relativenumber = true
 
-vim.opt.title = true
+-- Enable mouse mode
+vim.o.mouse = 'a'
 
---copies indent from previous line when making a new one
-vim.opt.autoindent = true
-vim.opt.smartindent = true
+-- Sync clipboard between OS and Neovim.
+--  Remove this option if you want your OS clipboard to remain independent.
+--  See `:help 'clipboard'`
+vim.o.clipboard = 'unnamedplus'
+
+-- Enable break indent
+vim.o.breakindent = true
+
+-- Save undo history
+vim.o.undofile = true
+
+-- Case-insensitive searching UNLESS \C or capital in search
+vim.o.ignorecase = true
+vim.o.smartcase = true
+
+-- Keep signcolumn on by default
+vim.wo.signcolumn = 'yes'
+
+-- Decrease update time
+vim.o.updatetime = 250
+vim.o.timeoutlen = 300
+
+-- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'
-vim.opt.hlsearch = true
 
-vim.opt.showcmd = true
+-- NOTE: You should make sure your terminal supports this
+vim.o.termguicolors = true
 
-vim.opt.cmdheight = 1
-vim.opt.laststatus = 2
-vim.opt.expandtab = true
+-- [[ Basic Keymaps ]]
 
-vim.opt.scrolloff = 10
-vim.opt.shell = 'fish'
-vim.opt.inccommand = 'split'
-vim.opt.ignorecase = true
-vim.opt.smarttab = true
+-- Keymaps for better default experience
+-- See `:help vim.keymap.set()`
+vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 
-vim.opt.breakindent = true
-vim.opt.shiftwidth = 2
-vim.opt.tabstop = 2
-vim.opt.wrap = true
-vim.opt.linebreak = true
+-- Remap for dealing with word wrap
+vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
+vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
---update times
-vim.opt.updatetime = 200
-vim.opt.timeout = true
-vim.opt.timeoutlen = 250
-
-
---clipboard
-vim.opt.clipboard:prepend { 'unnamed', 'unnamedplus' }
-
--- dont' add comment when using o
-vim.opt.formatoptions:remove("c,r,o,/")
+-- Diagnostic keymaps
+vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic message' })
+vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic message' })
+vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
+vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
