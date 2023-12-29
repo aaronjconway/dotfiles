@@ -9,7 +9,8 @@ require('telescope').setup {
   extensions = {
     file_browser = {
       theme = 'ivy',
-    }
+      hidden = true,
+    },
   },
 
   defaults = {
@@ -38,7 +39,7 @@ wk.register(
       p = { ":Telescope projects<CR>", 'projects' },
       t = { ":Telescope<CR>", 'Telescope' },
       g = { ":Telescope live_grep hidden=true<CR>", 'grep' },
-      b = { ":Telescope file_browser<CR>", 'file_browser' },
+      b = { ":Telescope file_browser path=%:p:h select_buffer=true<CR>", 'file_browser' },
       c = { ":Telescope commands<CR>", 'commands' },
     }
   },
