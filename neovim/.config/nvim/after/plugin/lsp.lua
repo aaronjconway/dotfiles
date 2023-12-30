@@ -39,7 +39,13 @@ local servers = {
   -- pyright = {},
   -- tsserver = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
-
+  marksman = {},
+  remark_ls = {},
+  pyright = {},
+  ruff_lsp = {},
+  taplo = {},
+  black = {},
+  isort = {},
   lua_ls = {
     Lua = {
       workspace = { checkThirdParty = false },

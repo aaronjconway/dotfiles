@@ -12,6 +12,7 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require('lazy').setup({
+  { "Vimjas/vim-python-pep8-indent" },
   {
     'windwp/nvim-autopairs',
     event = "InsertEnter",
@@ -30,7 +31,6 @@ require('lazy').setup({
   {
     "AckslD/nvim-neoclip.lua",
     dependencies = {
-      { 'kkharji/sqlite.lua',           module = 'sqlite' },
       { 'nvim-telescope/telescope.nvim' },
     },
     config = function()
@@ -46,7 +46,23 @@ require('lazy').setup({
   'tpope/vim-rhubarb',
   'tpope/vim-sleuth',
   'tpope/vim-surround',
-
+  {
+    "WhoIsSethDaniel/mason-tool-installer.nvim",
+    dependencies = {
+      { "williamboman/mason.nvim",           opts = true },
+      { "williamboman/mason-lspconfig.nvim", opts = true },
+    },
+    opts = {
+      ensure_installed = {
+        "pyright",  -- LSP for python
+        "ruff-lsp", -- linter for python (includes flake8, pep8, etc.)
+        "debugpy",  -- debugger
+        "black",    -- formatter
+        "isort",    -- organize imports
+        "taplo",    -- LSP for toml (for pyproject.toml files)
+      },
+    },
+  },
 
   {
     'neovim/nvim-lspconfig',
@@ -74,7 +90,7 @@ require('lazy').setup({
     },
   },
 
-  { 'folke/which-key.nvim', opts = {} },
+  { 'folke/which-key.nvim',  opts = {} },
   {
     'lewis6991/gitsigns.nvim',
     opts = {
