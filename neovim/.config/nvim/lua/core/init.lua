@@ -16,12 +16,3 @@ autocmd('TextYankPost', {
   end
 })
 
-
--- Define an autocmd for BufEnter event
-vim.cmd [[
-      autocmd TermOpen * startinsert
-]]
-
-vim.api.nvim_create_user_command('Yayterm', function()
-  print('this is a custom command')
-end, {})

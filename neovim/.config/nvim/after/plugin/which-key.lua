@@ -11,6 +11,7 @@ wk.register(
     w = { ":w<CR>", 'save nice' },
     W = { ":wq!<CR>", 'save nice' },
     e = { ":Texplore<CR>", 'Ntree' },
+    t = { ":TroubleToggle<Cr>", 'Toggle Trouble' },
 
     --have to do double since telescope uses s
     ss = { ":source<CR>", 'Source' },

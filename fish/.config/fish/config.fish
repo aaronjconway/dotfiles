@@ -1,6 +1,5 @@
 set -x RANGER_LOAD_DEFAULT_RC FALSE
 
-
 set fish_greeting ""
 
 set fish_default_key_bindings
@@ -11,8 +10,16 @@ alias l "exa -la"
 #tab for complete
 alias l "exa -la"
 
-#downloads folder on the 
+#downloads folder on the
 alias downloads 'cd /mnt/c/Users/ajcon/Downloads/'
+#downloads folder on the
+alias downloads 'cd /mnt/c/Users/ajcon/Downloads/'
+
+#source fish
+alias sfish 'source ~/dotfiles/fish/.config/fish/config.fish'
+
+# swap files
+alias swp 'cd ~/.local/state/nvim/swap/'
 
 #kasey home loans one drive
 alias khl 'cd /mnt/c/Users/ajcon/OneDrive - Kasey Home Loans/'
@@ -37,16 +44,16 @@ alias terminal_config "vim /mnt/c/Users/ajcon/AppData/Local/Packages/Microsoft.W
 #look for any man page
 alias manlist "source ~/dotfiles/fish/.config/fish/functions/fzf_select_man.fish"
 
-# tmux binds 
+# tmux binds
 alias t "tmux"
 alias tk "tmux kill-session"
 alias tv "tmux splitw -h"
-alias ts "tmux  list"
+alias ts "tmux list"
 alias tkeys "tmux list-keys | fzf"
-alias ratehawk "~/development/playground/scripts/ratehawk_dev.sh"
+alias khl-dev "~/dotfiles/tmux/.config/tmux/tmux_startup.sh"
 
 #ranger
-alias r "ranger" 
+alias r "ranger"
 
 #kasey home loans onedrive
 alias khl  'cd /mnt/c/Users/ajcon/OneDrive\ -\ Kasey\ Home\ Loans/'
@@ -54,7 +61,7 @@ alias khl  'cd /mnt/c/Users/ajcon/OneDrive\ -\ Kasey\ Home\ Loans/'
 #fish_config
 alias fconfig "vim ~/dotfiles/fish/.config/fish/config.fish"
 
-#tree 
+#tree
 alias tra "tree -a -C -L 3"
 alias tr "tree -C -L 3"
 

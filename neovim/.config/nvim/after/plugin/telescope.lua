@@ -15,6 +15,9 @@ require('telescope').setup {
 
   defaults = {
     file_ignore_patterns = { "node_modules" },
+    path_display = {
+      shorten = 15
+    },
     mappings = {
       i = {
         ['<C-u>'] = false,
@@ -31,10 +34,9 @@ wk.register(
   {
     s = {
       name = 'Search',
-      f = { ":Telescope find_files<CR>", 'find files' },
+      f = { ":Telescope find_files hidden=true<CR>", 'find files' },
       h = { ":Telescope help_tags<CR>", 'help tags' },
       k = { ":Telescope keymaps<CR>", 'keymaps' },
-      F = { ":Telescope find_files hidden=true<CR>", 'find files' },
       o = { ":Telescope oldfiles hidden=true<CR>", 'old files' },
       p = { ":Telescope projects<CR>", 'projects' },
       t = { ":Telescope<CR>", 'Telescope' },

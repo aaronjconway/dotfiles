@@ -8,19 +8,20 @@ local on_attach = function(_, bufnr)
 
   nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
   nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
-
   nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
   nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
   nmap('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
   nmap('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
   nmap('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
-  nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
-
   -- See `:help K` for why this keymap
   nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
   nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
   -- Lesser used LSP functionality
   nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
+
+  vim.diagnostic.config({
+    virtual_text = false
+  })
 
   vim.api.nvim_create_autocmd('BufWritePre', {
     buffer = bufnr,
@@ -35,25 +36,25 @@ end
 require('mason').setup()
 require('mason-lspconfig').setup()
 
+
 local servers = {
-  -- pyright = {},
-  -- tsserver = {},
-  -- html = { filetypes = { 'html', 'twig', 'hbs'} },
+  tsserver = { 'svelte' },
+  html = { 'svelte' },
   marksman = {},
-  remark_ls = {},
   pyright = {},
   ruff_lsp = {},
   taplo = {},
-  black = {},
-  isort = {},
   lua_ls = {
     Lua = {
       workspace = { checkThirdParty = false },
       telemetry = { enable = false },
-      -- diagnostics = { disable = { 'missing-fields' } },
+      diagnostics = { disable = { 'missing-fields' } },
     },
   },
 }
+
+
+
 
 -- Setup neovim lua configuration
 require('neodev').setup()
@@ -79,9 +80,16 @@ mason_lspconfig.setup_handlers {
 }
 
 local cmp = require 'cmp'
+local cmp_autopairs = require('nvim-autopairs.completion.cmp')
+
 local luasnip = require 'luasnip'
 require('luasnip.loaders.from_vscode').lazy_load()
 luasnip.config.setup {}
+
+cmp.event:on(
+  'confirm_done',
+  cmp_autopairs.on_confirm_done()
+)
 
 cmp.setup {
   snippet = {
@@ -90,8 +98,10 @@ cmp.setup {
     end,
   },
   completion = {
-    completeopt = 'menu,menuone,noinsert',
+    completeopt = 'menu,menuone,noinsert,noselect',
   },
+  -- stop preselecting things
+  preselect = cmp.PreselectMode.None,
   mapping = cmp.mapping.preset.insert {
     ['<C-n>'] = cmp.mapping.select_next_item(),
     ['<C-p>'] = cmp.mapping.select_prev_item(),
@@ -125,5 +135,7 @@ cmp.setup {
     { name = 'nvim_lsp' },
     { name = 'luasnip' },
     { name = 'path' },
+    { name = 'buffer' },
+    { name = 'cmdLine' },
   },
 }

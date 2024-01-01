@@ -12,6 +12,19 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require('lazy').setup({
+  -------------------------------
+  {
+    "pmizio/typescript-tools.nvim",
+    dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
+  },
+  {
+    "folke/trouble.nvim",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    opts = {
+      position = 'right',
+
+    }
+  },
   { "Vimjas/vim-python-pep8-indent" },
   {
     'windwp/nvim-autopairs',
@@ -38,9 +51,6 @@ require('lazy').setup({
     end,
   },
 
-  -- sql
-  { "kkharji/sqlite.lua" },
-
   --tpope
   'tpope/vim-fugitive',
   'tpope/vim-rhubarb',
@@ -49,8 +59,8 @@ require('lazy').setup({
   {
     "WhoIsSethDaniel/mason-tool-installer.nvim",
     dependencies = {
-      { "williamboman/mason.nvim",           opts = true },
-      { "williamboman/mason-lspconfig.nvim", opts = true },
+      { "williamboman/mason.nvim", --[[ opts = true ]] },
+      { "williamboman/mason-lspconfig.nvim", --[[ opts = true ]] },
     },
     opts = {
       ensure_installed = {
@@ -85,12 +95,14 @@ require('lazy').setup({
 
       'hrsh7th/cmp-nvim-lsp',
       'hrsh7th/cmp-path',
+      'hrsh7th/cmp-buffer',
+      'hrsh7th/cmp-cmdLine',
 
       'rafamadriz/friendly-snippets',
     },
   },
 
-  { 'folke/which-key.nvim',  opts = {} },
+  { 'folke/which-key.nvim',         opts = {} },
   {
     'lewis6991/gitsigns.nvim',
     opts = {
@@ -171,31 +183,19 @@ require('lazy').setup({
     end,
   },
 
-  {
-    -- Set lualine as statusline
-    'nvim-lualine/lualine.nvim',
-    -- See `:help lualine.txt`
-    opts = {
-      options = {
-        icons_enabled = false,
-        theme = 'onedark',
-        component_separators = '|',
-        section_separators = '',
-      },
-    },
-  },
+  { 'nvim-lualine/lualine.nvim' },
 
-  {
-    -- Add indentation guides even on blank lines
-    'lukas-reineke/indent-blankline.nvim',
-    -- Enable `lukas-reineke/indent-blankline.nvim`
-    -- See `:help ibl`
-    main = 'ibl',
-    opts = {},
-  },
+  -- {
+  --   -- Add indentation guides even on blank lines
+  --   'lukas-reineke/indent-blankline.nvim',
+  --   -- Enable `lukas-reineke/indent-blankline.nvim`
+  --   -- See `:help ibl`
+  --   main = 'ibl',
+  --   opts = {},
+  -- },
 
   -- "gc" to comment visual regions/lines
-  { 'numToStr/Comment.nvim', opts = {} },
+  { 'numToStr/Comment.nvim',    opts = {} },
 
   {
     "nvim-telescope/telescope-file-browser.nvim",
