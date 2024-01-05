@@ -14,9 +14,19 @@ require('telescope').setup {
   },
 
   defaults = {
-    file_ignore_patterns = { "node_modules" },
+    vimgrep_arguments = {
+      'rg',
+      '--color=never',
+      '--no-heading',
+      '--with-filename',
+      '--line-number',
+      '--column',
+      '--smart-case',
+      '-u'
+    },
+    file_ignore_patterns = { "node_modules", '.git' },
     path_display = {
-      shorten = 15
+      absolute = false,
     },
     mappings = {
       i = {
@@ -40,8 +50,8 @@ wk.register(
       o = { ":Telescope oldfiles hidden=true<CR>", 'old files' },
       p = { ":Telescope projects<CR>", 'projects' },
       t = { ":Telescope<CR>", 'Telescope' },
-      g = { ":Telescope live_grep hidden=true<CR>", 'grep' },
-      b = { ":Telescope file_browser path=%:p:h select_buffer=true<CR>", 'file_browser' },
+      g = { ":Telescope live_grep<CR>", 'grep' },
+      b = { ":Telescope buffers<CR>", 'buffers' },
       c = { ":Telescope commands<CR>", 'commands' },
     }
   },
@@ -56,3 +66,24 @@ vim.keymap.set('n', '<leader>/', function()
     previewer = false,
   })
 end, { desc = '[/] Fuzzily search in current buffer' })
+
+vim.keymap.set('n', '<leader>sG', function()
+  -- You can pass additional configuration to telescope to change theme, layout, etc.
+  require('telescope.builtin').live_grep(
+
+    require('telescope').defaults {
+
+      vimgrep_arguments = {
+        'l',
+        '--color=always',
+        '-uu'
+      },
+    },
+
+    require('telescope.themes').get_dropdown {
+      winblend = 10,
+      previewer = false,
+    }, {
+
+    })
+end, { desc = 'live grep hidden giles' })

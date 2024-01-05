@@ -12,6 +12,10 @@ vim.keymap.set("n", "<C-o>", "<C-o>zz")
 vim.keymap.set("n", "<C-i>", "<C-i>zz")
 vim.keymap.set("n", "<s-g>", "<s-g>zz")
 
+
+--swap windows
+vim.keymap.set("n", "<C-'>", ":echo 'hello world'")
+
 --swap windows
 vim.keymap.set("n", "<C-l>", "<C-w>w")
 

@@ -13,6 +13,23 @@ vim.opt.rtp:prepend(lazypath)
 
 require('lazy').setup({
   -------------------------------
+  { 'neovim/nvim-lspconfig' },
+  { 'jose-elias-alvarez/null-ls.nvim' },
+  { 'MunifTanjim/prettier.nvim' },
+  {
+    'folke/flash.nvim',
+    event = 'VeryLazy',
+    keys = { { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" } },
+  },
+  { 'mofiqul/vscode.nvim' },
+  {
+    "ThePrimeagen/harpoon",
+    branch = "harpoon2",
+    requires = {
+      { 'nvim-lua/plenary.nvim' }
+    },
+  },
+
   {
     "pmizio/typescript-tools.nvim",
     dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
@@ -35,9 +52,7 @@ require('lazy').setup({
     "ahmedkhalf/project.nvim",
     config = function()
       require("project_nvim").setup {
-        -- your configuration comes here
-        -- or leave it empty to use the default settings
-        -- refer to the configuration section below
+        show_hidden = true
       }
     end
   },
@@ -102,7 +117,7 @@ require('lazy').setup({
     },
   },
 
-  { 'folke/which-key.nvim',         opts = {} },
+  { 'folke/which-key.nvim',     opts = {} },
   {
     'lewis6991/gitsigns.nvim',
     opts = {
@@ -173,16 +188,6 @@ require('lazy').setup({
       end,
     },
   },
-
-  {
-    -- Theme inspired by Atom
-    'navarasu/onedark.nvim',
-    priority = 1000,
-    config = function()
-      vim.cmd.colorscheme 'onedark'
-    end,
-  },
-
   { 'nvim-lualine/lualine.nvim' },
 
   -- {

@@ -10,13 +10,16 @@ alias l "exa -la"
 #tab for complete
 alias l "exa -la"
 
+#run neovim in document mode
+alias ndoc 'nvim -u ~/.config/nvim_document/init.lua'
+
 #downloads folder on the
 alias downloads 'cd /mnt/c/Users/ajcon/Downloads/'
 #downloads folder on the
 alias downloads 'cd /mnt/c/Users/ajcon/Downloads/'
 
 #source fish
-alias sfish 'source ~/dotfiles/fish/.config/fish/config.fish'
+alias source_fish 'source ~/dotfiles/fish/.config/fish/config.fish'
 
 # swap files
 alias swp 'cd ~/.local/state/nvim/swap/'
