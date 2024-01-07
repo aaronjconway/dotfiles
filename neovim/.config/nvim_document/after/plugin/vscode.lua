@@ -16,7 +16,6 @@ require('vscode').setup({
 
     group_overrides = {
         Cursor = { fg = c.vscDarkBlue, bg = c.vscLightGreen, bold = true },
-        NotificationInfo = { fg = c.vscGreen, bg = c.vscBack, bold = true },
     }
 })
 

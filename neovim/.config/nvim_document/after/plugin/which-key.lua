@@ -12,6 +12,7 @@ wk.register(
     W = { ":wq!<CR>", 'save nice' },
     e = { ":Texplore<CR>", 'Ntree' },
     t = { ":TroubleToggle<Cr>", 'Toggle Trouble' },
+    on = { ":bNext<CR>", 'Next buffer' },
 
     --have to do double since telescope uses s
     ss = { ":source<CR>", 'Source' },
@@ -33,12 +34,7 @@ wk.register(
     t = {
       name = 'Tabs & Buffer',
       o = { ":botright vsp new<CR>", 'Open a buffer' },
-    },
-    d = {
-      name = 'Database',
-      o = { ":DBUIToggle<CR>", 'Toggle DBUI' },
     }
-
   },
   { prefix = '<leader>' }
 )

@@ -17,7 +17,6 @@ vim.defer_fn(function()
       'python',
       'rust',
       'scss',
-      'sql',
       'svelte',
       'tsx',
       'typescript',

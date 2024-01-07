@@ -4,6 +4,9 @@ set fish_greeting ""
 
 set fish_default_key_bindings
 
+#sc
+alias sc "sc-im"
+
 #exa
 alias l "exa -la"
 
@@ -11,7 +14,7 @@ alias l "exa -la"
 alias l "exa -la"
 
 #run neovim in document mode
-alias ndoc 'nvim -u ~/.config/nvim_document/init.lua'
+alias ndoc 'NVIM_APPNAME=nvim_document nvim'
 
 #downloads folder on the
 alias downloads 'cd /mnt/c/Users/ajcon/Downloads/'
