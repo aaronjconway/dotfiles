@@ -1,3 +1,4 @@
+
 set -x RANGER_LOAD_DEFAULT_RC FALSE
 
 set fish_greeting ""
@@ -7,8 +8,14 @@ set fish_default_key_bindings
 #sc
 alias sc "sc-im"
 
-#exa
-alias l "exa -la"
+#npm run dev -- --open
+alias dev "npm run dev -- --open"
+
+#obsidian git vault test
+alias obsidian-git-vault-test 'cd /mnt/c/Users/ajcon/OneDrive/Git\ Vault\ Test/'
+
+#kasey home loans one drive
+alias ajcon 'cd /mnt/c/Users/ajcon/'
 
 #tab for complete
 alias l "exa -la"

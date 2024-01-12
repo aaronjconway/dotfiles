@@ -31,7 +31,6 @@ require('lazy').setup({
     end,
   },
   { 'neovim/nvim-lspconfig' },
-  { 'jose-elias-alvarez/null-ls.nvim' },
   { 'MunifTanjim/prettier.nvim' },
   {
     'folke/flash.nvim',

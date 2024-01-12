@@ -81,12 +81,6 @@ flash.setup {
       -- This allows using those keys directly after the motion
       label = { exclude = "hjkliardc" },
       keys = {},
-      -- by default all keymaps are enabled, but you can disable some of them,
-      -- by removing them from the list.
-      -- If you rather use another key, you can map them
-      -- to something else, e.g., { [";"] = "L", [","] = H
-      ---@alias Flash.CharActions table<string, "next" | "prev" | "right" | "left">
-      -- The direction for `prev` and `next` is determined by the motion.
       -- `left` and `right` are always left and right.
       char_actions = function(motion)
         return {

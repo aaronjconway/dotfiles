@@ -12,6 +12,9 @@ vim.keymap.set("n", "<C-o>", "<C-o>zz")
 vim.keymap.set("n", "<C-i>", "<C-i>zz")
 vim.keymap.set("n", "<s-g>", "<s-g>zz")
 
+--maps backspace in insert to delete word
+vim.keymap.set("i", "<C-H>", "<C-W>")
+
 
 --swap windows
 vim.keymap.set("n", "<C-'>", ":echo 'hello world'")
