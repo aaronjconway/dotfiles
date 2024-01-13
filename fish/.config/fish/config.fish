@@ -1,4 +1,5 @@
 
+set -gx GOROOT '/usr/local/go'
 set -x RANGER_LOAD_DEFAULT_RC FALSE
 
 set fish_greeting ""
