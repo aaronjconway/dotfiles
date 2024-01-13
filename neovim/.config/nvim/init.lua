@@ -8,10 +8,8 @@ require('core.plugins')
 
 vim.cmd.highlight('FlashLabel guifg=#FFC921')
 
---open man and help in full page
+-- vim.cmd('autocmd FileType man wincmd T')
 -- vim.cmd('autocmd FileType help wincmd T')
-
-vim.cmd('autocmd FileType man wincmd T')
 
 local autocmd = vim.api.nvim_create_autocmd
 

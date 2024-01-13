@@ -5,6 +5,10 @@ set fish_greeting ""
 
 set fish_default_key_bindings
 
+#du 
+alias du 'du -h'
+
+
 #sc
 alias sc "sc-im"
 

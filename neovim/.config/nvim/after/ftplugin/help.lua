@@ -1,5 +1,3 @@
-
-
 vim.cmd([[
   augroup help_autocmd
     autocmd!

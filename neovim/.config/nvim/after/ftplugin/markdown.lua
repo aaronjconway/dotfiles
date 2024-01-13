@@ -1,0 +1,22 @@
+-- vim.cmd([[
+--   augroup markdown_autocmd
+--     autocmd!
+--     autocmd BufEnter */doc/* if &filetype == 'help' | wincmd T | endif
+--   augroup END
+-- ]])
+--
+-- vim.cmd [[echo "you're in a help file" ]]
+-- vim.api.nvim_buf_set_keymap(0, 'n', 'q', ':q<CR>', {})
+--
+-- local function load_folder_specific_config()
+--   local current_directory = vim.fn.getcwd()
+--
+--   -- Check if the current directory is '/fub'
+--   if current_directory:match('/fub$') then
+--     vim.cmd('source .vimrc_fub')     -- Load custom configuration file for /fub
+--   end
+-- end
+--
+-- -- Automatically call the function when Neovim starts and when the directory changes
+-- vim.cmd('autocmd VimEnter * lua load_folder_specific_config()')
+-- vim.cmd('autocmd BufEnter * lua load_folder_specific_config()')
