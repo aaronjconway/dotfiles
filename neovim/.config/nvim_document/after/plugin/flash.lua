@@ -27,7 +27,7 @@ flash.setup {
   },
 
   highlight = {
-    backdrop = false,
+    backdrop = true,
 
     -- just here to remembe the names
     groups = {

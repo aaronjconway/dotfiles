@@ -5,6 +5,7 @@ require("core.plugins")
 
 --make highlight prettier
 vim.cmd.highlight('FlashLabel guifg=#FFC921')
+vim.cmd.highlight('FlashBackDrop guifg=#bbbbbb')
 
 local augroup = vim.api.nvim_create_augroup
 local CoreGroup = augroup('Core', {})

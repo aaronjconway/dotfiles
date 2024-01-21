@@ -68,7 +68,8 @@ require('lazy').setup({
     "ahmedkhalf/project.nvim",
     config = function()
       require("project_nvim").setup {
-        show_hidden = true
+        show_hidden = true,
+        patterns = { 'README.md' },
       }
     end
   },

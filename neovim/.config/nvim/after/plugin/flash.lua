@@ -27,7 +27,7 @@ flash.setup {
   },
 
   highlight = {
-    backdrop = false,
+    backdrop = true,
 
     -- just here to remembe the names
     groups = {
@@ -43,8 +43,8 @@ flash.setup {
     search = {
       -- when `true`, flash will be activated during regular search by default.
       -- You can always toggle when searching with `require("flash").toggle()`
-      enabled = true,
-      highlight = { backdrop = false },
+      enabled = false,
+      highlight = { backdrop = true },
       jump = { history = true, register = true, nohlsearch = true },
       search = {
         -- `forward` will be automatically set to the search direction

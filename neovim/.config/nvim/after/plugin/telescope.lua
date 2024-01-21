@@ -22,7 +22,7 @@ require('telescope').setup {
       '--line-number',
       '--column',
       '--smart-case',
-      '-u'
+      '-uu'
     },
     file_ignore_patterns = { "node_modules", '.git' },
     path_display = {

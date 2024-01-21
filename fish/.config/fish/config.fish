@@ -1,14 +1,15 @@
-
-set -gx GOROOT '/usr/local/go'
-set -x RANGER_LOAD_DEFAULT_RC FALSE
-
+set -gx GOROOT '/usr/locol/go'
+set -gx RANGER_LOAD_DEFAULT_RC FALSE
+set -gx PYTHONPATH ~/development/playground/mmi $PYTHONPATH
 set fish_greeting ""
 
 set fish_default_key_bindings
 
-#du 
+#du
 alias du 'du -h'
 
+#linode
+alias linode "ssh aaron@172.233.136.98"
 
 #sc
 alias sc "sc-im"
@@ -68,7 +69,7 @@ alias tk "tmux kill-session"
 alias tv "tmux splitw -h"
 alias ts "tmux list"
 alias tkeys "tmux list-keys | fzf"
-alias khl-dev "~/dotfiles/tmux/.config/tmux/tmux_startup.sh"
+alias khl-dev "~/dotfiles/tmux/.config/tmux/khl-startup.sh"
 
 #ranger
 alias r "ranger"

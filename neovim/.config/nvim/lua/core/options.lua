@@ -1,5 +1,5 @@
 -- Set highlight on search
-vim.o.hlsearch = true
+vim.o.hlsearch = false
 
 vim.o.colorcolumn = 80
 

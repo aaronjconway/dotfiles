@@ -38,13 +38,14 @@ require('mason-lspconfig').setup()
 
 
 local servers = {
-  tsserver = { 'svelte' },
+  tsserver = { '.svelte' },
   astro = { 'astro', 'mdx', 'md' },
   html = { 'svelte' },
   marksman = { 'mdx', 'md' },
   pyright = {},
   ruff_lsp = {},
   taplo = {},
+  svelte = { 'svelte' },
   lua_ls = {
     Lua = {
       workspace = { checkThirdParty = false },
@@ -53,7 +54,6 @@ local servers = {
     },
   },
 }
-
 
 
 
