@@ -1,17 +1,26 @@
-set -gx GOROOT '/usr/locol/go'
+set -gx GOROOT '/usr/local/go'
 set -gx RANGER_LOAD_DEFAULT_RC FALSE
 set -gx PYTHONPATH ~/development/playground/mmi $PYTHONPATH
 set fish_greeting ""
 
 set fish_default_key_bindings
 
-#du
+#chat jipity
+alias chat '~/development/playground/scripts/chat-jipity.sh'
+
+#docker linode
+alias dl 'ssh aaron@172.233.136.98'
+
+#attempting to open things with firefox
+alias firefox '/mnt/c/Program Files/Mozilla Firefox/firefox.exe'
+
+#disk usage - file size
 alias du 'du -h'
 
-#linode
-alias linode "ssh aaron@172.233.136.98"
+#linode command line
+alias lcli 'linode-cli'
 
-#sc
+#sc - in term table editor. - not very good at using.
 alias sc "sc-im"
 
 #npm run dev -- --open
@@ -24,7 +33,7 @@ alias obsidian-git-vault-test 'cd /mnt/c/Users/ajcon/OneDrive/Git\ Vault\ Test/'
 alias ajcon 'cd /mnt/c/Users/ajcon/'
 
 #tab for complete
-alias l "exa -la"
+alias ls "exa -la"
 
 #run neovim in document mode
 alias ndoc 'NVIM_APPNAME=nvim_document nvim'
