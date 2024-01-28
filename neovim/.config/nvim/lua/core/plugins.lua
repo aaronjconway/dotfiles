@@ -70,7 +70,7 @@ require('lazy').setup({
     config = function()
       require("project_nvim").setup {
         show_hidden = true,
-        patterns = { 'README.md' },
+        patterns = { 'README.md', '.git' },
       }
     end
   },

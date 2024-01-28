@@ -8,6 +8,9 @@ set fish_default_key_bindings
 #chat jipity
 alias chat '~/development/playground/scripts/chat-jipity.sh'
 
+#chat jipity
+alias gl "git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'"
+
 #docker linode
 alias dl 'ssh aaron@172.233.136.98'
 

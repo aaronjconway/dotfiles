@@ -45,6 +45,9 @@ autocmd({ "BufEnter" }, {
   end,
 })
 
+vim.api.nvim_create_user_command('RemoveClassContents', function()
+  vim.cmd [[%s,\vclass\=".*",class="",g]]
+end, {})
 
 vim.filetype.add({
   extension = {
