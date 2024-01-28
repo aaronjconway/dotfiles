@@ -1,6 +1,7 @@
-# vim ft=lua
+local lsp_zero = require('lsp-zero')
 
-local on_attach = function(_, bufnr)
+
+lsp_zero.on_attach(function(_, bufnr)
   local nmap = function(keys, func, desc)
     if desc then
       desc = 'LSP: ' .. desc
@@ -15,15 +16,9 @@ local on_attach = function(_, bufnr)
   nmap('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
   nmap('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
   nmap('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
-  -- See `:help K` for why this keymap
   nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
   nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
-  -- Lesser used LSP functionality
   nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
-
-  vim.diagnostic.config({
-    virtual_text = false
-  })
 
   vim.api.nvim_create_autocmd('BufWritePre', {
     buffer = bufnr,
@@ -33,70 +28,34 @@ local on_attach = function(_, bufnr)
       }
     end
   })
-end
-
-require('mason').setup()
-require('mason-lspconfig').setup()
-
-
-local servers = {
-
-  tsserver = {
-    filetypes = {
-      'html',
-      'typescript',
-      'javascript',
-      'js',
-      'ts',
-      'typescriptreact',
-      'javascriptreact',
-    }
-  },
-  astro = { 'astro', 'mdx', 'md' },
-  html = {
-    filetypes = { "html" },
-    settings = {},
-    embeddedLanguages = { css = true, javascript = true },
-    configurationSection = { 'html', 'css', 'javascript' },
-  },
-  marksman = { 'mdx', 'md' },
-  pyright = {},
-  ruff_lsp = {},
-  taplo = {},
-  svelte = {},
-  lua_ls = {
-    Lua = {
-      workspace = { checkThirdParty = false },
-      telemetry = { enable = false },
-      diagnostics = { disable = { 'missing-fields' } },
-    },
-  },
-}
+end)
 
 -- Setup neovim lua configuration
 require('neodev').setup()
 
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
+-- to learn how to use mason.nvim with lsp-zero
+-- read this: https://github.com/VonHeikemen/lsp-zero.nvim/blob/v3.x/doc/md/guides/integrate-with-mason-nvim.md
+require('mason').setup({})
+require('mason-lspconfig').setup({
+  ensure_installed = {},
+  handlers = {
+    lsp_zero.default_setup,
+  },
+})
 
-local mason_lspconfig = require 'mason-lspconfig'
+require('lspconfig').lua_ls.setup({
+  Lua = {
+    workspace = { checkThirdParty = false },
+    telemetry = { enable = false },
+    diagnostics = { disabled = { 'missing-fields' } },
+  }
+})
 
-mason_lspconfig.setup {
-  ensure_installed = vim.tbl_keys(servers),
-}
+require('lspconfig').astro.setup({})
 
-mason_lspconfig.setup_handlers {
-  function(server_name)
-    require('lspconfig')[server_name].setup {
-      capabilities = capabilities,
-      on_attach = on_attach,
-      settings = servers[server_name],
-      filetypes = (servers[server_name] or {}).filetypes,
-    }
-  end,
-}
+local cmp = require('cmp')
+-- local cmp_action = require('lsp-zero').cmp_action()
 
-local cmp = require 'cmp'
 local cmp_autopairs = require('nvim-autopairs.completion.cmp')
 
 local luasnip = require 'luasnip'
@@ -157,24 +116,3 @@ cmp.setup {
     { name = 'vim-dadbod-completion' },
   },
 }
-
-local prettier = require("prettier")
-
-prettier.setup({
-  bin = 'prettier',
-  filetypes = {
-    "css",
-    'astro',
-    "graphql",
-    "html",
-    "javascript",
-    "javascriptreact",
-    "json",
-    "less",
-    "markdown",
-    "scss",
-    "typescript",
-    "typescriptreact",
-    "yaml",
-  },
-})
