@@ -6,14 +6,9 @@ pcall(require('telescope').load_extension, 'fzf')
 pcall(require('telescope').load_extension, 'neoclip')
 
 require('telescope').setup {
-  extensions = {
-    file_browser = {
-      theme = 'ivy',
-      hidden = true,
-    },
-  },
 
   defaults = {
+    -- default grep args
     vimgrep_arguments = {
       'rg',
       '--color=never',
@@ -22,7 +17,9 @@ require('telescope').setup {
       '--line-number',
       '--column',
       '--smart-case',
-      '-uu'
+      '-uu',
+      '--glob',
+      '!/dist/*'
     },
     file_ignore_patterns = { "node_modules", '.git' },
     path_display = {
@@ -38,7 +35,6 @@ require('telescope').setup {
   },
 }
 
-require('telescope').load_extension 'file_browser'
 
 wk.register(
   {
@@ -62,28 +58,33 @@ wk.register(
 vim.keymap.set('n', '<leader>/', function()
   -- You can pass additional configuration to telescope to change theme, layout, etc.
   require('telescope.builtin').current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
+    prompt_title = 'Fuzzy Search File',
     winblend = 10,
     previewer = false,
   })
 end, { desc = '[/] Fuzzily search in current buffer' })
 
+
+--grep everything
 vim.keymap.set('n', '<leader>sG', function()
-  -- You can pass additional configuration to telescope to change theme, layout, etc.
-  require('telescope.builtin').live_grep(
-
-    require('telescope').defaults {
-
+  require('telescope').setup {
+    defaults = {
       vimgrep_arguments = {
-        'l',
-        '--color=always',
-        '-uu'
+        'rg',
+        '--color=never',
+        '--no-heading',
+        '--with-filename',
+        '--line-number',
+        '--column',
+        '--smart-case',
+        '-uuu',
       },
-    },
+      file_ignore_patterns = {},
+    }
+  }
 
-    require('telescope.themes').get_dropdown {
-      winblend = 10,
-      previewer = false,
-    }, {
-
-    })
-end, { desc = 'live grep hidden giles' })
+  require('telescope.builtin').live_grep({
+    prompt_title = 'Unhinged Grep',
+  })
+end
+)

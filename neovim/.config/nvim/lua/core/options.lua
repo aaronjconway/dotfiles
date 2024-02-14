@@ -1,12 +1,21 @@
 -- Set highlight on search
 vim.o.hlsearch = false
 
+vim.o.wrap = true
+
+vim.o.linebreak = true
+
+
+vim.o.hidden = true
+
+
 vim.o.colorcolumn = 80
 
 vim.opt.tabstop = 4
 vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.expandtab = true
+
 
 -- Make line numbers default
 vim.opt.nu = true

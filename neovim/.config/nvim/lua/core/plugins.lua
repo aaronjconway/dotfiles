@@ -14,11 +14,13 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
   ----------------------------------------------------------------------------
 
+  { 'stevearc/conform.nvim' },
+  { 'vim-scripts/loremipsum' },
   {
     'kristijanhusak/vim-dadbod-ui',
     dependencies = {
       { 'tpope/vim-dadbod',                     lazy = true },
-      { 'kristijanhusak/vim-dadbod-completion', ft = { 'sql', 'mysql', 'plsql' }, lazy = true },
+      { 'kristijanhusak/vim-dadbod-completion', ft = { 'sql', 'mysql', 'plsql', 'sqlite' }, lazy = true },
     },
     cmd = {
       'DBUI',
@@ -98,6 +100,7 @@ require('lazy').setup({
   { 'williamboman/mason-lspconfig.nvim' },
   { 'VonHeikemen/lsp-zero.nvim',        branch = 'v3.x' },
   { 'neovim/nvim-lspconfig' },
+  { 'saadparwaiz1/cmp_luasnip' },
   { 'hrsh7th/cmp-nvim-lsp' },
   { 'hrsh7th/cmp-buffer' },
   { 'hrsh7th/cmp-path' },
@@ -113,11 +116,6 @@ require('lazy').setup({
 
   -- "gc" to comment visual regions/lines
   { 'numToStr/Comment.nvim',            opts = {} },
-
-  {
-    "nvim-telescope/telescope-file-browser.nvim",
-    dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" }
-  },
 
   {
     'nvim-telescope/telescope.nvim',

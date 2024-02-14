@@ -12,10 +12,10 @@ alias chat '~/development/playground/scripts/chat-jipity.sh'
 alias gl "git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'"
 
 #docker linode
-alias dl 'ssh aaron@172.233.136.98'
+alias docker-linode 'ssh aaron@172.233.155.179'
 
 #attempting to open things with firefox
-alias firefox '/mnt/c/Program Files/Mozilla Firefox/firefox.exe'
+alias firefox 'wslview firfox'
 
 #disk usage - file size
 alias du 'du -h'
@@ -81,7 +81,7 @@ alias tk "tmux kill-session"
 alias tv "tmux splitw -h"
 alias ts "tmux list"
 alias tkeys "tmux list-keys | fzf"
-alias khl-dev "~/dotfiles/tmux/.config/tmux/khl-startup.sh"
+alias startup "~/dotfiles/tmux/.config/tmux/startup.sh"
 
 #ranger
 alias r "ranger"

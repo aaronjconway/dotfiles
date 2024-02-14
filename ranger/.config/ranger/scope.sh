@@ -3,37 +3,9 @@
 set -o noclobber -o noglob -o nounset -o pipefail
 IFS=$'\n'
 
-## If the option `use_preview_script` is set to `true`,
-## then this script will be called and its output will be displayed in ranger.
-## ANSI color codes are supported.
-## STDIN is disabled, so interactive scripts won't work properly
-
-## This script is considered a configuration file and must be updated manually.
-## It will be left untouched if you upgrade ranger.
-
-## Because of some automated testing we do on the script #'s for comments need
-## to be doubled up. Code that is commented out, because it's an alternative for
-## example, gets only one #.
-
-## Meanings of exit codes:
-## code | meaning    | action of ranger
-## -----+------------+-------------------------------------------
-## 0    | success    | Display stdout as preview
-## 1    | no preview | Display no preview at all
-## 2    | plain text | Display the plain content of the file
-## 3    | fix width  | Don't reload when width changes
-## 4    | fix height | Don't reload when height changes
-## 5    | fix both   | Don't ever reload
-## 6    | image      | Display the image `$IMAGE_CACHE_PATH` points to as an image preview
-## 7    | image      | Display the file directly as an image
-
 ## Script arguments
 FILE_PATH="${1}"         # Full path of the highlighted file
 PV_WIDTH="${2}"          # Width of the preview pane (number of fitting characters)
-## shellcheck disable=SC2034 # PV_HEIGHT is provided for convenience and unused
-PV_HEIGHT="${3}"         # Height of the preview pane (number of fitting characters)
-IMAGE_CACHE_PATH="${4}"  # Full path that should be used to cache image preview
-PV_IMAGE_ENABLED="${5}"  # 'True' if image previews are enabled, 'False' otherwise.
 
 FILE_EXTENSION="${FILE_PATH##*.}"
 FILE_EXTENSION_LOWER="$(printf "%s" "${FILE_EXTENSION}" | tr '[:upper:]' '[:lower:]')"
@@ -97,7 +69,7 @@ handle_extension() {
         ## HTML
         htm|html|xhtml)
             ## Preview as text conversion
-            nvim -dump "${FILE_PATH}" && exit 5
+            w3m -dump "${FILE_PATH}" && exit 5
             lynx -dump -- "${FILE_PATH}" && exit 5
             elinks -dump "${FILE_PATH}" && exit 5
             pandoc -s -t markdown -- "${FILE_PATH}" && exit 5
@@ -109,96 +81,9 @@ handle_extension() {
             python -m json.tool -- "${FILE_PATH}" && exit 5
             ;;
 
-        ## Direct Stream Digital/Transfer (DSDIFF) and wavpack aren't detected
-        ## by file(1).
-        dff|dsf|wv|wvc)
-            mediainfo "${FILE_PATH}" && exit 5
-            exiftool "${FILE_PATH}" && exit 5
-            ;; # Continue with next handler on failure
     esac
 }
 
-handle_image() {
-    ## Size of the preview if there are multiple options or it has to be
-    ## rendered from vector graphics. If the conversion program allows
-    ## specifying only one dimension while keeping the aspect ratio, the width
-    ## will be used.
-    local DEFAULT_SIZE="1920x1080"
-
-    local mimetype="${1}"
-    case "${mimetype}" in
-        ## SVG
-        # image/svg+xml|image/svg)
-        #     convert -- "${FILE_PATH}" "${IMAGE_CACHE_PATH}" && exit 6
-        #     exit 1;;
-
-        ## DjVu
-        # image/vnd.djvu)
-        #     ddjvu -format=tiff -quality=90 -page=1 -size="${DEFAULT_SIZE}" \
-        #           - "${IMAGE_CACHE_PATH}" < "${FILE_PATH}" \
-        #           && exit 6 || exit 1;;
-
-        ## Image
-        image/*)
-            local orientation
-            orientation="$( identify -format '%[EXIF:Orientation]\n' -- "${FILE_PATH}" )"
-            ## If orientation data is present and the image actually
-            ## needs rotating ("1" means no rotation)...
-            if [[ -n "$orientation" && "$orientation" != 1 ]]; then
-                ## ...auto-rotate the image according to the EXIF data.
-                convert -- "${FILE_PATH}" -auto-orient "${IMAGE_CACHE_PATH}" && exit 6
-            fi
-
-            ## `w3mimgdisplay` will be called for all images (unless overriden
-            ## as above), but might fail for unsupported types.
-            exit 7;;
-
-        ## Video
-        # video/*)
-        #     # Thumbnail
-        #     ffmpegthumbnailer -i "${FILE_PATH}" -o "${IMAGE_CACHE_PATH}" -s 0 && exit 6
-        #     exit 1;;
-
-        # PDF
-        application/pdf)
-            pdftoppm -f 1 -l 1 \
-                     -scale-to-x "${DEFAULT_SIZE%x*}" \
-                     -scale-to-y -1 \
-                     -singlefile \
-                     -- "${FILE_PATH}"  \
-                && exit 6 || exit 1;;
-
-
-        ## ePub, MOBI, FB2 (using Calibre)
-        # application/epub+zip|application/x-mobipocket-ebook|\
-        # application/x-fictionbook+xml)
-        #     # ePub (using https://github.com/marianosimone/epub-thumbnailer)
-        #     epub-thumbnailer "${FILE_PATH}" "${IMAGE_CACHE_PATH}" \
-        #         "${DEFAULT_SIZE%x*}" && exit 6
-        #     ebook-meta --get-cover="${IMAGE_CACHE_PATH}" -- "${FILE_PATH}" \
-        #         >/dev/null && exit 6
-        #     exit 1;;
-
-        ## Font
-        application/font*|application/*opentype)
-            preview_png="/tmp/$(basename "${IMAGE_CACHE_PATH%.*}").png"
-            if fontimage -o "${preview_png}" \
-                         --pixelsize "120" \
-                         --fontname \
-                         --pixelsize "80" \
-                         --text "  ABCDEFGHIJKLMNOPQRSTUVWXYZ  " \
-                         --text "  abcdefghijklmnopqrstuvwxyz  " \
-                         --text "  0123456789.:,;(*!?') ff fl fi ffi ffl  " \
-                         --text "  The quick brown fox jumps over the lazy dog.  " \
-                         "${FILE_PATH}";
-            then
-                convert -- "${preview_png}" "${IMAGE_CACHE_PATH}" \
-                    && rm "${preview_png}" \
-                    && exit 6
-            else
-                exit 1
-            fi
-            ;;
 
         ## Preview archives using the first image inside.
         ## (Very useful for comic book collections for example.)
@@ -282,6 +167,9 @@ handle_mime() {
 
         ## XLS
         *ms-excel)
+            ## Preview as csv conversion
+            ## xls2csv comes with catdoc:
+            ##   http://www.wagner.pp.ru/~vitus/software/catdoc/
             xls2csv -- "${FILE_PATH}" && exit 5
             exit 1;;
 
@@ -307,11 +195,25 @@ handle_mime() {
                 -- "${FILE_PATH}" && exit 5
             exit 2;;
 
-        ## handle empty files
-        inode/x-empty)
-            echo '----- File is Empty -----' && file --dereference --brief -- "${FILE_PATH}" && exit 5
-            exit 2;;
+        ## DjVu
+        image/vnd.djvu)
+            ## Preview as text conversion (requires djvulibre)
+            djvutxt "${FILE_PATH}" | fmt -w "${PV_WIDTH}" && exit 5
+            exiftool "${FILE_PATH}" && exit 5
+            exit 1;;
 
+        ## Image
+        image/*)
+            ## Preview as text conversion
+            # img2txt --gamma=0.6 --width="${PV_WIDTH}" -- "${FILE_PATH}" && exit 4
+            exiftool "${FILE_PATH}" && exit 5
+            exit 1;;
+
+        ## Video and audio
+        video/* | audio/*)
+            mediainfo "${FILE_PATH}" && exit 5
+            exiftool "${FILE_PATH}" && exit 5
+            exit 1;;
     esac
 }
 

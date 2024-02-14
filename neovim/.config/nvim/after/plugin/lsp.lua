@@ -1,6 +1,5 @@
 local lsp_zero = require('lsp-zero')
 
-
 lsp_zero.on_attach(function(_, bufnr)
   local nmap = function(keys, func, desc)
     if desc then
@@ -44,14 +43,37 @@ require('mason-lspconfig').setup({
 })
 
 require('lspconfig').lua_ls.setup({
-  Lua = {
+  settings = {
     workspace = { checkThirdParty = false },
     telemetry = { enable = false },
     diagnostics = { disabled = { 'missing-fields' } },
   }
 })
 
+--server configs todo: I hate this. go use thekickstart way.
+require('lspconfig').jsonls.setup({})
+
+require('lspconfig').tsserver.setup({})
+
+--astro
 require('lspconfig').astro.setup({})
+
+--go lang
+require('lspconfig').gopls.setup({})
+
+--bashls
+require('lspconfig').bashls.setup({})
+
+require('lspconfig').lemminx.setup({})
+
+require('lspconfig').html.setup({
+
+  filetypes = { 'html' }
+})
+
+require('lspconfig').cssls.setup({
+  filetypes = { 'scss', 'css' }
+})
 
 local cmp = require('cmp')
 -- local cmp_action = require('lsp-zero').cmp_action()
@@ -60,6 +82,7 @@ local cmp_autopairs = require('nvim-autopairs.completion.cmp')
 
 local luasnip = require 'luasnip'
 require('luasnip.loaders.from_vscode').lazy_load()
+
 luasnip.config.setup {}
 
 cmp.event:on(
@@ -107,10 +130,11 @@ cmp.setup {
       end
     end, { 'i', 's' }),
   },
+
   sources = {
     { name = 'buffer' },
     { name = 'cmdLine' },
-    { name = 'luasnip' },
+    { name = 'luasnip',              option = { show_autosnippets = true } },
     { name = 'nvim_lsp' },
     { name = 'path' },
     { name = 'vim-dadbod-completion' },
