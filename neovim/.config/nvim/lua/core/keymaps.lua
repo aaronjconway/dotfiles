@@ -12,6 +12,9 @@ vim.keymap.set("n", "<C-o>", "<C-o>zz")
 vim.keymap.set("n", "<C-i>", "<C-i>zz")
 vim.keymap.set("n", "<s-g>", "<s-g>zz")
 
+vim.keymap.set('n', '<C-j>', ':cnext<CR>')
+vim.keymap.set('n', '<C-k>', ':cprev<CR>')
+
 --maps backspace in insert to delete word
 vim.keymap.set("i", "<C-H>", "<C-W>")
 

@@ -1,6 +1,8 @@
 local status, flash = pcall(require, "flash")
 if (not status) then return end
 
+
+-- NOTE: this is a test if todos are across projects
 flash.setup {
   -- labels = "abcdefghijklmnopqrstuvwxyz",
   labels = "asdfghjklqwertyuiopzxcvbnm",

@@ -1,3 +1,12 @@
+--mdx support
+vim.filetype.add({
+  extension = {
+    mdx = 'mdx'
+  },
+})
+
+vim.treesitter.language.register('markdown', 'mdx')
+
 vim.defer_fn(function()
   require('nvim-treesitter.configs').setup {
 
@@ -6,6 +15,7 @@ vim.defer_fn(function()
     sync_install = false,
 
     ensure_installed = {
+      'astro',
       'bash',
       'c',
       'cpp',

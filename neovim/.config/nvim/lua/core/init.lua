@@ -49,13 +49,6 @@ vim.api.nvim_create_user_command('RemoveClassContents', function()
   vim.cmd [[%s,\vclass\=".*",class="",g]]
 end, {})
 
-vim.filetype.add({
-  extension = {
-    mdx = 'markdown.mdx'
-  },
-  filename = {},
-  pattern = {},
-})
 
 vim.g.netrw_browse_split = 0
 vim.g.netrw_banner = 0

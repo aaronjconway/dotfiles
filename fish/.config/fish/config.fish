@@ -5,6 +5,8 @@ set fish_greeting ""
 
 set fish_default_key_bindings
 
+alias dbeaver '/usr/local/bin/dbeaver/dbeaver'
+
 #chat jipity
 alias chat '~/development/playground/scripts/chat-jipity.sh'
 
@@ -40,6 +42,9 @@ alias ls "exa -la"
 
 #run neovim in document mode
 alias ndoc 'NVIM_APPNAME=nvim_document nvim'
+
+#run neovim in the testing config
+alias ntest 'NVIM_APPNAME=nvim_test nvim'
 
 #downloads folder on the
 alias downloads 'cd /mnt/c/Users/ajcon/Downloads/'
@@ -113,3 +118,32 @@ set -x N_PREFIX "$HOME/n"; contains "$N_PREFIX/bin" $PATH; or set -a PATH "$N_PR
 test -s "$HOME/.config/envman/load.fish"; and source "$HOME/.config/envman/load.fish"
 
 set -x N_PREFIX "$HOME/n"; contains "$N_PREFIX/bin" $PATH; or set -a PATH "$N_PREFIX/bin"  # Added by n-install (see http://git.io/n-install-repo).
+
+
+# colored man output
+# from http://linuxtidbits.wordpress.com/2009/03/23/less-colors-for-man-pages/
+setenv LESS_TERMCAP_mb \e'[01;31m'       # begin blinking
+setenv LESS_TERMCAP_md \e'[01;38;5;74m'  # begin bold
+setenv LESS_TERMCAP_me \e'[0m'           # end mode
+setenv LESS_TERMCAP_se \e'[0m'           # end standout-mode
+setenv LESS_TERMCAP_so \e'[38;5;246m'    # begin standout-mode - info box
+setenv LESS_TERMCAP_ue \e'[0m'           # end underline
+setenv LESS_TERMCAP_us \e'[04;38;5;146m' # begin underline
+
+function fish_prompt
+	set_color brblack
+	echo -n "["(date "+%H:%M")"] "
+	set_color blue
+	echo -n (hostnamectl hostname)
+	if [ $PWD != $HOME ]
+		set_color brblack
+		echo -n ':'
+		set_color yellow
+		echo -n (basename $PWD)
+	end
+	set_color green
+	printf '%s ' (__fish_git_prompt)
+	set_color red
+	echo -n '| '
+	set_color normal
+end

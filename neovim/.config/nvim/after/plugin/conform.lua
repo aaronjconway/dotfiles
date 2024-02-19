@@ -1,4 +1,7 @@
-local conform = require('conform.nvim')
+local status, conform = pcall(require, "conform")
+if (not status) then return end
+
+
 
 conform.setup {
 

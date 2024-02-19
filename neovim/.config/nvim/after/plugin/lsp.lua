@@ -2,6 +2,7 @@ local lsp_zero = require('lsp-zero')
 
 lsp_zero.on_attach(function(_, bufnr)
   local nmap = function(keys, func, desc)
+    -- add lsp to lsp thigns
     if desc then
       desc = 'LSP: ' .. desc
     end
@@ -36,43 +37,42 @@ require('neodev').setup()
 -- read this: https://github.com/VonHeikemen/lsp-zero.nvim/blob/v3.x/doc/md/guides/integrate-with-mason-nvim.md
 require('mason').setup({})
 require('mason-lspconfig').setup({
-  ensure_installed = {},
   handlers = {
     lsp_zero.default_setup,
+    --lua
+    lua_ls = function()
+      require('lspconfig').lua_ls.setup({
+        settings = {
+          Lua = {
+            -- Disable telemetry
+            telemetry = { enable = false },
+            runtime = {
+              -- Tell the language server which version of Lua you're using
+              -- (most likely LuaJIT in the case of Neovim)
+              version = 'LuaJIT',
+              path = runtime_path,
+            },
+            diagnostics = {
+              -- Get the language server to recognize the `vim` global
+              globals = { 'vim' }
+            },
+            workspace = {
+              checkThirdParty = false,
+              library = {
+                -- Make the server aware of Neovim runtime files
+                vim.fn.expand('$VIMRUNTIME/lua'),
+                vim.fn.stdpath('config') .. '/lua'
+              }
+            }
+          }
+        }
+      })
+    end,
+    --astro
+    astro = function()
+      require('lspconfig').astro.setup({})
+    end,
   },
-})
-
-require('lspconfig').lua_ls.setup({
-  settings = {
-    workspace = { checkThirdParty = false },
-    telemetry = { enable = false },
-    diagnostics = { disabled = { 'missing-fields' } },
-  }
-})
-
---server configs todo: I hate this. go use thekickstart way.
-require('lspconfig').jsonls.setup({})
-
-require('lspconfig').tsserver.setup({})
-
---astro
-require('lspconfig').astro.setup({})
-
---go lang
-require('lspconfig').gopls.setup({})
-
---bashls
-require('lspconfig').bashls.setup({})
-
-require('lspconfig').lemminx.setup({})
-
-require('lspconfig').html.setup({
-
-  filetypes = { 'html' }
-})
-
-require('lspconfig').cssls.setup({
-  filetypes = { 'scss', 'css' }
 })
 
 local cmp = require('cmp')

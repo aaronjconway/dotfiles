@@ -13,7 +13,8 @@ vim.opt.rtp:prepend(lazypath)
 
 require('lazy').setup({
   ----------------------------------------------------------------------------
-
+  { 'folke/todo-comments.nvim' },
+  { 'norcalli/nvim-colorizer.lua' },
   { 'stevearc/conform.nvim' },
   { 'vim-scripts/loremipsum' },
   {
@@ -39,6 +40,7 @@ require('lazy').setup({
     event = 'VeryLazy',
     keys = { { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" } },
   },
+  --vscode
   { 'mofiqul/vscode.nvim' },
   {
     "ThePrimeagen/harpoon",
@@ -89,7 +91,6 @@ require('lazy').setup({
 
   -- make lua config easier
   -- Useful status updates for LSP
-  -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
   { 'j-hui/fidget.nvim',                opts = {} },
 
   -- Additional lua configuration, makes nvim stuff amazing!
@@ -127,8 +128,6 @@ require('lazy').setup({
       -- requirements installed. idk whta tthis is
       {
         'nvim-telescope/telescope-fzf-native.nvim',
-        -- NOTE: If you are having trouble with this installation,
-        --       refer to the README for telescope-fzf-native for more instructions.
         build = 'make',
         cond = function()
           return vim.fn.executable 'make' == 1
