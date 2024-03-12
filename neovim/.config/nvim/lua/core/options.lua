@@ -5,9 +5,7 @@ vim.o.wrap = true
 
 vim.o.linebreak = true
 
-
 vim.o.hidden = true
-
 
 vim.o.colorcolumn = 80
 
@@ -38,8 +36,6 @@ vim.o.undofile = true
 vim.o.ignorecase = true
 vim.o.smartcase = true
 
--- Keep signcolumn on by default
-vim.wo.signcolumn = 'yes'
 
 vim.opt.swapfile = false
 vim.opt.backup = false
@@ -70,5 +66,6 @@ vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = tr
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
 -- Diagnostic keymaps
+-- TODO: why are the keymaps spread out aorund the app. consolidate them all to the which key file.
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic message' })
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic message' })

@@ -7,6 +7,9 @@ set fish_default_key_bindings
 
 alias dbeaver '/usr/local/bin/dbeaver/dbeaver'
 
+#calculator
+alias calc 'bc -q'
+
 #chat jipity
 alias chat '~/development/playground/scripts/chat-jipity.sh'
 
@@ -14,7 +17,7 @@ alias chat '~/development/playground/scripts/chat-jipity.sh'
 alias gl "git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'"
 
 #docker linode
-alias docker-linode 'ssh aaron@172.233.155.179'
+alias admin-linode 'ssh aaron@172.235.62.214'
 
 #attempting to open things with firefox
 alias firefox 'wslview firfox'
@@ -65,7 +68,7 @@ alias python "python3"
 alias py "python3"
 
 # set colors for things
-set -gx FZF_DEFAULT_OPTS '--color=hl+:#b83232,bg+:#FFE5B4,fg+:#282C34,gutter:-1'
+set -gx FZF_DEFAULT_OPTS '--border --margin=1 --padding=1 --layout=reverse --height 60% --color=hl+:#b83232,bg+:#FFE5B4,fg+:#282C34,gutter:-1'
 set TERM 'xterm-256color'
 
 #alias
@@ -97,10 +100,6 @@ alias khl  'cd /mnt/c/Users/ajcon/OneDrive\ -\ Kasey\ Home\ Loans/'
 #fish_config
 alias fconfig "vim ~/dotfiles/fish/.config/fish/config.fish"
 
-#tree
-alias tra "tree -a -C -L 3"
-alias tr "tree -C -L 3"
-
 set -gx EDITOR "/usr/local/bin/nvim"
 set -gx VISUAL "/usr/local/bin/nvim"
 
@@ -130,20 +129,20 @@ setenv LESS_TERMCAP_so \e'[38;5;246m'    # begin standout-mode - info box
 setenv LESS_TERMCAP_ue \e'[0m'           # end underline
 setenv LESS_TERMCAP_us \e'[04;38;5;146m' # begin underline
 
-function fish_prompt
-	set_color brblack
-	echo -n "["(date "+%H:%M")"] "
-	set_color blue
-	echo -n (hostnamectl hostname)
-	if [ $PWD != $HOME ]
-		set_color brblack
-		echo -n ':'
-		set_color yellow
-		echo -n (basename $PWD)
-	end
-	set_color green
-	printf '%s ' (__fish_git_prompt)
-	set_color red
-	echo -n '| '
-	set_color normal
-end
+# function fish_prompt
+# 	set_color brblack
+# 	echo -n "["(date "+%H:%M")"] "
+# 	set_color blue
+# 	echo -n (hostnamectl hostname)
+# 	if [ $PWD != $HOME ]
+# 		set_color brblack
+# 		echo -n ':'
+# 		set_color yellow
+# 		echo -n (basename $PWD)
+# 	end
+# 	set_color green
+# 	printf '%s ' (__fish_git_prompt)
+# 	set_color red
+# 	echo -n '| '
+# 	set_color normal
+# end

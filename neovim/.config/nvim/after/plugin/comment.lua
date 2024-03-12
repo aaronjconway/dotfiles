@@ -9,8 +9,6 @@ comment.setup({
   opleader = {
     line = '<C-_>',
   }
-
-
 })
 
 

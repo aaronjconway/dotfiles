@@ -33,8 +33,6 @@ end)
 -- Setup neovim lua configuration
 require('neodev').setup()
 
--- to learn how to use mason.nvim with lsp-zero
--- read this: https://github.com/VonHeikemen/lsp-zero.nvim/blob/v3.x/doc/md/guides/integrate-with-mason-nvim.md
 require('mason').setup({})
 require('mason-lspconfig').setup({
   handlers = {
@@ -68,9 +66,23 @@ require('mason-lspconfig').setup({
         }
       })
     end,
-    --astro
+    ------------Typescript---------------
+    tsserver = function()
+      require('lspconfig').tsserver.setup {}
+    end,
+    ------------Astro--------------------
     astro = function()
-      require('lspconfig').astro.setup({})
+      require('lspconfig').astro.setup {
+        --add a cmd here
+      }
+    end,
+    ------------Rust--------------------
+    rust_analyzer = function()
+      require('lspconfig').rust_analyzer.setup({})
+    end,
+    ------------Svelte---------------
+    svelte = function()
+      require('lspconfig').svelte.setup {}
     end,
   },
 })

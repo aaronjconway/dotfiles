@@ -17,9 +17,9 @@ require('telescope').setup {
       '--line-number',
       '--column',
       '--smart-case',
-      '-uu',
       '--glob',
-      '!/dist/*'
+      '!/dist'
+
     },
     file_ignore_patterns = { "node_modules", '.git' },
     path_display = {
