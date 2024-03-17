@@ -1,11 +1,5 @@
-set -gx GOROOT '/usr/local/go'
-set -gx RANGER_LOAD_DEFAULT_RC FALSE
-set -gx PYTHONPATH ~/development/playground/mmi $PYTHONPATH
 set fish_greeting ""
-
 set fish_default_key_bindings
-
-alias dbeaver '/usr/local/bin/dbeaver/dbeaver'
 
 #calculator
 alias calc 'bc -q'
@@ -13,13 +7,13 @@ alias calc 'bc -q'
 #chat jipity
 alias chat '~/development/playground/scripts/chat-jipity.sh'
 
-#chat jipity
+#git log
 alias gl "git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'"
 
-#docker linode
+#remote linode
 alias admin-linode 'ssh aaron@172.235.62.214'
 
-#attempting to open things with firefox
+#open windows stuff
 alias firefox 'wslview firfox'
 
 #disk usage - file size
@@ -34,36 +28,19 @@ alias sc "sc-im"
 #npm run dev -- --open
 alias dev "npm run dev -- --open"
 
-#obsidian git vault test
-alias obsidian-git-vault-test 'cd /mnt/c/Users/ajcon/OneDrive/Git\ Vault\ Test/'
-
 #kasey home loans one drive
 alias ajcon 'cd /mnt/c/Users/ajcon/'
 
-#tab for complete
 alias ls "exa -la"
 
-#run neovim in document mode
-alias ndoc 'NVIM_APPNAME=nvim_document nvim'
-
-#run neovim in the testing config
-alias ntest 'NVIM_APPNAME=nvim_test nvim'
-
-#downloads folder on the
-alias downloads 'cd /mnt/c/Users/ajcon/Downloads/'
 #downloads folder on the
 alias downloads 'cd /mnt/c/Users/ajcon/Downloads/'
 
 #source fish
 alias source_fish 'source ~/dotfiles/fish/.config/fish/config.fish'
 
-# swap files
-alias swp 'cd ~/.local/state/nvim/swap/'
-
-#kasey home loans one drive
-alias khl 'cd /mnt/c/Users/ajcon/OneDrive - Kasey Home Loans/'
-
 #python
+set -gx PYTHONPATH ~/development/playground/mmi $PYTHONPATH
 alias python "python3"
 alias py "python3"
 
@@ -80,22 +57,14 @@ alias vd "nvim ."
 ## wsl term config
 alias terminal_config "vim /mnt/c/Users/ajcon/AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json"
 
-#look for any man page
-alias manlist "source ~/dotfiles/fish/.config/fish/functions/fzf_select_man.fish"
-
-# tmux binds
-alias t "tmux"
-alias tk "tmux kill-session"
-alias tv "tmux splitw -h"
-alias ts "tmux list"
-alias tkeys "tmux list-keys | fzf"
 alias startup "~/dotfiles/tmux/.config/tmux/startup.sh"
 
 #ranger
+set -gx RANGER_LOAD_DEFAULT_RC FALSE
 alias r "ranger"
 
-#kasey home loans onedrive
-alias khl  'cd /mnt/c/Users/ajcon/OneDrive\ -\ Kasey\ Home\ Loans/'
+#windows files
+alias windows  'cd /mnt/c/Users/ajcon'
 
 #fish_config
 alias fconfig "vim ~/dotfiles/fish/.config/fish/config.fish"
@@ -104,7 +73,7 @@ set -gx EDITOR "/usr/local/bin/nvim"
 set -gx VISUAL "/usr/local/bin/nvim"
 
 # Go
-
+set -gx GOROOT '/usr/local/go'
 set -x PATH $PATH /usr/local/go/bin
 set -x GOPATH $HOME/go
 set -x PATH $PATH $GOPATH/bin
@@ -128,21 +97,3 @@ setenv LESS_TERMCAP_se \e'[0m'           # end standout-mode
 setenv LESS_TERMCAP_so \e'[38;5;246m'    # begin standout-mode - info box
 setenv LESS_TERMCAP_ue \e'[0m'           # end underline
 setenv LESS_TERMCAP_us \e'[04;38;5;146m' # begin underline
-
-# function fish_prompt
-# 	set_color brblack
-# 	echo -n "["(date "+%H:%M")"] "
-# 	set_color blue
-# 	echo -n (hostnamectl hostname)
-# 	if [ $PWD != $HOME ]
-# 		set_color brblack
-# 		echo -n ':'
-# 		set_color yellow
-# 		echo -n (basename $PWD)
-# 	end
-# 	set_color green
-# 	printf '%s ' (__fish_git_prompt)
-# 	set_color red
-# 	echo -n '| '
-# 	set_color normal
-# end

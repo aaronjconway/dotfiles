@@ -10,7 +10,7 @@
   "flash.nvim": { "branch": "main", "commit": "48817af25f51c0590653bbc290866e4890fe1cbe" },
   "friendly-snippets": { "branch": "main", "commit": "aced40b66b7bae9bc2c37fd7b11841d54727a7b0" },
   "harpoon": { "branch": "harpoon2", "commit": "a38be6e0dd4c6db66997deab71fc4453ace97f9c" },
-  "lazy.nvim": { "branch": "main", "commit": "aedcd79811d491b60d0a6577a9c1701063c2a609" },
+  "lazy.nvim": { "branch": "main", "commit": "83493db50a434a4c5c648faf41e2ead80f96e478" },
   "loremipsum": { "branch": "master", "commit": "39354ae1c86c89bf36a4af7c6d4b9ca0c0a9eedf" },
   "lsp-zero.nvim": { "branch": "v3.x", "commit": "abac76482ec3012a2b359ba956a74e2ffd33d46f" },
   "lualine.nvim": { "branch": "master", "commit": "7d131a8d3ba5016229e8a1d08bf8782acea98852" },

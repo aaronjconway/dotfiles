@@ -11,7 +11,7 @@ directory_path="$1"
 tmux new-session -d -s khl -n Server
 
 # Create a new window named 'Server' and navigate to the project directory
-tmux send-keys -t khl:Server "cd ~/development/$directory_path/" C-m
+tmux send-keys -t khl:Server "cd ~/development/$directory_path " C-m
 tmux send-keys -t khl:Server C-l
 tmux send-keys -t khl:Server "npm run dev -- --open" C-m
 
