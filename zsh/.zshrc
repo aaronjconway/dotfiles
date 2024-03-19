@@ -158,13 +158,15 @@ lfcd () {
 # Define a function to select a directory with fzf and cd into it
 telescope() {
     local selected_dir
-    selected_dir=$(rg --files | fzf) && cd "$selected_dir" || return 1
+    selected_dir=$(fdfind . /home/aaron/ --hidden --type d |  fzf) && cd "$selected_dir" || return 1
 }
 
 # Optionally, you can bind this function to a key combination for easier access
 bindkey '^G' fcd
 bindkey -s '^O' 'telescope\n'
 autoload testfunc
+
+bindkey '\b' lazygit
 
 bindkey -s '^g' '^ulazygit\n'
 bindkey ' ' magic-space                           # do history expansion on space

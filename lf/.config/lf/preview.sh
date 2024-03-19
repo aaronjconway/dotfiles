@@ -1,16 +1,5 @@
 #!/usr/bin/env zsh
-# typeset -g FILE_PATH="$1"
-# typeset -g PREVIEW_WIDTH="$2"
-# typeset -g PREVIEW_POSITION_X="$4"
-# typeset -g PREVIEW_POSITION_Y="$5"
-# typeset -g FILE_MIMETYPE="$(file --dereference --brief --mime-type -- "${FILE_PATH}")"
-
-# # batcat --color="always" --terminal-width="${PREVIEW_WIDTH}" "${FILE_PATH}"
-# batcat -p --color="always" --language="${FILE_MIMETYPE}" --terminal-width=10 "${FILE_PATH}"
-# batcat -p --color="always" --terminal-width=1 "${FILE_PATH}"
-
-#
-# # syncat   "${FILE_PATH}"
+# this is a test
 set -o noclobber -o noglob -o nounset -o pipefail
 
 ## Script arguments
@@ -137,6 +126,12 @@ handle_mime() {
             mediainfo "${FILE_PATH}" && exit 5
             exiftool "${FILE_PATH}" && exit 5
             exit 1;;
+
+        ## everything else
+        *)
+            ## Syntax highlight
+            batcat --color="always" -p "${FILE_PATH}" && exit 5
+            exit 2;;
     esac
 }
 
