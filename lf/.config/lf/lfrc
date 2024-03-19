@@ -5,6 +5,7 @@ set ifs "\n"
 set icons
 set hidden
 set incsearch
+set incfilter
 set scrolloff 4
 set tabstop 2
 set smartcase
@@ -13,44 +14,27 @@ set info size
 set sortby natural
 set ratios '1:2:3'
 set timefmt '2006-01-02 15:04:05 -0700'
-set previewer ~/.config/lf/preview.zsh
+set previewer ~/.config/lf/preview.sh
 
 set promptfmt "
 \033[38;5;8m\033[48;5;236m %u@%h \033[38;5;236m\033[48;5;234m
 \033[38;5;8m\033[48;5;234m %w/%f \033[0m\033[38;5;234m\033[0m
 "
 
-# Secure logs and socket
-# ${{
-# 	if [ -S "${TMPDIR:-/tmp/}lf.${USER}.sock" ]; then
-# 		chmod o-rwx "${TMPDIR:-/tmp/}lf.${USER}."*
-# 	fi
-# }}
-
+# --------------------------
 # keyboard mappings
-# ---
+# --------------------------
 
-# open machanisms
+# open
 map <enter> open
-map E &$OPENER $f
-map o $mimeopen --ask $f
-map O $mimeopen --ask-default $f
-
-# general utilities
-# ---
-map i $LESS='-iWQMXR~' bat --paging=always --theme=TwoDark "$f"
-map I push A<c-a>
-map A rename
+map e &$OPENER $f
+map o $mimeopen $f
 map D trash
-map H jump-prev
-map L jump-next
-map . set hidden!
+map . :filter
 
 # create directory/file
 map ad push $mkdir<space>
 map af push $touch<space>
-map au !du -hsx * | sort -rh | less
-map ai !gstat $f || stat $f; echo ; du -sh $f ; echo ; file -I -b -p $f
 
 # Quickly locate a file with fzf and select it in lf
 map gf $lf -remote "send $id select $(fzf)"
@@ -111,15 +95,14 @@ cmd trash ${{
 }}
 
 # Replace open command with robust selection of openers
+# this is where videowe are going to port over the stuff from rangers rifle.conf
 cmd open ${{
 	case $(file --dereference --mime-type $f -b) in
 		inode/x-empty) $EDITOR $fx ;;
 		text/*) $EDITOR $fx;;
-		video/*) nohup mpv $fx > /dev/null & ;;
-		audio/*) nohup mpv $fx > /dev/null & ;;
-		audio/midi) timidity $fx ;;
-		application/epub+zip) nohup FBReader $f > /dev/null & ;;
-		application/pdf) nohup zathura $f > /dev/null & ;;
+		application/*) wslview $fx > /dev/null & ;;
+		video/*) wslview $fx > /dev/null & ;;
+		audio/*) wslview $fx > /dev/null & ;;
 		*) for f in $fx; do $OPENER $f > /dev/null 2> /dev/null & done;;
 	esac
 }}

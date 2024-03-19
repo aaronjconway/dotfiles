@@ -1,24 +1,33 @@
-#!/usr/bin/env bash
+#!/usr/bin/env zsh
+# typeset -g FILE_PATH="$1"
+# typeset -g PREVIEW_WIDTH="$2"
+# typeset -g PREVIEW_POSITION_X="$4"
+# typeset -g PREVIEW_POSITION_Y="$5"
+# typeset -g FILE_MIMETYPE="$(file --dereference --brief --mime-type -- "${FILE_PATH}")"
 
-# for viewing files
+# # batcat --color="always" --terminal-width="${PREVIEW_WIDTH}" "${FILE_PATH}"
+# batcat -p --color="always" --language="${FILE_MIMETYPE}" --terminal-width=10 "${FILE_PATH}"
+# batcat -p --color="always" --terminal-width=1 "${FILE_PATH}"
 
+#
+# # syncat   "${FILE_PATH}"
 set -o noclobber -o noglob -o nounset -o pipefail
 
 ## Script arguments
-FILE_PATH="${1}"         # Full path of the highlighted file
+typeset FILE_PATH="${1}"         # Full path of the highlighted file
 PV_WIDTH="${2}"          # Width of the preview pane (number of fitting characters)
 
-FILE_EXTENSION="${FILE_PATH##*.}"
-FILE_EXTENSION_LOWER="$(printf "%s" "${FILE_EXTENSION}" | tr '[:upper:]' '[:lower:]')"
+typeset FILE_EXTENSION="${FILE_PATH##*.}"
+typeset FILE_EXTENSION_LOWER="$(printf "%s" "${FILE_EXTENSION}" | tr '[:upper:]' '[:lower:]')"
 
 ## Settings
-HIGHLIGHT_SIZE_MAX=262143  # 256KiB
-HIGHLIGHT_TABWIDTH=${HIGHLIGHT_TABWIDTH:-8}
-HIGHLIGHT_STYLE=${HIGHLIGHT_STYLE:-pablo}
-HIGHLIGHT_OPTIONS="--replace-tabs=${HIGHLIGHT_TABWIDTH} --style=${HIGHLIGHT_STYLE} ${HIGHLIGHT_OPTIONS:-}"
-PYGMENTIZE_STYLE=${PYGMENTIZE_STYLE:-autumn}
-OPENSCAD_IMGSIZE=${RNGR_OPENSCAD_IMGSIZE:-1000,1000}
-OPENSCAD_COLORSCHEME=${RNGR_OPENSCAD_COLORSCHEME:-Tomorrow Night}
+# HIGHLIGHT_SIZE_MAX=262143  # 256KiB
+# HIGHLIGHT_TABWIDTH=${HIGHLIGHT_TABWIDTH:-8}
+# HIGHLIGHT_STYLE=${HIGHLIGHT_STYLE:-pablo}
+# HIGHLIGHT_OPTIONS="--replace-tabs=${HIGHLIGHT_TABWIDTH} --style=${HIGHLIGHT_STYLE} ${HIGHLIGHT_OPTIONS:-}"
+# PYGMENTIZE_STYLE=${PYGMENTIZE_STYLE:-autumn}
+# OPENSCAD_IMGSIZE=${RNGR_OPENSCAD_IMGSIZE:-1000,1000}
+# OPENSCAD_COLORSCHEME=${RNGR_OPENSCAD_COLORSCHEME:-Tomorrow Night}
 
 handle_extension() {
     case "${FILE_EXTENSION_LOWER}" in
@@ -40,7 +49,7 @@ handle_extension() {
         ## PDF
         pdf)
             ## Preview as text conversion
-            pdftotext -l 10 -nopgbrk -q -- "${FILE_PATH}" - | \
+            pdftotext -l 2 -nopgbrk -q -- "${FILE_PATH}" - | \
               fmt -w "${PV_WIDTH}" && exit 5
             exit 1;;
 
@@ -113,31 +122,8 @@ handle_mime() {
         ## Text
         text/* | */xml)
             ## Syntax highlight
-            if [[ "$( stat --printf='%s' -- "${FILE_PATH}" )" -gt "${HIGHLIGHT_SIZE_MAX}" ]]; then
-                exit 2
-            fi
-            if [[ "$( tput colors )" -ge 256 ]]; then
-                local pygmentize_format='terminal256'
-                local highlight_format='xterm256'
-            else
-                local pygmentize_format='terminal'
-                local highlight_format='ansi'
-            fi
-            env HIGHLIGHT_OPTIONS="${HIGHLIGHT_OPTIONS}" highlight \
-                --out-format="${highlight_format}" \
-                --force -- "${FILE_PATH}" && exit 5
-            env COLORTERM=8bit bat --color=always --style="plain" \
-                -- "${FILE_PATH}" && exit 5
-            pygmentize -f "${pygmentize_format}" -O "style=${PYGMENTIZE_STYLE}"\
-                -- "${FILE_PATH}" && exit 5
+            batcat --color="always" -p "${FILE_PATH}" && exit 5
             exit 2;;
-
-        ## DjVu
-        image/vnd.djvu)
-            ## Preview as text conversion (requires djvulibre)
-            djvutxt "${FILE_PATH}" | fmt -w "${PV_WIDTH}" && exit 5
-            exiftool "${FILE_PATH}" && exit 5
-            exit 1;;
 
         ## Image
         image/*)
@@ -162,12 +148,13 @@ handle_fallback() {
 
 MIMETYPE="$( file --dereference --brief --mime-type -- "${FILE_PATH}" )"
 
-if [[ "${PV_IMAGE_ENABLED}" == 'True' ]]; then
-    handle_image "${MIMETYPE}"
-fi
+# if [[ "${PV_IMAGE_ENABLED}" == 'True' ]]; then
+#     handle_image "${MIMETYPE}"
+# fi
 
 handle_extension
 handle_mime "${MIMETYPE}"
 handle_fallback
 
 exit 1
+

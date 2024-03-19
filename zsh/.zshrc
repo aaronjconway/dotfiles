@@ -1,51 +1,135 @@
-# The following lines were added by compinstall
-zstyle :compinstall filename '/home/aaron/.config/shell/zshrc'
+# -----------------------------------------------------------------------------
+# load zgen
+# -----------------------------------------------------------------------------
+source "${HOME}/.zgen/zgen.zsh"
 
+# if the init scipt doesn't exist
+if ! zgen saved; then
+    echo "Creating a zgen save"
+
+    # plugins
+    zgen load zsh-users/zsh-syntax-highlighting
+    zgen load zsh-users/zsh-autosuggestions
+
+    # # completions
+    # zgen load zsh-users/zsh-completions src
+
+    # save all to init script
+    zgen save
+fi
+# -----------------------------------------------------------------------------
+###############################################################################
+# -----------------------------------------------------------------------------
+
+# # The following lines were added by compinstall
+# zstyle :compinstall filename '/home/aaron/.config/shell/zshrc'
+#
+#
+autoload -U colors && colors
+# zmodload zsh/complist
+# _comp_options+=(globdots)		# Include hidden files.
+
+setopt autocd
+#setopt correct
+setopt interactivecomments
+setopt magicequalsubst
+setopt nonomatch
+setopt notify
+setopt numericglobsort
+setopt promptsubst
+stty stop undef
+
+# enable completion features
 autoload -Uz compinit
-compinit
+compinit -d ~/.cache/zcompdump
+zstyle ':completion:*:*:*:*:*' menu select
+zstyle ':completion:*' auto-description 'specify: %d'
+zstyle ':completion:*' completer _expand _complete
+zstyle ':completion:*' format 'Completing %d'
+zstyle ':completion:*' group-name ''
+zstyle ':completion:*' list-colors ''
+zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+zstyle ':completion:*' rehash true
+zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
+zstyle ':completion:*' use-compctl false
+zstyle ':completion:*' verbose true
+zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 
-# Enable colors and change prompt:
-autoload -U colors && colors	# Load colors
-PS1="%B%{$fg[red]%}[%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[blue]%}%M %{$fg[magenta]%}%~%{$fg[red]%}]%{$reset_color%}$%b "
-setopt autocd		# Automatically cd into typed directory.
-stty stop undef		# Disable ctrl-s to freeze terminal.
-setopt interactive_comments
+setopt hist_expire_dups_first # delete duplicates first when HISTFILE size exceeds HISTSIZE
+setopt hist_ignore_dups       # ignore duplicated commands history list
+setopt hist_ignore_space      # ignore commands that start with space
+setopt hist_verify            # show command with history expansion to user before running it
+#setopt share_history         # share command history data
+
+# force zsh to show the complete history
+alias history="history 0"
+
+# configure `time` format
+TIMEFMT=$'\nreal\t%E\nuser\t%U\nsys\t%S\ncpu\t%P'
+
+autoload -Uz vcs_info
+precmd() {
+    vcs_info
+}
+zstyle ':vcs_info:*' enable git
+zstyle ':vcs_info:git*' formats "[%b]"
+
+setopt prompt_subst
+
+PROMPT='${vcs_info_msg_0_}'
+PS1="%F{blue}%n%f%F{yellow}@%f%F{green}%m%f$PROMPT %~ $ "
+
 
 # History in cache directory:
-HISTSIZE=10000000
-SAVEHIST=10000000
+HISTSIZE=1000
+SAVEHIST=1000
 HISTFILE="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/history"
 
+
+
+# -----------------------------------------------------------------------------
 # Alias's
-# -----------------------------------------------
-alias source_zsh='source ~/.zshrc'
+# -----------------------------------------------------------------------------
+alias s='source ~/.zshrc'
 alias python="python3"
 alias py="python3"
+
+
+# unset
 alias r=""
 
-
-alias nvim="/usr/local/bin/nvim"
+alias nvim="/usr/local/bin/nvim-linux64/bin/nvim"
 alias vim="nvim"
 alias v="nvim"
-alias vd="nvim ."
+
 alias startup="~/dotfiles/tmux/.config/tmux/startup.sh"
-alias windows='cd /mnt/c/Users/ajcon'
 
-alias ls="exa -la"
+#cd into windows stuff
+alias win='cd /mnt/c/Users/ajcon'
 
+alias ls="exa -l"
+alias la="exa -la"
 
+#Golang
+if [ -d /usr/local/go/bin/ ]; then
+  export GOPATH=~/go
+  export GOBIN="$GOPATH/bin"
+  export PATH="/usr/local/go/bin:$GOBIN:$PATH"
+elif [ -d ~/.go/bin/ ]; then
+  export GOPATH="$HOME/.gopath"
+  export GOROOT="$HOME/.go"
+  export GOBIN="$GOPATH/bin"
+  export PATH="$GOPATH/bin:$PATH"
+fi
 
+export EDITOR="/usr/local/bin/nvim-linux64/bin/nvim"
+export VISUAL="/usr/local/bin/nvim-linux64/bin/nvim"
 
-export GOROOT='/usr/local/go'
-export PATH=/usr/local/go/bin:$PATH
-export GOPATH=$HOME/go
-export PATH=$GOPATH/bin:$PATH
-export EDITOR="/usr/local/bin/nvim"
-export VISUAL="/usr/local/bin/nvim"
 export FZF_DEFAULT_OPTS='--border --margin=1 --padding=1 --layout=reverse --height 60% --color=hl+:#b83232,bg+:#FFE5B4,fg+:#282C34,gutter:-1'
+
 export TERM='xterm-256color'
-export RANGER_LOAD_DEFAULT_RC=FALSE
-export PATH=~/.local/bin:$PATH
+
 
 
 # pretty man pages----------------------------------------
@@ -58,12 +142,6 @@ export LESS_TERMCAP_ue=$'\e[0m'           # end underline
 export LESS_TERMCAP_us=$'\e[04;38;5;146m' # begin underline
 #----------------------------------------------------------
 #
-# Basic auto/tab complete:
-autoload -U compinit
-zstyle ':completion:*' menu select
-zmodload zsh/complist
-compinit
-_comp_options+=(globdots)		# Include hidden files.
 
 # Use lf to switch directories and bind it to ctrl-o
 lfcd () {
@@ -76,13 +154,71 @@ lfcd () {
     fi
 }
 
-telescope () {
 
+# Define a function to select a directory with fzf and cd into it
+telescope() {
+    local selected_dir
+    selected_dir=$(rg --files | fzf) && cd "$selected_dir" || return 1
 }
 
-#--------------bind keys-----------------k
-# bindkey -s '^o' '^ulfcd\n'
-bindkey '^H' backward-kill-word
+# Optionally, you can bind this function to a key combination for easier access
+bindkey '^G' fcd
+bindkey -s '^O' 'telescope\n'
+autoload testfunc
 
-# Load syntax highlighting; should be last.
-source /usr/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh 2>/dev/null
+bindkey -s '^g' '^ulazygit\n'
+bindkey ' ' magic-space                           # do history expansion on space
+bindkey '^U' backward-kill-line                   # ctrl + U
+bindkey '^[[3;5~' kill-word                       # ctrl + Supr
+bindkey '^[[3~' delete-char                       # delete
+bindkey '^[[1;5C' forward-word                    # ctrl + ->
+bindkey '^[[1;5D' backward-word                   # ctrl + <-
+bindkey '^[[5~' beginning-of-buffer-or-history    # page up
+bindkey '^[[6~' end-of-buffer-or-history          # page down
+bindkey '^[[H' beginning-of-line                  # home
+bindkey '^[[F' end-of-line                        # end
+bindkey '^[[Z' undo                               # shift + tab undo last action
+
+if [ -x /usr/bin/dircolors ]; then
+
+    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+    export LS_COLORS="$LS_COLORS:ow=30;44:" # fix ls color for folders with 777 permissions
+
+    alias ls='ls --color=auto'
+    #alias dir='dir --color=auto'
+    #alias vdir='vdir --color=auto'
+
+    alias grep='grep --color=auto'
+    alias fgrep='fgrep --color=auto'
+    alias egrep='egrep --color=auto'
+
+    alias diff='diff --color=auto'
+    alias ip='ip --color=auto'
+
+    export LESS_TERMCAP_mb=$'\E[1;31m'     # begin blink
+    export LESS_TERMCAP_md=$'\E[1;36m'     # begin bold
+    export LESS_TERMCAP_me=$'\E[0m'        # reset bold/blink
+    export LESS_TERMCAP_so=$'\E[01;33m'    # begin reverse video
+    export LESS_TERMCAP_se=$'\E[0m'        # reset reverse video
+    export LESS_TERMCAP_us=$'\E[1;32m'     # begin underline
+    export LESS_TERMCAP_ue=$'\E[0m'        # reset underline
+
+    # Take advantage of $LS_COLORS for completion as well
+    zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+    zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
+fi
+
+# enable auto-suggestions based on the history
+if [ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
+    . /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+    # change suggestion color
+    ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#999'
+fi
+
+# Turso
+export PATH="/home/aaron/.turso:$PATH"
+
+# # Generated for envman. Do not edit.
+# [ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
+
+export N_PREFIX="$HOME/n"; [[ :$PATH: == *":$N_PREFIX/bin:"* ]] || PATH+=":$N_PREFIX/bin"

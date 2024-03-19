@@ -15,7 +15,6 @@ vim.defer_fn(function()
     sync_install = false,
 
     ensure_installed = {
-      'astro',
       'bash',
       'c',
       'cpp',
