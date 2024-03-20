@@ -1,21 +1,22 @@
 # -----------------------------------------------------------------------------
-# load zgen
+# load zgenom
 # -----------------------------------------------------------------------------
-source "${HOME}/.zgen/zgen.zsh"
+source "${HOME}/.zgenom/zgenom.zsh"
 
 # if the init scipt doesn't exist
-if ! zgen saved; then
-    echo "Creating a zgen save"
+if ! zgenom saved; then
+    echo "Creating a zgenom save"
 
     # plugins
-    zgen load zsh-users/zsh-syntax-highlighting
-    zgen load zsh-users/zsh-autosuggestions
+    zgenom load zsh-users/zsh-autosuggestions
+    zgenom load zsh-users/zsh-syntax-highlighting
+    zgenom load softmoth/zsh-vim-mode
 
     # # completions
     # zgen load zsh-users/zsh-completions src
 
     # save all to init script
-    zgen save
+    zgenom save
 fi
 # -----------------------------------------------------------------------------
 ###############################################################################
@@ -80,10 +81,9 @@ setopt prompt_subst
 PROMPT='${vcs_info_msg_0_}'
 PS1="%F{blue}%n%f%F{yellow}@%f%F{green}%m%f$PROMPT %~ $ "
 
-
 # History in cache directory:
-HISTSIZE=1000
-SAVEHIST=1000
+HISTSIZE=100000
+SAVEHIST=100000
 HISTFILE="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/history"
 
 
@@ -95,6 +95,8 @@ alias s='source ~/.zshrc'
 alias python="python3"
 alias py="python3"
 
+# open go docs
+alias godocs='wslview http://localhost:5555 && godoc -http=:5555 -v'
 
 # unset
 alias r=""
@@ -161,25 +163,8 @@ telescope() {
     selected_dir=$(fdfind . /home/aaron/ --hidden --type d |  fzf) && cd "$selected_dir" || return 1
 }
 
-# Optionally, you can bind this function to a key combination for easier access
-bindkey '^G' fcd
 bindkey -s '^O' 'telescope\n'
-autoload testfunc
-
-bindkey '\b' lazygit
-
-bindkey -s '^g' '^ulazygit\n'
-bindkey ' ' magic-space                           # do history expansion on space
-bindkey '^U' backward-kill-line                   # ctrl + U
-bindkey '^[[3;5~' kill-word                       # ctrl + Supr
-bindkey '^[[3~' delete-char                       # delete
-bindkey '^[[1;5C' forward-word                    # ctrl + ->
-bindkey '^[[1;5D' backward-word                   # ctrl + <-
-bindkey '^[[5~' beginning-of-buffer-or-history    # page up
-bindkey '^[[6~' end-of-buffer-or-history          # page down
-bindkey '^[[H' beginning-of-line                  # home
-bindkey '^[[F' end-of-line                        # end
-bindkey '^[[Z' undo                               # shift + tab undo last action
+bindkey -s '^G' '^ulazygit\n'
 
 if [ -x /usr/bin/dircolors ]; then
 
@@ -224,3 +209,22 @@ export PATH="/home/aaron/.turso:$PATH"
 # [ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
 
 export N_PREFIX="$HOME/n"; [[ :$PATH: == *":$N_PREFIX/bin:"* ]] || PATH+=":$N_PREFIX/bin"
+
+# Change cursor shape for different vi modes.
+function zle-keymap-select () {
+    case $KEYMAP in
+        vicmd) echo -ne '\e[1 q';;      # block
+        viins|main) echo -ne '\e[5 q';; # beam
+    esac
+}
+zle -N zle-keymap-select
+zle-line-init() {
+    zle -K viins # initiate `vi insert` as keymap (can be removed if `bindkey -V` has been set elsewhere)
+    echo -ne "\e[5 q"
+}
+zle -N zle-line-init
+echo -ne '\e[5 q' # Use beam shape cursor on startup.
+preexec() { echo -ne '\e[5 q' ;} # Use beam shape cursor for each new prompt.
+
+bindkey '^H' backward-kill-word
+bindkey '^[[3;5~' kill-word
