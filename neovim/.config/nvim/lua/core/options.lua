@@ -1,7 +1,9 @@
 -- Set highlight on search
 vim.o.hlsearch = false
 
+-- wrapping and force wrap
 vim.o.wrap = true
+vim.o.textwidth = 80
 
 vim.o.linebreak = true
 
@@ -15,7 +17,7 @@ vim.opt.shiftwidth = 4
 vim.opt.expandtab = true
 
 
--- Make line numbers default
+-- line numbers
 vim.opt.nu = true
 vim.wo.relativenumber = true
 
@@ -36,7 +38,6 @@ vim.o.undofile = true
 vim.o.ignorecase = true
 vim.o.smartcase = true
 
-
 vim.opt.swapfile = false
 vim.opt.backup = false
 vim.opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
@@ -53,19 +54,3 @@ vim.opt.scrolloff = 8
 vim.opt.signcolumn = "yes"
 vim.opt.colorcolumn = "80"
 vim.opt.isfname:append("@-@")
-
-
--- [[ Basic Keymaps ]]
-
--- Keymaps for better default experience
--- See `:help vim.keymap.set()`
-vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
-
--- Remap for dealing with word wrap
-vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
-vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
-
--- Diagnostic keymaps
--- TODO: why are the keymaps spread out aorund the app. consolidate them all to the which key file.
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic message' })
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic message' })

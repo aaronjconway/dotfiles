@@ -74,7 +74,7 @@ precmd() {
     vcs_info
 }
 zstyle ':vcs_info:*' enable git
-zstyle ':vcs_info:git*' formats "[%b]"
+zstyle ':vcs_info:git*' formats "[%F{yellow}%b%f]"
 
 setopt prompt_subst
 
@@ -95,8 +95,9 @@ alias s='source ~/.zshrc'
 alias python="python3"
 alias py="python3"
 
-# open go docs
-alias godocs='wslview http://localhost:5555 && godoc -http=:5555 -v'
+# open go docs - idk how useful this is. kinda wanna port to typesense
+alias godocs='wslview http://localhost:5555 && godoc -http=:5555 -v -index'
+
 
 # unset
 alias r=""
@@ -163,6 +164,17 @@ telescope() {
     selected_dir=$(fdfind . /home/aaron/ --hidden --type d |  fzf) && cd "$selected_dir" || return 1
 }
 
+
+# open obsidian
+alias obsidian='obsidian_open'
+
+obsidian_open() {
+    my_vaults=("KHL Vault" "Personal Vault")
+    selected_vault=$(printf '%s\n' "${my_vaults[@]}" | fzf) || return 1
+    encoded_vault=$(echo "$selected_vault" | sed 's/ /%20/g')
+    wslview "obsidian://open?vault=$encoded_vault"
+}
+
 bindkey -s '^O' 'telescope\n'
 bindkey -s '^G' '^ulazygit\n'
 
@@ -170,10 +182,6 @@ if [ -x /usr/bin/dircolors ]; then
 
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
     export LS_COLORS="$LS_COLORS:ow=30;44:" # fix ls color for folders with 777 permissions
-
-    alias ls='ls --color=auto'
-    #alias dir='dir --color=auto'
-    #alias vdir='vdir --color=auto'
 
     alias grep='grep --color=auto'
     alias fgrep='fgrep --color=auto'
