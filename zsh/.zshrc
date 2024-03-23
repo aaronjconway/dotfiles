@@ -132,6 +132,8 @@ export VISUAL="/usr/local/bin/nvim-linux64/bin/nvim"
 export FZF_DEFAULT_OPTS='--border --margin=1 --padding=1 --layout=reverse --height 60% --color=hl+:#b83232,bg+:#FFE5B4,fg+:#282C34,gutter:-1'
 
 export TERM='xterm-256color'
+# add local to path
+export PATH="$HOME/.local/bin:$PATH"
 
 
 
@@ -234,5 +236,9 @@ zle -N zle-line-init
 echo -ne '\e[5 q' # Use beam shape cursor on startup.
 preexec() { echo -ne '\e[5 q' ;} # Use beam shape cursor for each new prompt.
 
+# map
 bindkey '^H' backward-kill-word
-bindkey '^[[3;5~' kill-word
+
+# added by Webi for pyenv
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"

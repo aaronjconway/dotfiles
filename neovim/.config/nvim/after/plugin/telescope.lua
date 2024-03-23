@@ -49,6 +49,7 @@ wk.register(
       g = { ":Telescope live_grep<CR>", 'grep' },
       b = { ":Telescope buffers<CR>", 'buffers' },
       c = { ":Telescope commands<CR>", 'commands' },
+      r = { ":Telescope resume<CR>", 'resume the last search' },
     }
   },
   { prefix = '<leader>' }
