@@ -1,7 +1,31 @@
+# vim:ft=bash
 set shellopts '-eu'
 set ifs "\n"
 
-# set color256
+# UB_PID=0
+# UB_SOCKET=""
+
+# case "$(uname -a)" in
+#     *Darwin*) UEBERZUG_TMP_DIR="$TMPDIR" ;;
+#     *) UEBERZUG_TMP_DIR="/tmp" ;;
+# esac
+#
+# cleanup() {
+#     exec 3>&-
+#     ueberzugpp cmd -s "$UB_SOCKET" -a exit
+# }
+#
+# [ ! -d "$HOME/.cache/lf" ] && mkdir -p "$HOME/.cache/lf"
+# UB_PID_FILE="$UEBERZUG_TMP_DIR/.$(uuidgen)"
+# ueberzugpp layer --silent --no-stdin --use-escape-codes --pid-file "$UB_PID_FILE"
+# UB_PID=$(cat "$UB_PID_FILE")
+# rm "$UB_PID_FILE"
+# UB_SOCKET="$UEBERZUG_TMP_DIR/ueberzugpp-${UB_PID}.socket"
+# export UB_PID UB_SOCKET
+# trap cleanup HUP INT QUIT TERM EXIT
+# lf "$@" 3>&-
+
+set color256
 set icons
 set hidden
 set incsearch
@@ -16,10 +40,10 @@ set ratios '1:2:3'
 set timefmt '2006-01-02 15:04:05 -0700'
 set previewer ~/.config/lf/preview.sh
 
-set promptfmt "
-\033[38;5;8m\033[48;5;236m %u@%h \033[38;5;236m\033[48;5;234m
-\033[38;5;8m\033[48;5;234m %w/%f \033[0m\033[38;5;234m\033[0m
-"
+# set promptfmt "
+# \033[38;5;8m\033[48;5;236m %u@%h \033[38;5;236m\033[48;5;234m
+# \033[38;5;8m\033[48;5;234m %w/%f \033[0m\033[38;5;234m\033[0m
+# "
 
 # --------------------------
 # keyboard mappings
@@ -31,6 +55,7 @@ map e &$OPENER $f
 map o $mimeopen $f
 map D trash
 map . :filter
+map A test
 
 # create directory/file
 map ad push $mkdir<space>
@@ -85,14 +110,16 @@ cmd mkfile %[ -n "${1}" ] && touch ${@} || echo "Argument needed"
 
 # Implement trash command
 cmd trash ${{
-	set -f
-	if hash trash-put 2>/dev/null; then
-		trash-put -v -- $fx
-	else
-		mkdir -p "$HOME"/.trash
-		mv -vi $fx "$HOME"/.trash
-	fi
+		rm -rf $fx
 }}
+
+# cmd delete ${{
+#     set -f
+#     printf "$fx\n"
+#     printf "delete?[y/n]"
+#     read ans
+#     [ "$ans" = "y" ] && rm -rf $fx
+# }}
 
 # Replace open command with robust selection of openers
 # this is where videowe are going to port over the stuff from rangers rifle.conf
@@ -100,6 +127,7 @@ cmd open ${{
 	case $(file --dereference --mime-type $f -b) in
 		inode/x-empty) $EDITOR $fx ;;
 		text/*) $EDITOR $fx;;
+		*/json) $EDITOR $fx;;
 		application/*) wslview $fx > /dev/null & ;;
 		video/*) wslview $fx > /dev/null & ;;
 		audio/*) wslview $fx > /dev/null & ;;

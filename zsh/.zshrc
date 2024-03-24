@@ -22,13 +22,13 @@ fi
 ###############################################################################
 # -----------------------------------------------------------------------------
 
-# # The following lines were added by compinstall
-# zstyle :compinstall filename '/home/aaron/.config/shell/zshrc'
-#
-#
+# The following lines were added by compinstall
+zstyle :compinstall filename '/home/aaron/.config/shell/zshrc'
+
+
 autoload -U colors && colors
-# zmodload zsh/complist
-# _comp_options+=(globdots)		# Include hidden files.
+zmodload zsh/complist
+_comp_options+=(globdots)		# Include hidden files.
 
 setopt autocd
 #setopt correct
@@ -48,7 +48,7 @@ zstyle ':completion:*' auto-description 'specify: %d'
 zstyle ':completion:*' completer _expand _complete
 zstyle ':completion:*' format 'Completing %d'
 zstyle ':completion:*' group-name ''
-zstyle ':completion:*' list-colors ''
+# zstyle ':completion:*' list-colors ''
 zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 zstyle ':completion:*' rehash true
@@ -57,14 +57,6 @@ zstyle ':completion:*' use-compctl false
 zstyle ':completion:*' verbose true
 zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 
-setopt hist_expire_dups_first # delete duplicates first when HISTFILE size exceeds HISTSIZE
-setopt hist_ignore_dups       # ignore duplicated commands history list
-setopt hist_ignore_space      # ignore commands that start with space
-setopt hist_verify            # show command with history expansion to user before running it
-#setopt share_history         # share command history data
-
-# force zsh to show the complete history
-alias history="history 0"
 
 # configure `time` format
 TIMEFMT=$'\nreal\t%E\nuser\t%U\nsys\t%S\ncpu\t%P'
@@ -81,19 +73,54 @@ setopt prompt_subst
 PROMPT='${vcs_info_msg_0_}'
 PS1="%F{blue}%n%f%F{yellow}@%f%F{green}%m%f$PROMPT %~ $ "
 
-# History in cache directory:
-HISTSIZE=100000
-SAVEHIST=100000
-HISTFILE="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/history"
+# History
+zsh_history_conf() {
+    HISTSIZE=1000000
+    SAVEHIST=1000000
+    HISTFILE=${_SE_ZSH_HISTORY_LOCATION:=${ZDOTDIR:=$HOME}}/.zsh_history
+    HISTTIMEFORMAT="[%F %T] "
 
+    # ignore case when expanding PATH params
+    setopt NO_CASE_GLOB
+
+    #  History related
+    #
+    # Append to history, instead of replacing it.
+    setopt APPEND_HISTORY
+    # Save as : start time:elapsed seconds;command
+    setopt EXTENDED_HISTORY
+    # Do not store duplication's
+    setopt HIST_IGNORE_ALL_DUPS
+    # Do not add command line to history when the first character
+    # on the line is a space, or when one of the expanded
+    # aliases contains a leading space
+    setopt HIST_IGNORE_SPACE
+
+    # Filter out superfluous blanks
+    setopt HIST_REDUCE_BLANKS
+
+    # Waits until completion to save command to history. Without this, history
+    # is saved as command starts, making elapsed time from EXTENDED_HISTORY
+    # always being 0
+    # Has no effect if SHARE_HISTORY is set
+    setopt INC_APPEND_HISTORY_TIME
+}
+
+zsh_history_conf
 
 
 # -----------------------------------------------------------------------------
 # Alias's
 # -----------------------------------------------------------------------------
 alias s='source ~/.zshrc'
-alias python="python3"
-alias py="python3"
+
+# rg search filenames
+alias rgf="rg . ~ --files | rg"
+
+alias ahk='cd /mnt/c/Users/ajcon/OneDrive/Documents/AutoHotkey/'
+
+# alias python="python3"
+# alias py="python3"
 
 # open go docs - idk how useful this is. kinda wanna port to typesense
 alias godocs='wslview http://localhost:5555 && godoc -http=:5555 -v -index'
@@ -135,8 +162,6 @@ export TERM='xterm-256color'
 # add local to path
 export PATH="$HOME/.local/bin:$PATH"
 
-
-
 # pretty man pages----------------------------------------
 export LESS_TERMCAP_mb=$'\e[01;31m'       # begin blinking
 export LESS_TERMCAP_md=$'\e[01;38;5;74m'  # begin bold
@@ -148,7 +173,7 @@ export LESS_TERMCAP_us=$'\e[04;38;5;146m' # begin underline
 #----------------------------------------------------------
 #
 
-# Use lf to switch directories and bind it to ctrl-o
+# Use lf to cd into dirs
 lfcd () {
     tmp="$(mktemp -uq)"
     trap 'rm -f $tmp >/dev/null 2>&1 && trap - HUP INT QUIT TERM PWR EXIT' HUP INT QUIT TERM PWR EXIT
@@ -159,13 +184,41 @@ lfcd () {
     fi
 }
 
+my_array=(
+    directories
+    files
+    select_from_history
+    selected_vault
+)
 
-# Define a function to select a directory with fzf and cd into it
+
+# Function to select from array using fzf
 telescope() {
-    local selected_dir
-    selected_dir=$(fdfind . /home/aaron/ --hidden --type d |  fzf) && cd "$selected_dir" || return 1
+  local choice
+  choice=$(printf "%s\n" "${my_array[@]}" | fzf --prompt="")
+  $choice
 }
 
+directories() {
+    local selected_dir
+    selected_dir=$(fdfind . /home/aaron/ --hidden --type d |  fzf) && cd "$selected_dir" || return 1
+    zle reset-prompt
+}
+
+files() {
+    local file
+    file=$(fdfind . /home/aaron/ --hidden --type f |  fzf) && vim "$file" || return 1
+    zle reset-prompt
+}
+
+
+# Function to select and edit from command history using fzf
+select_from_history() {
+  local choice
+  choice=$(history | fzf +s +m --tac --prompt="> " | awk '{$1=""; print substr($0,2)}')
+    LBUFFER="$choice"
+    zle redisplay
+}
 
 # open obsidian
 alias obsidian='obsidian_open'
@@ -177,13 +230,17 @@ obsidian_open() {
     wslview "obsidian://open?vault=$encoded_vault"
 }
 
-bindkey -s '^O' 'telescope\n'
 bindkey -s '^G' '^ulazygit\n'
+
+# Define a Zsh widget that calls the function
+zle -N my_telescope telescope
+bindkey "^O" my_telescope
+
 
 if [ -x /usr/bin/dircolors ]; then
 
-    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-    export LS_COLORS="$LS_COLORS:ow=30;44:" # fix ls color for folders with 777 permissions
+    # test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+    # export LS_COLORS="$LS_COLORS:ow=30;44:" # fix ls color for folders with 777 permissions
 
     alias grep='grep --color=auto'
     alias fgrep='fgrep --color=auto'
@@ -201,22 +258,19 @@ if [ -x /usr/bin/dircolors ]; then
     export LESS_TERMCAP_ue=$'\E[0m'        # reset underline
 
     # Take advantage of $LS_COLORS for completion as well
-    zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
-    zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
+    # zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+    # zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
 fi
 
 # enable auto-suggestions based on the history
 if [ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
     . /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-    # change suggestion color
     ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#999'
 fi
 
 # Turso
 export PATH="/home/aaron/.turso:$PATH"
 
-# # Generated for envman. Do not edit.
-# [ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
 
 export N_PREFIX="$HOME/n"; [[ :$PATH: == *":$N_PREFIX/bin:"* ]] || PATH+=":$N_PREFIX/bin"
 
@@ -238,7 +292,3 @@ preexec() { echo -ne '\e[5 q' ;} # Use beam shape cursor for each new prompt.
 
 # map
 bindkey '^H' backward-kill-word
-
-# added by Webi for pyenv
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
