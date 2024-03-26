@@ -25,7 +25,6 @@ fi
 # The following lines were added by compinstall
 zstyle :compinstall filename '/home/aaron/.config/shell/zshrc'
 
-
 autoload -U colors && colors
 zmodload zsh/complist
 _comp_options+=(globdots)		# Include hidden files.
@@ -114,24 +113,26 @@ zsh_history_conf
 # -----------------------------------------------------------------------------
 alias s='source ~/.zshrc'
 
+
+# call cheat sh for info
+alias cheat='cheat_sh'
+
 # rg search filenames
 alias rgf="rg . ~ --files | rg"
 
 alias ahk='cd /mnt/c/Users/ajcon/OneDrive/Documents/AutoHotkey/'
 
-# alias python="python3"
-# alias py="python3"
+alias python="python3"
+alias py="python3"
 
 # open go docs - idk how useful this is. kinda wanna port to typesense
 alias godocs='wslview http://localhost:5555 && godoc -http=:5555 -v -index'
 
 
-# unset
-alias r=""
 
 alias nvim="/usr/local/bin/nvim-linux64/bin/nvim"
 alias vim="nvim"
-alias v="nvim"
+alias vi="nvim"
 
 alias startup="~/dotfiles/tmux/.config/tmux/startup.sh"
 
@@ -173,6 +174,10 @@ export LESS_TERMCAP_us=$'\e[04;38;5;146m' # begin underline
 #----------------------------------------------------------
 #
 
+#----------------------------------------------------------
+#-----------------------Functions--------------------------
+#----------------------------------------------------------
+#
 # Use lf to cd into dirs
 lfcd () {
     tmp="$(mktemp -uq)"
@@ -184,13 +189,15 @@ lfcd () {
     fi
 }
 
+# I would rather move these functions to a separate folder and pick from that
+# folder. that way a new function would get automatically added to telesope
 my_array=(
     directories
+    directories_all
     files
     select_from_history
     selected_vault
 )
-
 
 # Function to select from array using fzf
 telescope() {
@@ -201,6 +208,12 @@ telescope() {
 
 directories() {
     local selected_dir
+    selected_dir=$(fdfind . /home/aaron/ -E '.cargo' -E '.rust*' -E 'n' -E '.cache' -E '.config' -E '.dotnet' -E 'node_modules' -E '.git' -E 'dist' -E 'build' --type d |  fzf) && cd "$selected_dir" || return 1
+    zle reset-prompt
+}
+
+directories_all() {
+    local selected_dir
     selected_dir=$(fdfind . /home/aaron/ --hidden --type d |  fzf) && cd "$selected_dir" || return 1
     zle reset-prompt
 }
@@ -210,6 +223,20 @@ files() {
     file=$(fdfind . /home/aaron/ --hidden --type f |  fzf) && vim "$file" || return 1
     zle reset-prompt
 }
+
+cheat_sh() {
+
+    if [ "$#" -eq "" ]; then
+        echo "Please provide an argument"
+    else
+        local url=$(echo "$*" | sed "s/ /%20/g")
+        curl "cheat.sh/$url" | batcat --theme="Visual Studio Dark+" -p --color=always
+    fi
+}
+
+#----------------------------------------------------------
+#----------------------------------------------------------
+#----------------------------------------------------------
 
 
 # Function to select and edit from command history using fzf
@@ -223,7 +250,8 @@ select_from_history() {
 # open obsidian
 alias obsidian='obsidian_open'
 
-obsidian_open() {
+selected_vault() {
+    local selected_vault
     my_vaults=("KHL Vault" "Personal Vault")
     selected_vault=$(printf '%s\n' "${my_vaults[@]}" | fzf) || return 1
     encoded_vault=$(echo "$selected_vault" | sed 's/ /%20/g')
@@ -281,6 +309,7 @@ function zle-keymap-select () {
         viins|main) echo -ne '\e[5 q';; # beam
     esac
 }
+
 zle -N zle-keymap-select
 zle-line-init() {
     zle -K viins # initiate `vi insert` as keymap (can be removed if `bindkey -V` has been set elsewhere)
@@ -292,3 +321,5 @@ preexec() { echo -ne '\e[5 q' ;} # Use beam shape cursor for each new prompt.
 
 # map
 bindkey '^H' backward-kill-word
+
+

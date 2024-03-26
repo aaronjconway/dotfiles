@@ -65,16 +65,10 @@ map af push $touch<space>
 map gf $lf -remote "send $id select $(fzf)"
 
 # map <esc> unselect; clear
-map zz push :z<space>
 
 map sn :{{ set sortby natural; set info size; set preview; }}
-map sa :{{ set sortby natural; set info size; set nopreview; set ratios 3:5; }}
 map ss :{{ set sortby size; set info size; set preview; }}
 map st :{{ set sortby time; set info time; set preview; }}
-
-# Tmux
-map sg &tmux split-window -h lf
-map sv &tmux split-window -v lf
 
 # show documentation
 map g? $lf -doc | less
