@@ -80,6 +80,10 @@ require('mason-lspconfig').setup({
     rust_analyzer = function()
       require('lspconfig').rust_analyzer.setup({})
     end,
+    ------------grammarly---------------
+    grammarly = function()
+      require('lspconfig').grammarly.setup {}
+    end,
     ------------Svelte---------------
     svelte = function()
       require('lspconfig').svelte.setup {}
