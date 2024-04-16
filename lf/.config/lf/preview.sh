@@ -6,26 +6,25 @@
 #     Y=$5
 #     MW=$(($2 - 1))
 #     MH=$3
-#     ueberzugpp cmd -s "$UB_SOCKET" -a add -i PREVIEW -x "$X" -y "$Y" --max-width "$MW" --max-height "$MH" -f "$FILE_PATH"
+#     ueberzug cmd -s "$UB_SOCKET" -a add -i PREVIEW -x "$X" -y "$Y" --max-width "$MW" --max-height "$MH" -f "$FILE_PATH"
 #     exit 1
-# }
-#
-
-# get_language() {
-#     file="$1"
-#     extension="${file##*.}"
-#     echo $extension
 # }
 
 
 batorcat() {
     file="$1"
-    # language=$(get_language "$file")
-    # get_language "$file"
-    # syncat  "$file" "$@"
-    batcat --theme="Visual Studio Dark+" -p --color=always  "$file"
+    shift
+    batcat --theme="Visual Studio Dark+" -p --color=always  "$file" "$@"
 }
 
+# batorcat() {
+#     file="$1"
+#     # language=$(get_language "$file")
+#     # get_language "$file"
+#     # syncat  "$file" "$@"
+#     batcat --theme="Visual Studio Dark+" -p --color=always  "$file"
+# }
+#
 CACHE="$HOME/.cache/lf/thumbnail.$(stat --printf '%n\0%i\0%F\0%s\0%W\0%Y' -- "$(readlink -f "$1")" | sha256sum | awk '{print $1}'))"
 
 case "$(printf "%s\n" "$(readlink -f "$1")" | tr '[:upper:]' '[:lower:]')" in

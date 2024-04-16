@@ -19,8 +19,8 @@ wk.setup()
 
 -- takes the content of the current bufer and outputs in another.
 local handleClose = function()
-  if vim.fn.bufname():sub(- #("new")) == "new" then
-    vim.cmd('q!')
+  if vim.fn.expand('%:t') == 'new' or '' then
+    vim.cmd('silent q')
   else
     local success, error = pcall(vim.cmd, 'bdelete')
     if not success then
@@ -36,6 +36,7 @@ wk.register(
     q = { function()
       handleClose()
     end, 'Quit Nicely' },
+
     Q = { ":qa!<CR>", 'Quit so Hard' },
     w = { ":w<CR>", 'save nice' },
     W = { ":wq!<CR>", 'save nice' },
@@ -72,13 +73,7 @@ wk.register(
   { prefix = '<leader>' }
 )
 
--- TODO:
--- why are
--- there
--- multiple
--- key
--- maps
--- [[ Basic Keymaps ]]
+--TODO: why are there multiple key maps  [[ Basic Keymaps ]]
 
 -- Keymaps for better default experience
 -- See `:help vim.keymap.set()`
@@ -91,3 +86,11 @@ vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = tr
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic message' })
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic message' })
+
+
+-- you can't do this because you use c-n and c-p for navigating other stuff.
+-- vim.keymap.set('n', '<C-n>', vim.cmd['cnext'], { desc = 'go to next in quickfix' })
+-- vim.keymap.set('n', '<C-p>', vim.cmd['cprevious'], { desc = 'go to next in quickfix' })
+-- vim.keymap.set("n", "<C-k>", "<cmd>cnext<CR>zz")
+vim.keymap.set("n", "<C-j>", "<cmd>cnext<CR>zz")
+vim.keymap.set("n", "<C-k>", "<cmd>cprev<CR>zz")

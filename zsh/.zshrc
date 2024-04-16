@@ -1,3 +1,4 @@
+bindkey -e
 # -----------------------------------------------------------------------------
 # load zgenom
 # -----------------------------------------------------------------------------
@@ -10,10 +11,7 @@ if ! zgenom saved; then
     # plugins
     zgenom load zsh-users/zsh-autosuggestions
     zgenom load zsh-users/zsh-syntax-highlighting
-    zgenom load softmoth/zsh-vim-mode
-
-    # # completions
-    # zgen load zsh-users/zsh-completions src
+    zgenom load zsh-users/zsh-completions
 
     # save all to init script
     zgenom save
@@ -23,11 +21,27 @@ fi
 # -----------------------------------------------------------------------------
 
 # The following lines were added by compinstall
-zstyle :compinstall filename '/home/aaron/.config/shell/zshrc'
 
-autoload -U colors && colors
-zmodload zsh/complist
+compinit -d ~/.cache/zcompdump
+zstyle ':completion:*' menu select
+zstyle ':completion:*' auto-description 'specify: %d'
+zstyle ':completion:*' completer _expand _complete
+zstyle ':completion:*' format 'Completing %d'
+zstyle ':completion:*' group-name ''
+zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+zstyle ':completion:*' rehash true
+zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
+zstyle ':completion:*' use-compctl false
+zstyle ':completion:*' verbose true
+zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
+zstyle :compinstall filename '/home/aaron/.zshrc'
 _comp_options+=(globdots)		# Include hidden files.
+
+autoload -Uz compinit
+autoload -U colors && colors
+compinit
+# End of lines added by compinstall
 
 setopt autocd
 #setopt correct
@@ -39,57 +53,48 @@ setopt numericglobsort
 setopt promptsubst
 stty stop undef
 
-# enable completion features
-autoload -Uz compinit
-compinit -d ~/.cache/zcompdump
-zstyle ':completion:*:*:*:*:*' menu select
-zstyle ':completion:*' auto-description 'specify: %d'
-zstyle ':completion:*' completer _expand _complete
-zstyle ':completion:*' format 'Completing %d'
-zstyle ':completion:*' group-name ''
-# zstyle ':completion:*' list-colors ''
-zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
-zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
-zstyle ':completion:*' rehash true
-zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
-zstyle ':completion:*' use-compctl false
-zstyle ':completion:*' verbose true
-zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
+# # enable completion features
+# autoload -Uz compinit
 
 
 # configure `time` format
 TIMEFMT=$'\nreal\t%E\nuser\t%U\nsys\t%S\ncpu\t%P'
 
 autoload -Uz vcs_info
+setopt prompt_subst
+
 precmd() {
     vcs_info
 }
+
 zstyle ':vcs_info:*' enable git
 zstyle ':vcs_info:git*' formats "[%F{yellow}%b%f]"
-
-setopt prompt_subst
+zstyle ':vcs_info:git*:*' get-revision true
+zstyle ':vcs_info:git*:*' check-for-changes false
 
 PROMPT='${vcs_info_msg_0_}'
 PS1="%F{blue}%n%f%F{yellow}@%f%F{green}%m%f$PROMPT %~ $ "
 
 # History
 zsh_history_conf() {
-    HISTSIZE=1000000
-    SAVEHIST=1000000
-    HISTFILE=${_SE_ZSH_HISTORY_LOCATION:=${ZDOTDIR:=$HOME}}/.zsh_history
+    HISTSIZE=100000000
+    SAVEHIST=100000000
+    HISTFILE=~/.zsh_history
     HISTTIMEFORMAT="[%F %T] "
 
     # ignore case when expanding PATH params
     setopt NO_CASE_GLOB
 
-    #  History related
-    #
     # Append to history, instead of replacing it.
     setopt APPEND_HISTORY
+
     # Save as : start time:elapsed seconds;command
     setopt EXTENDED_HISTORY
+
     # Do not store duplication's
     setopt HIST_IGNORE_ALL_DUPS
+    setopt HIST_FIND_NO_DUPS
+
     # Do not add command line to history when the first character
     # on the line is a space, or when one of the expanded
     # aliases contains a leading space
@@ -107,12 +112,10 @@ zsh_history_conf() {
 
 zsh_history_conf
 
-
 # -----------------------------------------------------------------------------
 # Alias's
 # -----------------------------------------------------------------------------
 alias s='source ~/.zshrc'
-
 
 # call cheat sh for info
 alias cheat='cheat_sh'
@@ -127,8 +130,6 @@ alias py="python3"
 
 # open go docs - idk how useful this is. kinda wanna port to typesense
 alias godocs='wslview http://localhost:5555 && godoc -http=:5555 -v -index'
-
-
 
 alias nvim="/usr/local/bin/nvim-linux64/bin/nvim"
 alias vim="nvim"
@@ -156,23 +157,36 @@ fi
 
 export EDITOR="/usr/local/bin/nvim-linux64/bin/nvim"
 export VISUAL="/usr/local/bin/nvim-linux64/bin/nvim"
-
 export FZF_DEFAULT_OPTS='--border --margin=1 --padding=1 --layout=reverse --height 60% --color=hl+:#b83232,bg+:#FFE5B4,fg+:#282C34,gutter:-1'
-
 export TERM='xterm-256color'
-# add local to path
 export PATH="$HOME/.local/bin:$PATH"
+export PAGER=less
 
-# pretty man pages----------------------------------------
-export LESS_TERMCAP_mb=$'\e[01;31m'       # begin blinking
-export LESS_TERMCAP_md=$'\e[01;38;5;74m'  # begin bold
-export LESS_TERMCAP_me=$'\e[0m'           # end mode
-export LESS_TERMCAP_se=$'\e[0m'           # end standout-mode
-export LESS_TERMCAP_so=$'\e[38;5;246m'    # begin standout-mode - info box
-export LESS_TERMCAP_ue=$'\e[0m'           # end underline
-export LESS_TERMCAP_us=$'\e[04;38;5;146m' # begin underline
-#----------------------------------------------------------
-#
+
+if [ -x /usr/bin/dircolors ]; then
+
+    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+    export LS_COLORS="$LS_COLORS:ow=30;44:" # fix ls color for folders with 777 permissions
+
+    alias grep='grep --color=auto'
+    alias fgrep='fgrep --color=auto'
+    alias egrep='egrep --color=auto'
+
+    alias diff='diff --color=auto'
+    alias ip='ip --color=auto'
+
+    export LESS_TERMCAP_mb=$'\E[1;31m'     # begin blink
+    export LESS_TERMCAP_md=$'\E[1;36m'     # begin bold
+    export LESS_TERMCAP_me=$'\E[0m'        # reset bold/blink
+    export LESS_TERMCAP_so=$'\E[01;33m'    # begin reverse video
+    export LESS_TERMCAP_se=$'\E[0m'        # reset reverse video
+    export LESS_TERMCAP_us=$'\E[1;32m'     # begin underline
+    export LESS_TERMCAP_ue=$'\E[0m'        # reset underline
+
+    # Take advantage of $LS_COLORS for completion as well
+    zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+    zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
+fi
 
 #----------------------------------------------------------
 #-----------------------Functions--------------------------
@@ -189,11 +203,15 @@ lfcd () {
     fi
 }
 
+h() {"$@" | batcat -p --theme="Visual Studio Dark+" --language=man }
+
 # I would rather move these functions to a separate folder and pick from that
 # folder. that way a new function would get automatically added to telesope
 my_array=(
     directories
     directories_all
+    project_directories
+    find_root_dir
     files
     select_from_history
     selected_vault
@@ -218,6 +236,21 @@ directories_all() {
     zle reset-prompt
 }
 
+project_directories() {
+    local selected_dir
+    root_dir=$(find_root_dir)
+    selected_dir=$(fdfind . $root_dir -E '.cargo' -E '.rust*' -E 'n' -E '.cache' -E '.config' -E '.dotnet' -E 'node_modules' -E '.git' -E 'dist' -E 'build' --type d |  fzf) && cd "$selected_dir" || return 1
+    zle reset-prompt
+}
+
+# a fzf function that helps find files only doesn't actuall go to them.
+# this is for lf navigation.
+project_files_for_lf() {
+    root_dir=$(find_root_dir)
+    selected_dir=$(fdfind . $root_dir --type d |  fzf)
+    echo "$selected_dir"
+}
+
 files() {
     local file
     file=$(fdfind . /home/aaron/ --hidden --type f |  fzf) && vim "$file" || return 1
@@ -234,9 +267,25 @@ cheat_sh() {
     fi
 }
 
-#----------------------------------------------------------
-#----------------------------------------------------------
-#----------------------------------------------------------
+find_root_dir() {
+
+    local file_list=(".git" "README.md")
+    local current_dir="$PWD"
+
+    #  while  the curredir is not the root dir
+    while [[ "$current_dir" != "/home/aaron/" ]]; do
+        for file in $file_list; do
+            if [[ -e "$current_dir/$file" ]]; then
+                echo "$current_dir"
+                return 0
+            fi
+        done
+        current_dir=$(dirname "$current_dir")
+    done
+
+    echo "Root directory not found."
+    return 1
+}
 
 
 # Function to select and edit from command history using fzf
@@ -258,37 +307,23 @@ selected_vault() {
     wslview "obsidian://open?vault=$encoded_vault"
 }
 
+#----------------------------------------------------------
+#----------------------------------------------------------
+#----------------------------------------------------------
+
 bindkey -s '^G' '^ulazygit\n'
 
 # Define a Zsh widget that calls the function
 zle -N my_telescope telescope
 bindkey "^O" my_telescope
 
+bindkey '^H' backward-kill-word
+bindkey '^p' up-line-or-history
+bindkey '^n' down-line-or-history
+bindkey '^e' autosuggest-accept
 
-if [ -x /usr/bin/dircolors ]; then
-
-    # test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-    # export LS_COLORS="$LS_COLORS:ow=30;44:" # fix ls color for folders with 777 permissions
-
-    alias grep='grep --color=auto'
-    alias fgrep='fgrep --color=auto'
-    alias egrep='egrep --color=auto'
-
-    alias diff='diff --color=auto'
-    alias ip='ip --color=auto'
-
-    export LESS_TERMCAP_mb=$'\E[1;31m'     # begin blink
-    export LESS_TERMCAP_md=$'\E[1;36m'     # begin bold
-    export LESS_TERMCAP_me=$'\E[0m'        # reset bold/blink
-    export LESS_TERMCAP_so=$'\E[01;33m'    # begin reverse video
-    export LESS_TERMCAP_se=$'\E[0m'        # reset reverse video
-    export LESS_TERMCAP_us=$'\E[1;32m'     # begin underline
-    export LESS_TERMCAP_ue=$'\E[0m'        # reset underline
-
-    # Take advantage of $LS_COLORS for completion as well
-    # zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
-    # zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
-fi
+echo -ne '\e[5 q' # Use beam shape cursor on startup.
+preexec() { echo -ne '\e[5 q' ;} # Use beam shape cursor for each new prompt.
 
 # enable auto-suggestions based on the history
 if [ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
@@ -299,27 +334,16 @@ fi
 # Turso
 export PATH="/home/aaron/.turso:$PATH"
 
-
 export N_PREFIX="$HOME/n"; [[ :$PATH: == *":$N_PREFIX/bin:"* ]] || PATH+=":$N_PREFIX/bin"
 
-# Change cursor shape for different vi modes.
-function zle-keymap-select () {
-    case $KEYMAP in
-        vicmd) echo -ne '\e[1 q';;      # block
-        viins|main) echo -ne '\e[5 q';; # beam
-    esac
-}
+# Generated for envman. Do not edit.
+[ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
 
-zle -N zle-keymap-select
-zle-line-init() {
-    zle -K viins # initiate `vi insert` as keymap (can be removed if `bindkey -V` has been set elsewhere)
-    echo -ne "\e[5 q"
-}
-zle -N zle-line-init
-echo -ne '\e[5 q' # Use beam shape cursor on startup.
-preexec() { echo -ne '\e[5 q' ;} # Use beam shape cursor for each new prompt.
+# pnpm
+export PNPM_HOME="/home/aaron/.local/share/pnpm"
 
-# map
-bindkey '^H' backward-kill-word
-
-
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end

@@ -3,8 +3,8 @@
   email = aaron@kaseyhomeloans.com
 
 [core]
-  editor = nvim
-	excludesFile = ~/.gitignore
+  editor = /usr/local/bin/nvim-linux64/bin/nvim
+  excludesFile = ~/.gitignore
 
 [pull]
   rebase = true

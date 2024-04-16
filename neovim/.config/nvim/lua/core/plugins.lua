@@ -139,6 +139,7 @@ require('lazy').setup({
   {
     -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
+    'theHamsta/nvim-treesitter-pairs',
     dependencies = {
       'nvim-treesitter/nvim-treesitter-textobjects',
     },

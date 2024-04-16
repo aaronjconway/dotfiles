@@ -18,7 +18,11 @@ require('telescope').setup {
       '--column',
       '--smart-case',
       '--glob',
-      '!/dist'
+      '!/dist/*',
+      '--glob',
+      '!/node_modules/*',
+      '--glob',
+      '!/pnpm-lock.yml'
 
     },
     file_ignore_patterns = { "node_modules", '.git' },

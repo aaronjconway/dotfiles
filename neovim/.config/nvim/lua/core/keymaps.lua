@@ -12,9 +12,6 @@ vim.keymap.set("n", "<C-o>", "<C-o>zz")
 vim.keymap.set("n", "<C-i>", "<C-i>zz")
 vim.keymap.set("n", "<s-g>", "<s-g>zz")
 
-vim.keymap.set('n', '<C-j>', ':cnext<CR>')
-vim.keymap.set('n', '<C-k>', ':cprev<CR>')
-
 --maps backspace in insert to delete word
 vim.keymap.set("i", "<C-H>", "<C-W>")
 
@@ -33,7 +30,9 @@ vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = tr
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
 --leave insert quickly
-vim.keymap.set('i', 'kj', "<ESC>l", { desc = "escap insert mode" })
+vim.keymap.set('i', 'kj', "<ESC>l")
+--leave insert quickly
+vim.keymap.set('v', 'kj', "<ESC>")
 
 -- Select (charwise) the contents of the current line, excluding indentation.
 vim.keymap.set("n", "vv", "^vg_")

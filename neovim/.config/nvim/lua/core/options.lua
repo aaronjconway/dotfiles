@@ -45,7 +45,7 @@ vim.opt.undofile = true
 
 -- Decrease update time
 vim.o.updatetime = 250
-vim.o.timeoutlen = 300
+vim.o.timeoutlen = 250
 
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'

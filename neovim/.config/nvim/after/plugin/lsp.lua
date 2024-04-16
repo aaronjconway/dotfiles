@@ -17,7 +17,6 @@ lsp_zero.on_attach(function(_, bufnr)
   nmap('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
   nmap('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
   nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
-  nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
   nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
 
   vim.api.nvim_create_autocmd('BufWritePre', {
@@ -80,13 +79,15 @@ require('mason-lspconfig').setup({
     rust_analyzer = function()
       require('lspconfig').rust_analyzer.setup({})
     end,
-    ------------grammarly---------------
-    grammarly = function()
-      require('lspconfig').grammarly.setup {}
-    end,
     ------------Svelte---------------
     svelte = function()
       require('lspconfig').svelte.setup {}
+    end,
+    ------------Marksman---------------
+    marksman = function()
+      require('lspconfig').marksman.setup {
+        file_types = { 'mdx', 'md' }
+      }
     end,
   },
 })

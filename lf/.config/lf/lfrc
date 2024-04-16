@@ -51,18 +51,15 @@ set previewer ~/.config/lf/preview.sh
 
 # open
 map <enter> open
-map e &$OPENER $f
-map o $mimeopen $f
 map D trash
 map . :filter
-map A test
 
 # create directory/file
 map ad push $mkdir<space>
 map af push $touch<space>
 
 # Quickly locate a file with fzf and select it in lf
-map gf $lf -remote "send $id select $(fzf)"
+map gf $lf -remote "send $id select $(fdfind . $(find_root_dir) | fzf)"
 
 # map <esc> unselect; clear
 
@@ -81,16 +78,16 @@ map = &bcompare $fx
 # map X !$f
 
 # directory aliases
-map gv cd ~/.config/nvim
-map gc cd ~/.config
-map gp cd ~/code
-map gdl cd ~/dl
-map gdo cd ~/docs
-map ge cd /etc
-map gm cd /mnt
-map go cd /opt
-map g/ cd /
-map g~ cd ~
+# map gv cd ~/.config/nvim
+# map gc cd ~/.config
+# map gp cd ~/code
+# map gdl cd ~/dl
+# map gdo cd ~/docs
+# map ge cd /etc
+# map gm cd /mnt
+# map go cd /opt
+# map g/ cd /
+# map g~ cd ~
 
 # waiting for https://github.com/gokcehan/lf/issues/111
 # cmap <c-right> cmd-word
@@ -115,8 +112,8 @@ cmd trash ${{
 #     [ "$ans" = "y" ] && rm -rf $fx
 # }}
 
-# Replace open command with robust selection of openers
-# this is where videowe are going to port over the stuff from rangers rifle.conf
+
+
 cmd open ${{
 	case $(file --dereference --mime-type $f -b) in
 		inode/x-empty) $EDITOR $fx ;;
@@ -125,6 +122,7 @@ cmd open ${{
 		application/*) wslview $fx > /dev/null & ;;
 		video/*) wslview $fx > /dev/null & ;;
 		audio/*) wslview $fx > /dev/null & ;;
+		image/*) wslview $fx > /dev/null & ;;
 		*) for f in $fx; do $OPENER $f > /dev/null 2> /dev/null & done;;
 	esac
 }}
