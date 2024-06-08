@@ -2,29 +2,6 @@
 set shellopts '-eu'
 set ifs "\n"
 
-# UB_PID=0
-# UB_SOCKET=""
-
-# case "$(uname -a)" in
-#     *Darwin*) UEBERZUG_TMP_DIR="$TMPDIR" ;;
-#     *) UEBERZUG_TMP_DIR="/tmp" ;;
-# esac
-#
-# cleanup() {
-#     exec 3>&-
-#     ueberzugpp cmd -s "$UB_SOCKET" -a exit
-# }
-#
-# [ ! -d "$HOME/.cache/lf" ] && mkdir -p "$HOME/.cache/lf"
-# UB_PID_FILE="$UEBERZUG_TMP_DIR/.$(uuidgen)"
-# ueberzugpp layer --silent --no-stdin --use-escape-codes --pid-file "$UB_PID_FILE"
-# UB_PID=$(cat "$UB_PID_FILE")
-# rm "$UB_PID_FILE"
-# UB_SOCKET="$UEBERZUG_TMP_DIR/ueberzugpp-${UB_PID}.socket"
-# export UB_PID UB_SOCKET
-# trap cleanup HUP INT QUIT TERM EXIT
-# lf "$@" 3>&-
-
 set color256
 set icons
 set hidden
@@ -39,11 +16,6 @@ set sortby natural
 set ratios '1:2:3'
 set timefmt '2006-01-02 15:04:05 -0700'
 set previewer ~/.config/lf/preview.sh
-
-# set promptfmt "
-# \033[38;5;8m\033[48;5;236m %u@%h \033[38;5;236m\033[48;5;234m
-# \033[38;5;8m\033[48;5;234m %w/%f \033[0m\033[38;5;234m\033[0m
-# "
 
 # --------------------------
 # keyboard mappings
@@ -72,26 +44,6 @@ map g? $lf -doc | less
 
 # beyond compare selected files/directories
 map = &bcompare $fx
-
-# execute current file (must be executable)
-# map x $$f
-# map X !$f
-
-# directory aliases
-# map gv cd ~/.config/nvim
-# map gc cd ~/.config
-# map gp cd ~/code
-# map gdl cd ~/dl
-# map gdo cd ~/docs
-# map ge cd /etc
-# map gm cd /mnt
-# map go cd /opt
-# map g/ cd /
-# map g~ cd ~
-
-# waiting for https://github.com/gokcehan/lf/issues/111
-# cmap <c-right> cmd-word
-# cmap <c-left> cmd-word-back
 
 # commands
 # ---
