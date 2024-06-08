@@ -117,6 +117,9 @@ zsh_history_conf
 # -----------------------------------------------------------------------------
 alias s='source ~/.zshrc'
 
+alias admin-linode='ssh root@172.235.38.138'
+
+
 # call cheat sh for info
 alias cheat='cheat_sh'
 
@@ -297,7 +300,7 @@ select_from_history() {
 }
 
 # open obsidian
-alias obsidian='obsidian_open'
+alias obsidian='selected_vault'
 
 selected_vault() {
     local selected_vault
@@ -321,6 +324,9 @@ bindkey '^H' backward-kill-word
 bindkey '^p' up-line-or-history
 bindkey '^n' down-line-or-history
 bindkey '^e' autosuggest-accept
+bindkey '^[[1;5D' backward-word
+bindkey '^[[1;5C' forward-word
+bindkey '^e' autosuggest-accept
 
 echo -ne '\e[5 q' # Use beam shape cursor on startup.
 preexec() { echo -ne '\e[5 q' ;} # Use beam shape cursor for each new prompt.
@@ -334,16 +340,15 @@ fi
 # Turso
 export PATH="/home/aaron/.turso:$PATH"
 
-export N_PREFIX="$HOME/n"; [[ :$PATH: == *":$N_PREFIX/bin:"* ]] || PATH+=":$N_PREFIX/bin"
-
 # Generated for envman. Do not edit.
 [ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
 
 # pnpm
 export PNPM_HOME="/home/aaron/.local/share/pnpm"
-
 case ":$PATH:" in
   *":$PNPM_HOME:"*) ;;
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 # pnpm end
+
+export N_PREFIX="$HOME/n"; [[ :$PATH: == *":$N_PREFIX/bin:"* ]] || PATH+=":$N_PREFIX/bin"  # Added by n-install (see http://git.io/n-install-repo).

@@ -1,5 +1,4 @@
 #!/bin/zsh
-
 alias s='~/.zshrc'
 
 # {{{1 Edit Aliases
