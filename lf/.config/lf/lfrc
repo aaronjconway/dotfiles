@@ -21,10 +21,11 @@ set previewer ~/.config/lf/preview.sh
 # keyboard mappings
 # --------------------------
 
-# open
-map <enter> open
 map D trash
 map . :filter
+
+#extract
+map e extract
 
 # create directory/file
 map ad push $mkdir<space>
@@ -45,60 +46,38 @@ map g? $lf -doc | less
 # beyond compare selected files/directories
 map = &bcompare $fx
 
-# commands
-# ---
-
 cmd mkdir %[ -n "${1}" ] && mkdir -p ${@} || echo "Argument needed"
 cmd mkfile %[ -n "${1}" ] && touch ${@} || echo "Argument needed"
 
-# Implement trash command
+cmd extract ${{
+
+    set -f
+    case $f in
+        *.tar.bz|*.tar.bz2|*.tbz|*.tbz2) tar xjvf $f;;
+        *.tar.gz|*.tgz) tar xzvf $f;;
+        *.tar.xz|*.txz) tar xJvf $f;;
+        *.zip) unzip $f;;
+        *.rar) unrar x $f;;
+        *.7z) 7z x $f;;
+    esac
+}}
+
 cmd trash ${{
 		rm -rf $fx
 }}
 
-# cmd delete ${{
-#     set -f
-#     printf "$fx\n"
-#     printf "delete?[y/n]"
-#     read ans
-#     [ "$ans" = "y" ] && rm -rf $fx
-# }}
 
+map <enter> open
 
-
-cmd open ${{
-	case $(file --dereference --mime-type $f -b) in
-		inode/x-empty) $EDITOR $fx ;;
-		text/*) $EDITOR $fx;;
-		*/json) $EDITOR $fx;;
-		application/*) wslview $fx > /dev/null & ;;
-		video/*) wslview $fx > /dev/null & ;;
-		audio/*) wslview $fx > /dev/null & ;;
-		image/*) wslview $fx > /dev/null & ;;
-		*) for f in $fx; do $OPENER $f > /dev/null 2> /dev/null & done;;
-	esac
+cmd open &{{
+    case $(file --mime-type -Lb $f) in
+        inode/x-empty | text/* | */json | */html) lf -remote "send $id \$$EDITOR \$fx";;
+        *) for f in $fx; do $OPENER $f > /dev/null 2> /dev/null & done;;
+    esac
 }}
 
-# replace paste command with rsync and progress display
-# cmd paste &{{
-# 	load=$(lf -remote 'load')
-# 	mode=$(echo "$load" | sed -n '1p')
-# 	list=$(echo "$load" | sed '1d')
-# 	if [ $mode = 'copy' ]; then
-# 		rsync -avh --ignore-existing --progress $list . \
-# 			| stdbuf -i0 -o0 -e0 tr '\r' '\n' \
-# 			| while read line; do
-# 				echo "$line"
-# 				lf -remote "send $id echo $line"
-# 			done
-# 	elif [ $mode = 'move' ]; then
-# 		mv -i $list .
-# 	fi
-# 	lf -remote 'send load'
-# 	lf -remote 'send clear'
-# }}
 
-# quickly cd into frecent directories using zoxide, zlua or rupa/z
+# quickly cd into recent directories using zoxide, zlua or rupa/z
 cmd z ${{
 	set +u
 	dest=''
@@ -146,5 +125,3 @@ cmd resize %{{
 	# lf -remote "send $id echo 'ui adjusted for width of $w'"
 }}
 resize
-
-#  vim: set ts=2 sw=2 tw=80 noet :

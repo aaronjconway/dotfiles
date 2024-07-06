@@ -1,15 +1,19 @@
 -- Set highlight on search
 vim.o.hlsearch = false
 
+-- see :h fo-table for comment options
+vim.o.formatoptions = 'cr'
+
 -- wrapping and force wrap
 vim.o.wrap = true
 vim.o.textwidth = 80
+vim.o.tw = 80
+vim.o.colorcolumn = "81"
 
 vim.o.linebreak = true
 
 vim.o.hidden = true
 
-vim.o.colorcolumn = 80
 
 vim.opt.tabstop = 4
 vim.opt.softtabstop = 4
@@ -52,5 +56,4 @@ vim.o.completeopt = 'menuone,noselect'
 vim.o.termguicolors = true
 vim.opt.scrolloff = 8
 vim.opt.signcolumn = "yes"
-vim.opt.colorcolumn = "80"
 vim.opt.isfname:append("@-@")

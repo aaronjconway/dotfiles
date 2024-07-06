@@ -4,39 +4,8 @@ if not status then print('problem with which key') end
 
 wk.setup()
 
--- -- takes the content of the current bufer and outputs in another.
--- local handleClose = function()
---   local bufnr = vim.fn.bufnr("%")
---
---   local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
---   local newbuff = vim.api.nvim_create_buf(false, true)
---
---   vim.api.nvim_buf_set_lines(newbuff, 0, -1, false, lines)
---   vim.api.nvim_command('vsp')
---
---   vim.api.nvim_win_set_buf(0, newbuff)
--- end
-
--- takes the content of the current bufer and outputs in another.
-local handleClose = function()
-  if vim.fn.expand('%:t') == 'new' or '' then
-    vim.cmd('silent q')
-  else
-    local success, error = pcall(vim.cmd, 'bdelete')
-    if not success then
-      print('Error occured: ', error)
-    end
-  end
-end
-
 wk.register(
   {
-    --todo: make this better
-    -- q = { ":bdelete<CR>", 'Quit Nicely' },
-    q = { function()
-      handleClose()
-    end, 'Quit Nicely' },
-
     Q = { ":qa!<CR>", 'Quit so Hard' },
     w = { ":w<CR>", 'save nice' },
     W = { ":wq!<CR>", 'save nice' },

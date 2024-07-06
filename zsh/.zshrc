@@ -13,6 +13,7 @@ if ! zgenom saved; then
     zgenom load zsh-users/zsh-syntax-highlighting
     zgenom load zsh-users/zsh-completions
 
+
     # save all to init script
     zgenom save
 fi
@@ -37,6 +38,8 @@ zstyle ':completion:*' verbose true
 zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 zstyle :compinstall filename '/home/aaron/.zshrc'
 _comp_options+=(globdots)		# Include hidden files.
+
+plugins=(docker)
 
 autoload -Uz compinit
 autoload -U colors && colors
@@ -160,6 +163,7 @@ fi
 
 export EDITOR="/usr/local/bin/nvim-linux64/bin/nvim"
 export VISUAL="/usr/local/bin/nvim-linux64/bin/nvim"
+export OPENER="wslview"
 export FZF_DEFAULT_OPTS='--border --margin=1 --padding=1 --layout=reverse --height 60% --color=hl+:#b83232,bg+:#FFE5B4,fg+:#282C34,gutter:-1'
 export TERM='xterm-256color'
 export PATH="$HOME/.local/bin:$PATH"
@@ -213,6 +217,7 @@ h() {"$@" | batcat -p --theme="Visual Studio Dark+" --language=man }
 my_array=(
     directories
     directories_all
+    readme
     project_directories
     find_root_dir
     files
@@ -227,9 +232,25 @@ telescope() {
   $choice
 }
 
+
 directories() {
     local selected_dir
     selected_dir=$(fdfind . /home/aaron/ -E '.cargo' -E '.rust*' -E 'n' -E '.cache' -E '.config' -E '.dotnet' -E 'node_modules' -E '.git' -E 'dist' -E 'build' --type d |  fzf) && cd "$selected_dir" || return 1
+    zle reset-prompt
+}
+
+
+readme() {
+    local selected_dir
+    selected_dir=$(fdfind . . --type d | fzf --preview '[[ -f {}/README.md ]] && batcat {}/README.md || echo "README.md not found"') && cd "$selected_dir" || return 1
+
+    # Final check and preview after selection
+    if [[ -f "README.md" ]]; then
+        batcat "README.md"
+    else
+        echo "README.md not found in the selected directory."
+    fi
+
     zle reset-prompt
 }
 
@@ -352,3 +373,4 @@ esac
 # pnpm end
 
 export N_PREFIX="$HOME/n"; [[ :$PATH: == *":$N_PREFIX/bin:"* ]] || PATH+=":$N_PREFIX/bin"  # Added by n-install (see http://git.io/n-install-repo).
+

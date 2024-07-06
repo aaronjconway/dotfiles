@@ -11,12 +11,14 @@ comment.setup({
   }
 })
 
-ft = require('Comment.ft')
+local ft = require('Comment.ft')
 ft.set('mdx', "{/*%s*/}")
 ft.set('markdown', "{/*%s*/}")
 
---see :h fo-table for why these letters are set.
---c,r allow ading comment lines on enter action whne in  insert
---but not on "o" new line
 
-vim.o.formatoptions = 'cr'
+--:h fo-table for why these letters are set.
+
+
+
+--c,r allow adding comment lines on enter when in insert
+--but not on "o" new line
