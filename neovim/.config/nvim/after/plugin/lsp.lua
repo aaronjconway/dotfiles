@@ -83,6 +83,10 @@ require('mason-lspconfig').setup({
     svelte = function()
       require('lspconfig').svelte.setup {}
     end,
+    ------------HTMX---------------
+    htmx = function()
+      require('lspconfig').htmx.setup {}
+    end,
     ------------Marksman---------------
     marksman = function()
       require('lspconfig').marksman.setup {
