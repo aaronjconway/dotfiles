@@ -23,31 +23,38 @@ fi
 
 # The following lines were added by compinstall
 
+autoload -Uz compinit
+autoload -U colors && colors
+autoload bashcompinit && bashcompinit
+source /etc/bash_completion.d/azure-cli
+
+compinit
 compinit -d ~/.cache/zcompdump
-zstyle ':completion:*' menu select
-zstyle ':completion:*' auto-description 'specify: %d'
-zstyle ':completion:*' completer _expand _complete
-zstyle ':completion:*' format 'Completing %d'
+
+zstyle ':completion:*' format '%B%d%b'
 zstyle ':completion:*' group-name ''
-zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
-zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
-zstyle ':completion:*' rehash true
-zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
-zstyle ':completion:*' use-compctl false
-zstyle ':completion:*' verbose true
-zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
+zstyle ':completion:*' insert-unambiguous true
+zstyle ':completion:*' list-colors ''
+zstyle ':completion:*' list-prompt '%S%M matches%s'
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}' 'r:|[._-]=**' 'l:|=* r:|=*'
+zstyle ':completion:*' menu select=2
+zstyle ':completion:*' select-prompt '%SScrolling active: %s'
+zstyle ':completion:*' list-prompt '%S%M matches%s'
+zstyle ':completion:*' completer _complete _approximate
+zstyle ':completion:*' completion-ignore-case true
+autoload -U up-line-or-search down-line-or-search
+zle -N up-line-or-search
+zle -N down-line-or-search
+
+zle -N autosuggest-or-complete
+zle -A complete-word autosuggest-or-complete
+
 zstyle :compinstall filename '/home/aaron/.zshrc'
 _comp_options+=(globdots)		# Include hidden files.
 
 plugins=(docker)
 
-autoload -Uz compinit
-autoload -U colors && colors
-compinit
-# End of lines added by compinstall
-
 setopt autocd
-#setopt correct
 setopt interactivecomments
 setopt magicequalsubst
 setopt nonomatch
@@ -55,10 +62,6 @@ setopt notify
 setopt numericglobsort
 setopt promptsubst
 stty stop undef
-
-# # enable completion features
-# autoload -Uz compinit
-
 
 # configure `time` format
 TIMEFMT=$'\nreal\t%E\nuser\t%U\nsys\t%S\ncpu\t%P'
@@ -78,39 +81,21 @@ zstyle ':vcs_info:git*:*' check-for-changes false
 PROMPT='${vcs_info_msg_0_}'
 PS1="%F{blue}%n%f%F{yellow}@%f%F{green}%m%f$PROMPT %~ $ "
 
-# History
 zsh_history_conf() {
-    HISTSIZE=100000000
-    SAVEHIST=100000000
-    HISTFILE=~/.zsh_history
-    HISTTIMEFORMAT="[%F %T] "
+    HISTSIZE=100000000        # Maximum number of events stored in memory
+    SAVEHIST=100000000        # Maximum number of events saved to file
+    HISTFILE=~/.zsh_history   # Where to save the history file
+    HISTTIMEFORMAT="[%F %T] " # Include date and time in history entries
 
-    # ignore case when expanding PATH params
-    setopt NO_CASE_GLOB
-
-    # Append to history, instead of replacing it.
     setopt APPEND_HISTORY
-
-    # Save as : start time:elapsed seconds;command
     setopt EXTENDED_HISTORY
-
-    # Do not store duplication's
     setopt HIST_IGNORE_ALL_DUPS
     setopt HIST_FIND_NO_DUPS
-
-    # Do not add command line to history when the first character
-    # on the line is a space, or when one of the expanded
-    # aliases contains a leading space
     setopt HIST_IGNORE_SPACE
-
-    # Filter out superfluous blanks
     setopt HIST_REDUCE_BLANKS
-
-    # Waits until completion to save command to history. Without this, history
-    # is saved as command starts, making elapsed time from EXTENDED_HISTORY
-    # always being 0
-    # Has no effect if SHARE_HISTORY is set
-    setopt INC_APPEND_HISTORY_TIME
+    setopt INC_APPEND_HISTORY
+    setopt SHARE_HISTORY
+    setopt NO_CASE_GLOB
 }
 
 zsh_history_conf
@@ -198,8 +183,18 @@ fi
 #----------------------------------------------------------
 #-----------------------Functions--------------------------
 #----------------------------------------------------------
-#
+
+
+mkd() {
+  if [ -z "$1" ]; then
+    echo "Usage: mkd <directory_name>"
+    return 1
+  fi
+  mkdir -p "$1" && cd "$1"
+}
+
 # Use lf to cd into dirs
+
 lfcd () {
     tmp="$(mktemp -uq)"
     trap 'rm -f $tmp >/dev/null 2>&1 && trap - HUP INT QUIT TERM PWR EXIT' HUP INT QUIT TERM PWR EXIT
@@ -374,3 +369,6 @@ esac
 
 export N_PREFIX="$HOME/n"; [[ :$PATH: == *":$N_PREFIX/bin:"* ]] || PATH+=":$N_PREFIX/bin"  # Added by n-install (see http://git.io/n-install-repo).
 
+
+# add Pulumi to the PATH
+export PATH=$PATH:/home/aaron/.pulumi/bin

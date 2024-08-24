@@ -13,6 +13,7 @@ vim.opt.rtp:prepend(lazypath)
 
 require('lazy').setup({
   ----------------------------------------------------------------------------
+  { 'junegunn/vim-easy-align' },
   { 'folke/todo-comments.nvim' },
   { 'norcalli/nvim-colorizer.lua' },
   { 'stevearc/conform.nvim' },

@@ -66,9 +66,10 @@ require('mason-lspconfig').setup({
       })
     end,
     ------------Typescript---------------
-    tsserver = function()
-      require('lspconfig').tsserver.setup {}
-    end,
+    -- tsserver = function()
+    --   require('lspconfig').tsserver.setup {
+    --   }
+    -- end,
     ------------Astro--------------------
     astro = function()
       require('lspconfig').astro.setup {
