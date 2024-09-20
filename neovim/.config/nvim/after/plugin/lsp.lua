@@ -66,10 +66,10 @@ require('mason-lspconfig').setup({
       })
     end,
     ------------Typescript---------------
-    -- tsserver = function()
-    --   require('lspconfig').tsserver.setup {
-    --   }
-    -- end,
+    tsserver = function()
+      require('lspconfig').tsserver.setup {
+      }
+    end,
     ------------Astro--------------------
     astro = function()
       require('lspconfig').astro.setup {
@@ -83,6 +83,10 @@ require('mason-lspconfig').setup({
     ------------Svelte---------------
     svelte = function()
       require('lspconfig').svelte.setup {}
+    end,
+    ------------HTML---------------
+    html = function()
+      require('lspconfig').html.setup {}
     end,
     ------------HTMX---------------
     htmx = function()

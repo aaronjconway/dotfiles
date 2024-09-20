@@ -54,6 +54,10 @@ vim.o.timeoutlen = 250
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'
 vim.o.termguicolors = true
+
+-- Set cursor to block in normal mode and beam in insert mode
+vim.opt.guicursor = "n-v-c:block,i-ci-ve:ver25,r-cr:hor20,o:hor50"
+
 vim.opt.scrolloff = 8
 vim.opt.signcolumn = "yes"
 vim.opt.isfname:append("@-@")

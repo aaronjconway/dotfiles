@@ -1,35 +1,30 @@
-bindkey -e
+bindkey -v
+export KEYTIMEOUT=1
+
 # -----------------------------------------------------------------------------
 # load zgenom
 # -----------------------------------------------------------------------------
 source "${HOME}/.zgenom/zgenom.zsh"
 
-# if the init scipt doesn't exist
 if ! zgenom saved; then
     echo "Creating a zgenom save"
 
     # plugins
-    zgenom load zsh-users/zsh-autosuggestions
     zgenom load zsh-users/zsh-syntax-highlighting
     zgenom load zsh-users/zsh-completions
-
+    zgenom load zsh-users/zsh-autosuggestions
 
     # save all to init script
     zgenom save
 fi
 # -----------------------------------------------------------------------------
-###############################################################################
-# -----------------------------------------------------------------------------
-
-# The following lines were added by compinstall
 
 autoload -Uz compinit
 autoload -U colors && colors
 autoload bashcompinit && bashcompinit
 source /etc/bash_completion.d/azure-cli
 
-compinit
-compinit -d ~/.cache/zcompdump
+
 
 zstyle ':completion:*' format '%B%d%b'
 zstyle ':completion:*' group-name ''
@@ -52,7 +47,9 @@ zle -A complete-word autosuggest-or-complete
 zstyle :compinstall filename '/home/aaron/.zshrc'
 _comp_options+=(globdots)		# Include hidden files.
 
-plugins=(docker)
+compinit
+compinit -d ~/.cache/zcompdump
+
 
 setopt autocd
 setopt interactivecomments
@@ -69,9 +66,6 @@ TIMEFMT=$'\nreal\t%E\nuser\t%U\nsys\t%S\ncpu\t%P'
 autoload -Uz vcs_info
 setopt prompt_subst
 
-precmd() {
-    vcs_info
-}
 
 zstyle ':vcs_info:*' enable git
 zstyle ':vcs_info:git*' formats "[%F{yellow}%b%f]"
@@ -82,27 +76,32 @@ PROMPT='${vcs_info_msg_0_}'
 PS1="%F{blue}%n%f%F{yellow}@%f%F{green}%m%f$PROMPT %~ $ "
 
 zsh_history_conf() {
-    HISTSIZE=100000000        # Maximum number of events stored in memory
-    SAVEHIST=100000000        # Maximum number of events saved to file
-    HISTFILE=~/.zsh_history   # Where to save the history file
-    HISTTIMEFORMAT="[%F %T] " # Include date and time in history entries
+    HISTSIZE=100000000
+    SAVEHIST=100000000
+    HISTFILE=~/.zsh_history
+    HISTTIMEFORMAT="[%F %T] "
 
+    setopt SHARE_HISTORY
+    setopt INC_APPEND_HISTORY
     setopt APPEND_HISTORY
     setopt EXTENDED_HISTORY
-    setopt HIST_IGNORE_ALL_DUPS
-    setopt HIST_FIND_NO_DUPS
+    setopt HIST_IGNORE_DUPS
     setopt HIST_IGNORE_SPACE
+    setopt HIST_SAVE_NO_DUPS
     setopt HIST_REDUCE_BLANKS
-    setopt INC_APPEND_HISTORY
-    setopt SHARE_HISTORY
     setopt NO_CASE_GLOB
 }
 
 zsh_history_conf
 
+
 # -----------------------------------------------------------------------------
 # Alias's
 # -----------------------------------------------------------------------------
+
+alias ns='nix-shell'
+
+
 alias s='source ~/.zshrc'
 
 alias admin-linode='ssh root@172.235.38.138'
@@ -185,6 +184,7 @@ fi
 #----------------------------------------------------------
 
 
+
 mkd() {
   if [ -z "$1" ]; then
     echo "Usage: mkd <directory_name>"
@@ -217,7 +217,7 @@ my_array=(
     find_root_dir
     files
     select_from_history
-    selected_vault
+    obsidian
 )
 
 # Function to select from array using fzf
@@ -315,26 +315,27 @@ select_from_history() {
     zle redisplay
 }
 
-# open obsidian
-alias obsidian='selected_vault'
-
-selected_vault() {
+obsidian() {
     local selected_vault
-    my_vaults=("KHL Vault" "Personal Vault")
+    my_vaults=("KHL Vault" "Personal Vault" "Technology")
     selected_vault=$(printf '%s\n' "${my_vaults[@]}" | fzf) || return 1
     encoded_vault=$(echo "$selected_vault" | sed 's/ /%20/g')
     wslview "obsidian://open?vault=$encoded_vault"
+    zle reset-prompt
 }
 
 #----------------------------------------------------------
 #----------------------------------------------------------
 #----------------------------------------------------------
 
+
 bindkey -s '^G' '^ulazygit\n'
 
 # Define a Zsh widget that calls the function
 zle -N my_telescope telescope
 bindkey "^O" my_telescope
+
+
 
 bindkey '^H' backward-kill-word
 bindkey '^p' up-line-or-history
@@ -344,9 +345,45 @@ bindkey '^[[1;5D' backward-word
 bindkey '^[[1;5C' forward-word
 bindkey '^e' autosuggest-accept
 
-echo -ne '\e[5 q' # Use beam shape cursor on startup.
-preexec() { echo -ne '\e[5 q' ;} # Use beam shape cursor for each new prompt.
+precmd() {
+    vcs_info
+}
 
+function zle-keymap-select {
+  if [[ ${KEYMAP} == vicmd ]] ||
+     [[ $1 = 'block' ]]; then
+    echo -ne '\e[1 q'
+  elif [[ ${KEYMAP} == main ]] ||
+       [[ ${KEYMAP} == viins ]] ||
+       [[ ${KEYMAP} = '' ]] ||
+       [[ $1 = 'beam' ]]; then
+    echo -ne '\e[5 q'
+  fi
+}
+
+function zle-alert {
+  if [[ ${KEYMAP} == vicmd ]]; then
+    echo 'beans!'
+  elif [[ ${KEYMAP} == main ]]; then
+    echo 'cheese!'
+  fi
+}
+
+
+
+zle -N zle-keymap-select
+zle-line-init() {
+    zle -K viins
+    zle -N zle-alert
+    echo -ne "\e[5 q"
+}
+zle -N zle-line-init
+echo -ne '\e[5 q'
+preexec() { echo -ne '\e[5 q' ;}
+
+
+
+#------------------------------------------------------------------------------
 # enable auto-suggestions based on the history
 if [ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
     . /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
@@ -365,10 +402,6 @@ case ":$PATH:" in
   *":$PNPM_HOME:"*) ;;
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
-# pnpm end
 
-export N_PREFIX="$HOME/n"; [[ :$PATH: == *":$N_PREFIX/bin:"* ]] || PATH+=":$N_PREFIX/bin"  # Added by n-install (see http://git.io/n-install-repo).
-
-
-# add Pulumi to the PATH
+export N_PREFIX="$HOME/n"; [[ :$PATH: == *":$N_PREFIX/bin:"* ]] || PATH+=":$N_PREFIX/bin"
 export PATH=$PATH:/home/aaron/.pulumi/bin
