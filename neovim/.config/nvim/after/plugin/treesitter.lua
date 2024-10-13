@@ -5,6 +5,7 @@ vim.filetype.add({
   },
 })
 
+
 vim.treesitter.language.register('markdown', 'mdx')
 
 vim.defer_fn(function()

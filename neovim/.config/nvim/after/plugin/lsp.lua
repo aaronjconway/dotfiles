@@ -72,9 +72,9 @@ require('mason-lspconfig').setup({
     end,
     ------------Astro--------------------
     astro = function()
-      require('lspconfig').astro.setup {
-        --add a cmd here
-      }
+      require('lspconfig').astro.setup({
+        file_types = { 'mdx', 'md' }
+      })
     end,
     ------------Rust--------------------
     rust_analyzer = function()
@@ -95,8 +95,14 @@ require('mason-lspconfig').setup({
     ------------Marksman---------------
     marksman = function()
       require('lspconfig').marksman.setup {
-        file_types = { 'mdx', 'md' }
+        file_types = { '.mdx', '.md' }
       }
+    end,
+    ------------MDX---------------
+    mdx_analyzer = function()
+      require('lspconfig').mdx_analyzer.setup({
+        file_types = { '.mdx', '.md' }
+      })
     end,
   },
 })

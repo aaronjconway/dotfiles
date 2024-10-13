@@ -38,7 +38,7 @@ map gf $lf -remote "send $id select $(fdfind . $(find_root_dir) | fzf)"
 
 map sn :{{ set sortby natural; set info size; set preview; }}
 map ss :{{ set sortby size; set info size; set preview; }}
-map st :{{ set sortby time; set info time; set preview; }}
+map st :{{ set sortby time; set reverse; set info time; set preview; }}
 
 # show documentation
 map g? $lf -doc | less
