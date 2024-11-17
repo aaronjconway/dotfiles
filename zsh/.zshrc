@@ -21,7 +21,8 @@ fi
 
 autoload -Uz compinit
 autoload -U colors && colors
-autoload bashcompinit && bashcompinit
+autoload -U +X bashcompinit && bashcompinit
+complete -C '/usr/local/bin/aws_completer' aws
 source /etc/bash_completion.d/azure-cli
 
 
@@ -99,8 +100,16 @@ zsh_history_conf
 # Alias's
 # -----------------------------------------------------------------------------
 
+alias activate='source ~/py_envs/bin/activate'
 alias ns='nix-shell'
 
+
+domain() {
+    while true; do
+        read "input?>"
+        whois "$input" | awk 'NR==1 { $1=$1; print }'
+    done
+}
 
 alias s='source ~/.zshrc'
 
@@ -119,7 +128,7 @@ alias python="python3"
 alias py="python3"
 
 # open go docs - idk how useful this is. kinda wanna port to typesense
-alias godocs='wslview http://localhost:5555 && godoc -http=:5555 -v -index'
+alias godocs='open http://localhost:5555 && godoc -http=:5555 -v -index'
 
 alias nvim="/usr/local/bin/nvim-linux64/bin/nvim"
 alias vim="nvim"
@@ -130,8 +139,7 @@ alias startup="~/dotfiles/tmux/.config/tmux/startup.sh"
 #cd into windows stuff
 alias win='cd /mnt/c/Users/ajcon'
 
-alias ls="exa -l"
-alias la="exa -la"
+alias ls="ls -la --color=auto"
 
 #Golang
 if [ -d /usr/local/go/bin/ ]; then
@@ -147,11 +155,17 @@ fi
 
 export EDITOR="/usr/local/bin/nvim-linux64/bin/nvim"
 export VISUAL="/usr/local/bin/nvim-linux64/bin/nvim"
-export OPENER="wslview"
+export PATH=$PATH:/usr/local/bin/nvim-linux64/bin/nvim
+export OPENER="xdg-open"
+
 export FZF_DEFAULT_OPTS='--border --margin=1 --padding=1 --layout=reverse --height 60% --color=hl+:#b83232,bg+:#FFE5B4,fg+:#282C34,gutter:-1'
 export TERM='xterm-256color'
 export PATH="$HOME/.local/bin:$PATH"
 export PAGER=less
+export PATH="$HOME/Development/utils/:$PATH"
+
+# change the word chars so that I can backspace to a /
+export WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'
 
 
 if [ -x /usr/bin/dircolors ]; then
@@ -320,7 +334,7 @@ obsidian() {
     my_vaults=("KHL Vault" "Personal Vault" "Technology")
     selected_vault=$(printf '%s\n' "${my_vaults[@]}" | fzf) || return 1
     encoded_vault=$(echo "$selected_vault" | sed 's/ /%20/g')
-    wslview "obsidian://open?vault=$encoded_vault"
+    open "obsidian://open?vault=$encoded_vault"
     zle reset-prompt
 }
 
@@ -390,9 +404,6 @@ if [ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
     ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#999'
 fi
 
-# Turso
-export PATH="/home/aaron/.turso:$PATH"
-
 # Generated for envman. Do not edit.
 [ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
 
@@ -403,5 +414,16 @@ case ":$PATH:" in
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 
-export N_PREFIX="$HOME/n"; [[ :$PATH: == *":$N_PREFIX/bin:"* ]] || PATH+=":$N_PREFIX/bin"
 export PATH=$PATH:/home/aaron/.pulumi/bin
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+export N_PREFIX="$HOME/n"; [[ :$PATH: == *":$N_PREFIX/bin:"* ]] || PATH+=":$N_PREFIX/bin"  # Added by n-install (see http://git.io/n-install-repo).
+
+# pnpm
+export PNPM_HOME="/home/aaron/.local/share/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end

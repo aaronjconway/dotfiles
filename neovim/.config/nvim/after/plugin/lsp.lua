@@ -66,8 +66,8 @@ require('mason-lspconfig').setup({
       })
     end,
     ------------Typescript---------------
-    tsserver = function()
-      require('lspconfig').tsserver.setup {
+    ts_ls = function()
+      require('lspconfig').ts_ls.setup {
       }
     end,
     ------------Astro--------------------
@@ -80,17 +80,13 @@ require('mason-lspconfig').setup({
     rust_analyzer = function()
       require('lspconfig').rust_analyzer.setup({})
     end,
-    ------------Svelte---------------
-    svelte = function()
-      require('lspconfig').svelte.setup {}
-    end,
+    -- ------------Svelte---------------
+    -- svelte = function()
+    --   require('lspconfig').svelte.setup {}
+    -- end,
     ------------HTML---------------
     html = function()
       require('lspconfig').html.setup {}
-    end,
-    ------------HTMX---------------
-    htmx = function()
-      require('lspconfig').htmx.setup {}
     end,
     ------------Marksman---------------
     marksman = function()
@@ -104,6 +100,20 @@ require('mason-lspconfig').setup({
         file_types = { '.mdx', '.md' }
       })
     end,
+    pylsp = function()
+      require('lspconfig').pylsp.setup({
+        settings = {
+          pylsp = {
+            plugins = {
+              pycodestyle = {
+                ignore = { 'E501' },
+                maxLineLength = 200
+              }
+            }
+          }
+        }
+      })
+    end
   },
 })
 

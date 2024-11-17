@@ -67,11 +67,15 @@ cmd trash ${{
 }}
 
 
+map o &{{xdg-open $f}}
+
 map <enter> open
 
 cmd open &{{
     case $(file --mime-type -Lb $f) in
-        inode/x-empty | text/* | */json | */html) lf -remote "send $id \$$EDITOR \$fx";;
+        application/pdf) for f in $fx; do $OPENER $f > /dev/null 2> /dev/null & done;;
+        application/octet-stream) for f in $fx; do $OPENER $f > /dev/null 2> /dev/null & done;;
+        inode/x-empty | text/* | */json | */html | application/*) lf -remote "send $id \$$EDITOR \$fx";;
         *) for f in $fx; do $OPENER $f > /dev/null 2> /dev/null & done;;
     esac
 }}

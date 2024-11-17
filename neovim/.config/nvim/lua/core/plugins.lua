@@ -1,40 +1,19 @@
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
-if not vim.loop.fs_stat(lazypath) then
-  vim.fn.system {
-    'git',
-    'clone',
-    '--filter=blob:none',
-    'https://github.com/folke/lazy.nvim.git',
-    '--branch=stable',
-    lazypath,
-  }
-end
+if not (vim.uv or vim.loop).fs_stat(lazypath) then
+  local lazyrepo = 'https://github.com/folke/lazy.nvim.git'
+  local out = vim.fn.system { 'git', 'clone', '--filter=blob:none', '--branch=stable', lazyrepo, lazypath }
+  if vim.v.shell_error ~= 0 then
+    error('Error cloning lazy.nvim:\n' .. out)
+  end
+end ---@diagnostic disable-next-line: undefined-field
 vim.opt.rtp:prepend(lazypath)
 
 require('lazy').setup({
-  ----------------------------------------------------------------------------
+  ----------------------------------beginning------------------------------------------
   { 'junegunn/vim-easy-align' },
   { 'folke/todo-comments.nvim' },
   { 'norcalli/nvim-colorizer.lua' },
-  { 'stevearc/conform.nvim' },
   { 'vim-scripts/loremipsum' },
-  {
-    'kristijanhusak/vim-dadbod-ui',
-    dependencies = {
-      { 'tpope/vim-dadbod',                     lazy = true },
-      { 'kristijanhusak/vim-dadbod-completion', ft = { 'sql', 'mysql', 'plsql', 'sqlite' }, lazy = true },
-    },
-    cmd = {
-      'DBUI',
-      'DBUIToggle',
-      'DBUIAddConnection',
-      'DBUIFindBuffer',
-    },
-    init = function()
-      -- Your DBUI configuration
-      vim.g.db_ui_use_nerd_fonts = 1
-    end,
-  },
   { 'MunifTanjim/prettier.nvim' },
   {
     'folke/flash.nvim',
@@ -44,36 +23,11 @@ require('lazy').setup({
   --vscode
   { 'mofiqul/vscode.nvim' },
   {
-    "ThePrimeagen/harpoon",
-    branch = "harpoon2",
-    requires = {
-      { 'nvim-lua/plenary.nvim' }
-    },
-  },
-
-  {
-    "folke/trouble.nvim",
-    dependencies = { "nvim-tree/nvim-web-devicons" },
-    opts = {
-      position = 'right',
-
-    }
-  },
-  { "Vimjas/vim-python-pep8-indent" },
-  {
     'windwp/nvim-autopairs',
     event = "InsertEnter",
     opts = {}
   },
-  {
-    "ahmedkhalf/project.nvim",
-    config = function()
-      require("project_nvim").setup {
-        show_hidden = true,
-        patterns = { 'README.md', '.git' },
-      }
-    end
-  },
+  { "ahmedkhalf/project.nvim" },
 
   --tpope
   'tpope/vim-fugitive',
@@ -112,6 +66,7 @@ require('lazy').setup({
 
   {
     'nvim-telescope/telescope.nvim',
+    event = 'VimEnter',
     branch = '0.1.x',
     dependencies = {
       'nvim-lua/plenary.nvim',
@@ -124,14 +79,6 @@ require('lazy').setup({
       },
     },
   },
-
-  {
-    -- Highlight, edit, and navigate code
-    'nvim-treesitter/nvim-treesitter',
-    'theHamsta/nvim-treesitter-pairs',
-    dependencies = {
-      'nvim-treesitter/nvim-treesitter-textobjects',
-    },
-    build = ':TSUpdate',
-  },
+  { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" }
+  -----------------------end of plugins--------------------------
 }, {})

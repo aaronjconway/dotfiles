@@ -1,4 +1,6 @@
 local wk = require('which-key')
+local utils = require('core.utils')
+local project_root = utils.find_project_root()
 
 require('telescope').setup {
   defaults = {
@@ -7,7 +9,8 @@ require('telescope').setup {
       "/.svelte-kit/*",
       "package-lock.json",
       "tsconfig.json",
-      "public", "dist",
+      "public",
+      "dist",
       "node_modules",
       "pnpm-lock.yaml",
       ".json",
@@ -32,25 +35,35 @@ require('telescope').setup {
 -- Enable telescope fzf native, if installed
 pcall(require('telescope').load_extension, 'fzf')
 
+-- Enable proje
+pcall(require('telescope').load_extension, 'projects')
 
-wk.register(
+
+local builtin = require 'telescope.builtin'
+wk.add({
+  { "<leader>s",  group = "Search" },
+  { "<leader>sb", ":Telescope buffers<CR>",  desc = "buffers" },
+  { "<leader>sc", ":Telescope commands<CR>", desc = "commands" },
+  -- { "<leader>sf", ":Telescope find_files hidden=true<CR>", desc = "find files" },
   {
-    s = {
-      name = 'Search',
-      f = { ":Telescope find_files hidden=true<CR>", 'find files' },
-      h = { ":Telescope help_tags<CR>", 'help tags' },
-      k = { ":Telescope keymaps<CR>", 'keymaps' },
-      o = { ":Telescope oldfiles hidden=true<CR>", 'old files' },
-      p = { ":Telescope projects<CR>", 'projects' },
-      t = { ":Telescope<CR>", 'Telescope' },
-      g = { ":Telescope live_grep<CR>", 'grep' },
-      b = { ":Telescope buffers<CR>", 'buffers' },
-      c = { ":Telescope commands<CR>", 'commands' },
-      r = { ":Telescope resume<CR>", 'resume the last search' },
-    }
+    "<leader>sf",
+    function()
+      builtin.find_files({
+        cwd = project_root,
+        hidden = true
+      })
+    end,
+    desc = "find files"
   },
-  { prefix = '<leader>' }
-)
+  { "<leader>sg", require "core.rip",                    desc = "grep" },
+  { "<leader>sh", ":Telescope help_tags<CR>",            desc = "help tags" },
+  { "<leader>sk", ":Telescope keymaps<CR>",              desc = "keymaps" },
+  { "<leader>so", ":Telescope oldfiles hidden=true<CR>", desc = "old files" },
+  { "<leader>sp", ":Telescope projects<CR>",             desc = "projects" },
+  { "<leader>sr", ":Telescope resume<CR>",               desc = "resume the last search" },
+  { "<leader>st", ":Telescope<CR>",                      desc = "Telescope" }
+})
+
 
 
 vim.keymap.set('n', '<leader>/', function()

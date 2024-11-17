@@ -1,8 +1,6 @@
 local status, flash = pcall(require, "flash")
 if (not status) then return end
 
-
--- NOTE: this is a test if todos are across projects
 flash.setup {
   -- labels = "abcdefghijklmnopqrstuvwxyz",
   labels = "asdfghjklqwertyuiopzxcvbnm",
@@ -30,8 +28,6 @@ flash.setup {
 
   highlight = {
     backdrop = true,
-
-    -- just here to remembe the names
     groups = {
       match = "FlashMatch",
       current = "FlashCurrent",

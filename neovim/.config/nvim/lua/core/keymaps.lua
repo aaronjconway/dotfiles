@@ -12,12 +12,10 @@ vim.keymap.set("n", "<C-o>", "<C-o>zz")
 vim.keymap.set("n", "<C-i>", "<C-i>zz")
 vim.keymap.set("n", "<s-g>", "<s-g>zz")
 
---maps backspace in insert to delete word
+--maps backspace and c-H in insert to delete word
+-- have to do this since tmux and normal shell I think send different keys
+vim.keymap.set("i", "<C-BS>", "<C-W>")
 vim.keymap.set("i", "<C-H>", "<C-W>")
-
-
---swap windows
-vim.keymap.set("n", "<C-'>", ":echo 'hello world'")
 
 --swap windows
 vim.keymap.set("n", "<C-l>", "<C-w>w")
@@ -25,17 +23,12 @@ vim.keymap.set("n", "<C-l>", "<C-w>w")
 --don't do anything on space
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 
--- vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
--- vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
---
--- vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
-
-vim.keymap.set('n', 'j', 'gj')
-vim.keymap.set('n', 'k', 'gk')
+vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
+vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
 --leave insert quickly
 vim.keymap.set('i', 'kj', "<ESC>l")
---leave insert quickly
+--leave visual quickly
 vim.keymap.set('v', 'kj', "<ESC>")
 
 -- Select (charwise) the contents of the current line, excluding indentation.
