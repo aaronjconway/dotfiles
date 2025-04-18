@@ -16,6 +16,7 @@ vim.keymap.set("n", "<s-g>", "<s-g>zz")
 -- have to do this since tmux and normal shell I think send different keys
 vim.keymap.set("i", "<C-BS>", "<C-W>")
 vim.keymap.set("i", "<C-H>", "<C-W>")
+vim.keymap.set("c", "<C-H>", "<C-W>")
 
 --swap windows
 vim.keymap.set("n", "<C-l>", "<C-w>w")

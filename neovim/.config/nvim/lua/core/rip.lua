@@ -64,7 +64,15 @@ return function(opts)
           "--smart-case",
           "-uuu",
           "--iglob",
-          "!*{.git,go.mod,go.run,build,cargo,rustup,node_modules,pnpm-lock.yml,.svelte-kit, .astro}"
+          "!*{.git,go.mod,go.run,build,cargo,rustup,node_modules,pnpm-lock.yaml,.svelte-kit,.astro}",
+          "--glob",
+          "!*{.yaml,yml,.prettierignore,package.json}",
+          "--glob",
+          "!*{go.sum,go.mod,.github}",
+          "--glob",
+          "!nats/**",
+          "--glob",
+          "!bin/**"
         },
       }
     end,

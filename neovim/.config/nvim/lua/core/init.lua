@@ -50,6 +50,17 @@ vim.api.nvim_create_user_command('RemoveClassContents', function()
 end, {})
 
 
+vim.api.nvim_create_user_command('Git', function(opts)
+  if #opts.fargs == 0 then
+    vim.cmd('tabnew')
+    vim.cmd('Git')
+  else
+    -- Reconstruct original Git command with arguments
+    vim.cmd('Git ' .. table.concat(opts.fargs, ' '))
+  end
+end, { nargs = '*', complete = 'customlist,fugitive#Complete' })
+
+
 vim.g.netrw_browse_split = 0
 vim.g.netrw_banner = 0
 vim.g.netrw_winsize = 25

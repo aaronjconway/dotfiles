@@ -8,13 +8,12 @@ comment.setup({
   --
   toggler = {
     line = '<C-_>',
-    block = '<C-_>',
   },
   opleader = {
     line = '<C-_>',
-    block = '<C-_>',
   }
 })
+
 local ft = require('Comment.ft')
 ft.set('mdx', "{/*%s*/}")
 ft.set('markdown', "{/*%s*/}")

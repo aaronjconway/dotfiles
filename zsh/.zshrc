@@ -124,11 +124,16 @@ alias rgf="rg . ~ --files | rg"
 
 alias ahk='cd /mnt/c/Users/ajcon/OneDrive/Documents/AutoHotkey/'
 
-alias python="python3"
-alias py="python3"
 
-# open go docs - idk how useful this is. kinda wanna port to typesense
-alias godocs='open http://localhost:5555 && godoc -http=:5555 -v -index'
+# alias python="python3"
+# alias py="python3"
+# used for webui:stable:diffusion:ai:image:generation
+
+## testing temp
+alias python_cmd="python3.11"
+alias python="python3.11"
+alias python3="python3.11"
+
 
 alias nvim="/usr/local/bin/nvim-linux64/bin/nvim"
 alias vim="nvim"
@@ -142,6 +147,11 @@ alias win='cd /mnt/c/Users/ajcon'
 alias ls="ls -la --color=auto"
 
 #Golang
+
+# this is for libsqlite3, gcc and gclib having some conflict that produces and
+# error - unsure of how to resolve
+
+# export CGO_CFLAGS="-g -O2 -Wno-return-local-addr"
 if [ -d /usr/local/go/bin/ ]; then
   export GOPATH=~/go
   export GOBIN="$GOPATH/bin"
@@ -427,5 +437,5 @@ case ":$PATH:" in
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 # pnpm end
-eval 
+eval
 TWILIO_AC_ZSH_SETUP_PATH=/home/aaron/.twilio-cli/autocomplete/zsh_setup && test -f $TWILIO_AC_ZSH_SETUP_PATH && source $TWILIO_AC_ZSH_SETUP_PATH; # twilio autocomplete setup

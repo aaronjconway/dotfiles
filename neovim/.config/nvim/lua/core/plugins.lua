@@ -20,20 +20,24 @@ require('lazy').setup({
     event = 'VeryLazy',
     keys = { { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" } },
   },
+  { "folke/trouble.nvim" },
   --vscode
   { 'mofiqul/vscode.nvim' },
+
+  -- pairs
+  'tpope/vim-surround',
   {
     'windwp/nvim-autopairs',
     event = "InsertEnter",
     opts = {}
   },
+
   { "ahmedkhalf/project.nvim" },
 
   --tpope
   'tpope/vim-fugitive',
   'tpope/vim-rhubarb',
   'tpope/vim-sleuth',
-  'tpope/vim-surround',
 
   -- make lua config easier
   -- Useful status updates for LSP

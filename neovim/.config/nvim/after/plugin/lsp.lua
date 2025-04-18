@@ -1,5 +1,5 @@
 local lsp_zero = require('lsp-zero')
-
+local runtime_path = vim.split(package.path, ';')
 lsp_zero.on_attach(function(_, bufnr)
   local nmap = function(keys, func, desc)
     -- add lsp to lsp thigns
@@ -38,7 +38,7 @@ require('mason-lspconfig').setup({
   ensure_installed = {},
   handlers = {
     lsp_zero.default_setup,
-    --lua
+    ------------LUA---------------
     lua_ls = function()
       require('lspconfig').lua_ls.setup({
         settings = {
@@ -49,7 +49,8 @@ require('mason-lspconfig').setup({
               path = runtime_path,
             },
             diagnostics = {
-              globals = { 'vim' }
+              globals = { 'vim' },
+              disable = { 'missing-fields' }
             },
             workspace = {
               checkThirdParty = false,
@@ -85,6 +86,10 @@ require('mason-lspconfig').setup({
     html = function()
       require('lspconfig').html.setup {}
     end,
+    ------------TEMPL---------------
+    templ = function()
+      require('lspconfig').templ.setup {}
+    end,
     ------------Marksman---------------
     marksman = function()
       require('lspconfig').marksman.setup {
@@ -114,16 +119,17 @@ require('mason-lspconfig').setup({
   },
 })
 
-local cmp = require('cmp')
--- local cmp_action = require('lsp-zero').cmp_action()
-
-local cmp_autopairs = require('nvim-autopairs.completion.cmp')
 
 local luasnip = require 'luasnip'
 require('luasnip.loaders.from_vscode').lazy_load()
 
 luasnip.config.setup {}
 
+local cmp = require('cmp')
+-- local cmp_action = require('lsp-zero').cmp_action()
+local cmp_autopairs = require('nvim-autopairs.completion.cmp')
+
+--experiment maybe comment out
 cmp.event:on(
   'confirm_done',
   cmp_autopairs.on_confirm_done()
