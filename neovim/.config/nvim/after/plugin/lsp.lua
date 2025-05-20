@@ -19,14 +19,14 @@ lsp_zero.on_attach(function(_, bufnr)
   nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
   nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
 
-  vim.api.nvim_create_autocmd('BufWritePre', {
-    buffer = bufnr,
-    callback = function()
-      vim.lsp.buf.format {
-        async = false,
-      }
-    end
-  })
+  -- vim.api.nvim_create_autocmd('BufWritePre', {
+  --   buffer = bufnr,
+  --   callback = function()
+  --     vim.lsp.buf.format {
+  --       async = false,
+  --     }
+  --   end
+  -- })
 end)
 
 -- Setup neovim lua configuration

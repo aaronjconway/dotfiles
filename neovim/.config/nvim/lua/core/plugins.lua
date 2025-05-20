@@ -10,6 +10,10 @@ vim.opt.rtp:prepend(lazypath)
 
 require('lazy').setup({
   ----------------------------------beginning------------------------------------------
+  {
+    'stevearc/conform.nvim',
+    opts = {},
+  },
   { 'junegunn/vim-easy-align' },
   { 'folke/todo-comments.nvim' },
   { 'norcalli/nvim-colorizer.lua' },

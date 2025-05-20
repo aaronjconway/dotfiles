@@ -14,4 +14,9 @@ M.find_project_root = function()
   return nil -- No .git directory found
 end
 
+
+M.wrap_text = function()
+  print('I am not wrapping text correctly!')
+end
+
 return M

@@ -4,7 +4,6 @@ normal = {family = "JetBrainsMono NerdFont", style = "regular"}
 italic = {family = "JetBrainsMono NerdFont", style = "italic"}
 bold = {family = "JetBrainsMono NerdFont", style = "bold"}
 
-
 [window]
 startup_mode = "Fullscreen"
 padding = {x = 10, y = 10}

@@ -50,6 +50,11 @@ vim.api.nvim_create_user_command('RemoveClassContents', function()
 end, {})
 
 
+vim.api.nvim_create_user_command('WrapText', function()
+  vim.cmd [[normal! ggVGgq]]
+end, {})
+
+
 vim.g.netrw_browse_split = 0
 vim.g.netrw_banner = 0
 vim.g.netrw_winsize = 25
