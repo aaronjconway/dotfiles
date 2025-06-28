@@ -11,7 +11,23 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
   ----------------------------------beginning------------------------------------------
   {
+    "nvimtools/none-ls.nvim",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    config = function()
+      local null_ls = require("null-ls")
+      null_ls.setup({
+        sources = {
+          null_ls.builtins.formatting.prettier
+        },
+      })
+    end
+  },
+  {
     'stevearc/conform.nvim',
+    opts = {},
+  },
+  {
+    'stevearc/oil.nvim',
     opts = {},
   },
   { 'junegunn/vim-easy-align' },
@@ -25,8 +41,15 @@ require('lazy').setup({
     keys = { { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" } },
   },
   { "folke/trouble.nvim" },
-  --vscode
-  { 'mofiqul/vscode.nvim' },
+  -- --vscode
+  -- { 'mofiqul/vscode.nvim' },
+  { "EdenEast/nightfox.nvim" },
+
+  {
+    "davidmh/mdx.nvim",
+    config = true,
+    dependencies = { "nvim-treesitter/nvim-treesitter" }
+  },
 
   -- pairs
   'tpope/vim-surround',
@@ -87,6 +110,7 @@ require('lazy').setup({
       },
     },
   },
-  { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" }
+  { "nvim-treesitter/nvim-treesitter",            branch = 'master', lazy = false, build = ":TSUpdate" },
+  { 'nvim-treesitter/nvim-treesitter-textobjects' },
   -----------------------end of plugins--------------------------
 }, {})

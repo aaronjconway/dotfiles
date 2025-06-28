@@ -1,17 +1,12 @@
 [font]
 size = 12.0
-normal = {family = "JetBrainsMono NerdFont", style = "regular"}
-italic = {family = "JetBrainsMono NerdFont", style = "italic"}
-bold = {family = "JetBrainsMono NerdFont", style = "bold"}
 
 [window]
-startup_mode = "Fullscreen"
-padding = {x = 10, y = 10}
+# startup_mode = "windowed"
+padding = { x = 10, y = 10 }
 
 [terminal]
 osc52 = "CopyPaste"
 
 [keyboard]
-bindings = [
-{key = "Insert",mods = "Shift",action = "paste"}
-]
+bindings = [{ key = "Insert", mods = "Shift", action = "paste" }]

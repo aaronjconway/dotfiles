@@ -1,8 +1,8 @@
 local lsp_zero = require('lsp-zero')
 local runtime_path = vim.split(package.path, ';')
+
 lsp_zero.on_attach(function(_, bufnr)
   local nmap = function(keys, func, desc)
-    -- add lsp to lsp thigns
     if desc then
       desc = 'LSP: ' .. desc
     end
@@ -13,25 +13,21 @@ lsp_zero.on_attach(function(_, bufnr)
   nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
   nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
   nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
-  nmap('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
+  nmap('gi', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
   nmap('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
   nmap('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
   nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
   nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
 
-  -- vim.api.nvim_create_autocmd('BufWritePre', {
-  --   buffer = bufnr,
-  --   callback = function()
-  --     vim.lsp.buf.format {
-  --       async = false,
-  --     }
-  --   end
-  -- })
 end)
 
--- Setup neovim lua configuration
-require('neodev').setup()
+-- Diagnostic settings
+vim.diagnostic.config {
+  virtual_text = false,
+  update_in_insert = true,
+}
 
+require('neodev').setup()
 require('mason').setup({})
 require('mason-lspconfig').setup({
   automatic_installation = false,
@@ -63,6 +59,11 @@ require('mason-lspconfig').setup({
         }
       })
     end,
+    ------------CPP---------------
+    clangd = function()
+      require('lspconfig').clangd.setup {
+      }
+    end,
     ------------Typescript---------------
     ts_ls = function()
       require('lspconfig').ts_ls.setup {
@@ -78,15 +79,23 @@ require('mason-lspconfig').setup({
     rust_analyzer = function()
       require('lspconfig').rust_analyzer.setup({})
     end,
-    -- ------------Svelte---------------
-    -- svelte = function()
-    --   require('lspconfig').svelte.setup {}
-    -- end,
     ------------HTML---------------
     html = function()
-      require('lspconfig').html.setup {}
+      require('lspconfig').html.setup {
+        filetypes = { 'html', 'templ' }
+      }
     end,
-    ------------TEMPL---------------
+    ------------Emmet---------------
+    emmet_language_server = function()
+      require('lspconfig').emmet_language_server.setup {
+        filetypes = { 'html', 'templ' }
+      }
+    end,
+    ------------C#---------------
+    csharp_ls = function()
+      require('lspconfig').csharp_ls.setup {}
+    end,
+    ------------Templ---------------
     templ = function()
       require('lspconfig').templ.setup {}
     end,
@@ -102,6 +111,7 @@ require('mason-lspconfig').setup({
         file_types = { '.mdx', '.md' }
       })
     end,
+    ------------Python---------------
     pylsp = function()
       require('lspconfig').pylsp.setup({
         settings = {
@@ -177,10 +187,10 @@ cmp.setup {
   },
 
   sources = {
-    { name = 'buffer' },
-    { name = 'cmdLine' },
     { name = 'luasnip',              option = { show_autosnippets = true } },
     { name = 'nvim_lsp' },
+    { name = 'buffer' },
+    { name = 'cmdLine' },
     { name = 'path' },
     { name = 'vim-dadbod-completion' },
   },

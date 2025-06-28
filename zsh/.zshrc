@@ -1,6 +1,41 @@
 bindkey -v
 export KEYTIMEOUT=1
 
+# history
+zshaddhistory() {
+   setopt LOCAL_OPTIONS
+   setopt EXTENDED_GLOB
+   print -sr -- "${1%%$'\n'##}"
+   fc -p "$HISTFILE"
+   return 1
+}
+
+zsh_history_conf() {
+
+    HISTSIZE=100000000
+    SAVEHIST=100000000
+    HISTFILE=~/.zsh_history
+    # HISTTIMEFORMAT="[%F %T] "
+
+    setopt APPEND_HISTORY
+    setopt EXTENDED_HISTORY
+    setopt HIST_EXPIRE_DUPS_FIRST
+    setopt HIST_FIND_NO_DUPS
+    setopt HIST_IGNORE_ALL_DUPS
+    setopt HIST_IGNORE_DUPS
+    setopt HIST_IGNORE_SPACE
+    setopt HIST_NO_STORE
+    setopt HIST_REDUCE_BLANKS
+    setopt HIST_SAVE_NO_DUPS
+    setopt HIST_VERIFY
+    setopt INC_APPEND_HISTORY
+    setopt NO_CASE_GLOB
+    setopt SHARE_HISTORY
+
+}
+
+zsh_history_conf
+
 # -----------------------------------------------------------------------------
 # load zgenom
 # -----------------------------------------------------------------------------
@@ -16,17 +51,16 @@ if ! zgenom saved; then
 
     # save all to init script
     zgenom save
+
 fi
+
 # -----------------------------------------------------------------------------
 
 autoload -Uz compinit
 autoload -U colors && colors
-autoload -U +X bashcompinit && bashcompinit
-complete -C '/usr/local/bin/aws_completer' aws
-source /etc/bash_completion.d/azure-cli
 
-
-
+zstyle ':completion::complete:*' use-cache on
+zstyle ':completion::complete:*' cache-path ~/.zsh/cache
 zstyle ':completion:*' format '%B%d%b'
 zstyle ':completion:*' group-name ''
 zstyle ':completion:*' insert-unambiguous true
@@ -38,6 +72,7 @@ zstyle ':completion:*' select-prompt '%SScrolling active: %s'
 zstyle ':completion:*' list-prompt '%S%M matches%s'
 zstyle ':completion:*' completer _complete _approximate
 zstyle ':completion:*' completion-ignore-case true
+
 autoload -U up-line-or-search down-line-or-search
 zle -N up-line-or-search
 zle -N down-line-or-search
@@ -46,10 +81,14 @@ zle -N autosuggest-or-complete
 zle -A complete-word autosuggest-or-complete
 
 zstyle :compinstall filename '/home/aaron/.zshrc'
+
 _comp_options+=(globdots)		# Include hidden files.
 
-compinit
-compinit -d ~/.cache/zcompdump
+for dump in ~/.zcompdump(N.mh+24); do
+  compinit
+done
+compinit -C
+
 
 
 setopt autocd
@@ -74,34 +113,27 @@ zstyle ':vcs_info:git*:*' get-revision true
 zstyle ':vcs_info:git*:*' check-for-changes false
 
 PROMPT='${vcs_info_msg_0_}'
-PS1="%F{blue}%n%f%F{yellow}@%f%F{green}%m%f$PROMPT %~ $ "
+# PS1="%F{blue}%n%f%F{yellow}@%f%F{green}%m%f$PROMPT %~ $ "
+PS1="$PROMPT %~ $ "
 
-zsh_history_conf() {
-    HISTSIZE=100000000
-    SAVEHIST=100000000
-    HISTFILE=~/.zsh_history
-    HISTTIMEFORMAT="[%F %T] "
-
-    setopt SHARE_HISTORY
-    setopt INC_APPEND_HISTORY
-    setopt APPEND_HISTORY
-    setopt EXTENDED_HISTORY
-    setopt HIST_IGNORE_DUPS
-    setopt HIST_IGNORE_SPACE
-    setopt HIST_SAVE_NO_DUPS
-    setopt HIST_REDUCE_BLANKS
-    setopt NO_CASE_GLOB
-}
-
-zsh_history_conf
 
 
 # -----------------------------------------------------------------------------
 # Alias's
 # -----------------------------------------------------------------------------
 
+alias grep="grep -i"
+
+
+alias copy="xclip -selection clipboard"
+alias bright='sudo brightnessctl set 120000'
+alias capslock='xdotool key Caps_Lock'
+alias CAPSLOCK='xdotool key Caps_Lock'
+
 alias activate='source ~/py_envs/bin/activate'
 alias ns='nix-shell'
+
+alias caps='setxkbmap -option ctrl:nocaps'
 
 
 domain() {
@@ -120,7 +152,7 @@ alias admin-linode='ssh root@172.235.38.138'
 alias cheat='cheat_sh'
 
 # rg search filenames
-alias rgf="rg . ~ --files | rg"
+alias rgf="rg --files | rg -i"
 
 alias ahk='cd /mnt/c/Users/ajcon/OneDrive/Documents/AutoHotkey/'
 
@@ -129,15 +161,16 @@ alias ahk='cd /mnt/c/Users/ajcon/OneDrive/Documents/AutoHotkey/'
 # alias py="python3"
 # used for webui:stable:diffusion:ai:image:generation
 
-## testing temp
-alias python_cmd="python3.11"
-alias python="python3.11"
-alias python3="python3.11"
+# ## testing temp
+# alias python_cmd="python3.11"
+# alias python="python3.11"
+# alias python3="python3.11"
 
 
 alias nvim="/usr/local/bin/nvim-linux64/bin/nvim"
 alias vim="nvim"
 alias vi="nvim"
+alias vs="vim -c \"setlocal buftype=nofile bufhidden=hide noswapfile\""
 
 alias startup="~/dotfiles/tmux/.config/tmux/startup.sh"
 
@@ -177,6 +210,10 @@ export PATH="$HOME/Development/utils/:$PATH"
 # change the word chars so that I can backspace to a /
 export WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'
 
+export PATH=$HOME/.dotnet:$PATH
+export PATH=$HOME/.dotnet/tools:$PATH
+export DOTNET_ROOT=$HOME/.dotnet
+
 
 if [ -x /usr/bin/dircolors ]; then
 
@@ -207,6 +244,41 @@ fi
 #-----------------------Functions--------------------------
 #----------------------------------------------------------
 
+ reset-monitors () {
+        primary="eDP-1"
+        for output in $(xrandr | grep "con" | cut -d" " -f1)
+        do
+                        xrandr --output "$output" --right-of "$primary"
+                        echo "$output" " set"
+        done
+}
+
+
+ laptop () {
+        primary="eDP-1"
+        for output in $(xrandr | grep "con" | cut -d" " -f1)
+        do
+                if [ "$output" = "$primary" ]
+                then
+                        xrandr --output "$output" --auto
+                else
+                        xrandr --output "$output" --off
+        echo "done"
+                fi
+        done
+}
+
+monitors() {
+    prev=""
+    for output in $(xrandr | grep " connected" | cut -d" " -f1); do
+        if [ -n "$prev" ]; then
+            echo "setting $output right of $prev"
+            xrandr --output "$output" --auto
+            xrandr --output "$output" --right-of "$prev"
+        fi
+        prev="$output"
+    done
+}
 
 
 mkd() {
@@ -254,7 +326,7 @@ telescope() {
 
 directories() {
     local selected_dir
-    selected_dir=$(fdfind . /home/aaron/ -E '.cargo' -E '.rust*' -E 'n' -E '.cache' -E '.config' -E '.dotnet' -E 'node_modules' -E '.git' -E 'dist' -E 'build' --type d |  fzf) && cd "$selected_dir" || return 1
+    selected_dir=$(fdfind . /home/aaron/ -E '.cargo' -E '.rust*' -E 'n' -E '.cache' -E '.dotnet' -E 'node_modules' -E '.git' -E 'dist' -E 'build' --type d |  fzf) && cd "$selected_dir" || return 1
     zle reset-prompt
 }
 
@@ -348,6 +420,7 @@ obsidian() {
     zle reset-prompt
 }
 
+
 #----------------------------------------------------------
 #----------------------------------------------------------
 #----------------------------------------------------------
@@ -362,6 +435,7 @@ bindkey "^O" my_telescope
 
 
 bindkey '^H' backward-kill-word
+bindkey '^?' backward-delete-char
 bindkey '^p' up-line-or-history
 bindkey '^n' down-line-or-history
 bindkey '^e' autosuggest-accept
@@ -403,10 +477,8 @@ zle-line-init() {
 }
 zle -N zle-line-init
 echo -ne '\e[5 q'
-preexec() { echo -ne '\e[5 q' ;}
 
-
-
+# preexec() { echo -ne '\e[5 q' ;zz}
 #------------------------------------------------------------------------------
 # enable auto-suggestions based on the history
 if [ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
@@ -423,19 +495,8 @@ case ":$PATH:" in
   *":$PNPM_HOME:"*) ;;
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
-
-export PATH=$PATH:/home/aaron/.pulumi/bin
+# pnpm end
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 export N_PREFIX="$HOME/n"; [[ :$PATH: == *":$N_PREFIX/bin:"* ]] || PATH+=":$N_PREFIX/bin"  # Added by n-install (see http://git.io/n-install-repo).
-
-# pnpm
-export PNPM_HOME="/home/aaron/.local/share/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
-# pnpm end
-eval
-TWILIO_AC_ZSH_SETUP_PATH=/home/aaron/.twilio-cli/autocomplete/zsh_setup && test -f $TWILIO_AC_ZSH_SETUP_PATH && source $TWILIO_AC_ZSH_SETUP_PATH; # twilio autocomplete setup
