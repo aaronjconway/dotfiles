@@ -4,6 +4,4 @@ if (not status) then
   return
 end
 
-project.setup({
-
-})
+project.setup({})

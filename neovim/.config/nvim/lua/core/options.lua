@@ -46,3 +46,4 @@ vim.o.guicursor = "n-v-c:block,i-ci-ve:ver25,r-cr:hor20,o:hor50"
 vim.o.scrolloff = 8
 vim.o.signcolumn = "yes"
 vim.opt.isfname:append("@,48-57,/,.,-,_,+,,,#,$,%,{,},[,],@-@,!,~,=")
+vim.opt.iskeyword:remove("_")

@@ -13,7 +13,6 @@ vim.api.nvim_set_keymap('n', '<C-p>',
   { noremap = true, silent = true })
 
 
-
 configs.setup({
   auto_install = true,
   ignore_install = {},

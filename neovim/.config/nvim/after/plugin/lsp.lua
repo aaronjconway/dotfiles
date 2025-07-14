@@ -1,134 +1,4 @@
-local lsp_zero = require('lsp-zero')
-local runtime_path = vim.split(package.path, ';')
-
-lsp_zero.on_attach(function(_, bufnr)
-  local nmap = function(keys, func, desc)
-    if desc then
-      desc = 'LSP: ' .. desc
-    end
-    vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
-  end
-
-  nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
-  nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
-  nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
-  nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
-  nmap('gi', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
-  nmap('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
-  nmap('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
-  nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
-  nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
-
-end)
-
--- Diagnostic settings
-vim.diagnostic.config {
-  virtual_text = false,
-  update_in_insert = true,
-}
-
 require('neodev').setup()
-require('mason').setup({})
-require('mason-lspconfig').setup({
-  automatic_installation = false,
-  ensure_installed = {},
-  handlers = {
-    lsp_zero.default_setup,
-    ------------LUA---------------
-    lua_ls = function()
-      require('lspconfig').lua_ls.setup({
-        settings = {
-          Lua = {
-            telemetry = { enable = false },
-            runtime = {
-              version = 'LuaJIT',
-              path = runtime_path,
-            },
-            diagnostics = {
-              globals = { 'vim' },
-              disable = { 'missing-fields' }
-            },
-            workspace = {
-              checkThirdParty = false,
-              library = {
-                vim.fn.expand('$VIMRUNTIME/lua'),
-                vim.fn.stdpath('config') .. '/lua'
-              }
-            }
-          }
-        }
-      })
-    end,
-    ------------CPP---------------
-    clangd = function()
-      require('lspconfig').clangd.setup {
-      }
-    end,
-    ------------Typescript---------------
-    ts_ls = function()
-      require('lspconfig').ts_ls.setup {
-      }
-    end,
-    ------------Astro--------------------
-    astro = function()
-      require('lspconfig').astro.setup({
-        file_types = { 'mdx', 'md' }
-      })
-    end,
-    ------------Rust--------------------
-    rust_analyzer = function()
-      require('lspconfig').rust_analyzer.setup({})
-    end,
-    ------------HTML---------------
-    html = function()
-      require('lspconfig').html.setup {
-        filetypes = { 'html', 'templ' }
-      }
-    end,
-    ------------Emmet---------------
-    emmet_language_server = function()
-      require('lspconfig').emmet_language_server.setup {
-        filetypes = { 'html', 'templ' }
-      }
-    end,
-    ------------C#---------------
-    csharp_ls = function()
-      require('lspconfig').csharp_ls.setup {}
-    end,
-    ------------Templ---------------
-    templ = function()
-      require('lspconfig').templ.setup {}
-    end,
-    ------------Marksman---------------
-    marksman = function()
-      require('lspconfig').marksman.setup {
-        file_types = { '.mdx', '.md' }
-      }
-    end,
-    ------------MDX---------------
-    mdx_analyzer = function()
-      require('lspconfig').mdx_analyzer.setup({
-        file_types = { '.mdx', '.md' }
-      })
-    end,
-    ------------Python---------------
-    pylsp = function()
-      require('lspconfig').pylsp.setup({
-        settings = {
-          pylsp = {
-            plugins = {
-              pycodestyle = {
-                ignore = { 'E501' },
-                maxLineLength = 200
-              }
-            }
-          }
-        }
-      })
-    end
-  },
-})
-
 
 local luasnip = require 'luasnip'
 require('luasnip.loaders.from_vscode').lazy_load()
@@ -136,7 +6,6 @@ require('luasnip.loaders.from_vscode').lazy_load()
 luasnip.config.setup {}
 
 local cmp = require('cmp')
--- local cmp_action = require('lsp-zero').cmp_action()
 local cmp_autopairs = require('nvim-autopairs.completion.cmp')
 
 --experiment maybe comment out
@@ -187,11 +56,10 @@ cmp.setup {
   },
 
   sources = {
-    { name = 'luasnip',              option = { show_autosnippets = true } },
+    { name = 'luasnip', option = { show_autosnippets = true } },
     { name = 'nvim_lsp' },
     { name = 'buffer' },
     { name = 'cmdLine' },
     { name = 'path' },
-    { name = 'vim-dadbod-completion' },
   },
 }

@@ -8,6 +8,8 @@ for_window [class=".*"] layout tabbed
 
 set $mod Mod1
 
+font pango:monospace 14
+
 # Audio
 set $refresh_i3status killall -SIGUSR1 i3status
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10% && $refresh_i3status
@@ -96,6 +98,6 @@ bindsym $mod+Shift+r restart
 
 bar {
 	position top
-        font pango:monospace 12
+        font pango:monospace 14
 	status_command i3blocks
 }

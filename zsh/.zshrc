@@ -1,96 +1,64 @@
+# Keybindings
 bindkey -v
 export KEYTIMEOUT=1
 
-# history
-zshaddhistory() {
-   setopt LOCAL_OPTIONS
-   setopt EXTENDED_GLOB
-   print -sr -- "${1%%$'\n'##}"
-   fc -p "$HISTFILE"
-   return 1
-}
+# History
+HISTSIZE=100000000
+SAVEHIST=100000000
+HISTFILE=~/.zsh_history
 
-zsh_history_conf() {
+setopt inc_append_history
+setopt share_history
+setopt extended_history
+setopt hist_expire_dups_first
+setopt hist_find_no_dups
+setopt hist_ignore_dups
+setopt hist_ignore_all_dups
+setopt hist_ignore_space
+setopt hist_reduce_blanks
+setopt hist_save_no_dups
+setopt hist_verify
 
-    HISTSIZE=100000000
-    SAVEHIST=100000000
-    HISTFILE=~/.zsh_history
-    # HISTTIMEFORMAT="[%F %T] "
+autoload -Uz add-zsh-hook
+zsh_history_sync() { fc -AI }
+add-zsh-hook precmd zsh_history_sync
 
-    setopt APPEND_HISTORY
-    setopt EXTENDED_HISTORY
-    setopt HIST_EXPIRE_DUPS_FIRST
-    setopt HIST_FIND_NO_DUPS
-    setopt HIST_IGNORE_ALL_DUPS
-    setopt HIST_IGNORE_DUPS
-    setopt HIST_IGNORE_SPACE
-    setopt HIST_NO_STORE
-    setopt HIST_REDUCE_BLANKS
-    setopt HIST_SAVE_NO_DUPS
-    setopt HIST_VERIFY
-    setopt INC_APPEND_HISTORY
-    setopt NO_CASE_GLOB
-    setopt SHARE_HISTORY
-
-}
-
-zsh_history_conf
-
-# -----------------------------------------------------------------------------
-# load zgenom
-# -----------------------------------------------------------------------------
+# Plugins via zgenom
 source "${HOME}/.zgenom/zgenom.zsh"
 
 if ! zgenom saved; then
     echo "Creating a zgenom save"
 
-    # plugins
     zgenom load zsh-users/zsh-syntax-highlighting
     zgenom load zsh-users/zsh-completions
     zgenom load zsh-users/zsh-autosuggestions
 
-    # save all to init script
     zgenom save
-
 fi
 
-# -----------------------------------------------------------------------------
-
+# Completion system
 autoload -Uz compinit
 autoload -U colors && colors
 
-zstyle ':completion::complete:*' use-cache on
-zstyle ':completion::complete:*' cache-path ~/.zsh/cache
-zstyle ':completion:*' format '%B%d%b'
-zstyle ':completion:*' group-name ''
-zstyle ':completion:*' insert-unambiguous true
-zstyle ':completion:*' list-colors ''
-zstyle ':completion:*' list-prompt '%S%M matches%s'
-zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}' 'r:|[._-]=**' 'l:|=* r:|=*'
-zstyle ':completion:*' menu select=2
-zstyle ':completion:*' select-prompt '%SScrolling active: %s'
-zstyle ':completion:*' list-prompt '%S%M matches%s'
 zstyle ':completion:*' completer _complete _approximate
 zstyle ':completion:*' completion-ignore-case true
+zstyle ':completion:*' format '%B%d%b'
+zstyle ':completion:*' insert-unambiguous true
+zstyle ':completion:*' list-colors ''
+zstyle ':completion:*' list-columns 1
+zstyle ':completion:*' list-packed false
+zstyle ':completion:*' list-rows-first false
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}' 'r:|[._-]=**' 'l:|=* r:|=*'
+zstyle ':completion:*' menu select
+zstyle ':completion:*' select-prompt '%SScrolling active: %s'
+zstyle ':completion:*:default' list-prompt '%S%M matches%s'
+zstyle ':completion::complete:*' cache-path ~/.zsh/cache
+zstyle ':completion::complete:*' use-cache on
 
-autoload -U up-line-or-search down-line-or-search
-zle -N up-line-or-search
-zle -N down-line-or-search
-
-zle -N autosuggest-or-complete
-zle -A complete-word autosuggest-or-complete
-
-zstyle :compinstall filename '/home/aaron/.zshrc'
-
-_comp_options+=(globdots)		# Include hidden files.
-
-for dump in ~/.zcompdump(N.mh+24); do
-  compinit
-done
+_comp_options+=(globdots)
 compinit -C
 
-
-
+# Shell options
 setopt autocd
 setopt interactivecomments
 setopt magicequalsubst
@@ -98,24 +66,23 @@ setopt nonomatch
 setopt notify
 setopt numericglobsort
 setopt promptsubst
+
 stty stop undef
 
-# configure `time` format
+# Time command formatting
 TIMEFMT=$'\nreal\t%E\nuser\t%U\nsys\t%S\ncpu\t%P'
 
+# Git prompt via vcs_info
 autoload -Uz vcs_info
-setopt prompt_subst
-
-
 zstyle ':vcs_info:*' enable git
 zstyle ':vcs_info:git*' formats "[%F{yellow}%b%f]"
 zstyle ':vcs_info:git*:*' get-revision true
 zstyle ':vcs_info:git*:*' check-for-changes false
 
-PROMPT='${vcs_info_msg_0_}'
-# PS1="%F{blue}%n%f%F{yellow}@%f%F{green}%m%f$PROMPT %~ $ "
-PS1="$PROMPT %~ $ "
+precmd() { vcs_info }
 
+# Prompt
+PS1='${vcs_info_msg_0_} %~ $ '
 
 
 # -----------------------------------------------------------------------------
@@ -153,6 +120,7 @@ alias cheat='cheat_sh'
 
 # rg search filenames
 alias rgf="rg --files | rg -i"
+alias rgi="rg -i"
 
 alias ahk='cd /mnt/c/Users/ajcon/OneDrive/Documents/AutoHotkey/'
 
@@ -167,10 +135,11 @@ alias ahk='cd /mnt/c/Users/ajcon/OneDrive/Documents/AutoHotkey/'
 # alias python3="python3.11"
 
 
-alias nvim="/usr/local/bin/nvim-linux64/bin/nvim"
+alias nvim="/usr/local/bin/nvim-linux-x86_64/bin/nvim"
 alias vim="nvim"
 alias vi="nvim"
 alias vs="vim -c \"setlocal buftype=nofile bufhidden=hide noswapfile\""
+alias supervim="sudo /usr/local/bin/nvim-linux-x86_64/bin/nvim"
 
 alias startup="~/dotfiles/tmux/.config/tmux/startup.sh"
 
@@ -196,10 +165,13 @@ elif [ -d ~/.go/bin/ ]; then
   export PATH="$GOPATH/bin:$PATH"
 fi
 
-export EDITOR="/usr/local/bin/nvim-linux64/bin/nvim"
-export VISUAL="/usr/local/bin/nvim-linux64/bin/nvim"
-export PATH=$PATH:/usr/local/bin/nvim-linux64/bin/nvim
+export EDITOR="/usr/local/bin/nvim-linux-x86_64/bin/nvim"
+export VISUAL="/usr/local/bin/nvim-linux-x86_64/bin/nvim"
+export PATH=$PATH:/usr/local/bin/nvim-linux-x86_64/bin/nvim
 export OPENER="xdg-open"
+
+# for making menu select in zsh only do 1 column
+export COLUMNS=1
 
 export FZF_DEFAULT_OPTS='--border --margin=1 --padding=1 --layout=reverse --height 60% --color=hl+:#b83232,bg+:#FFE5B4,fg+:#282C34,gutter:-1'
 export TERM='xterm-256color'
@@ -244,26 +216,23 @@ fi
 #-----------------------Functions--------------------------
 #----------------------------------------------------------
 
- reset-monitors () {
-        primary="eDP-1"
-        for output in $(xrandr | grep "con" | cut -d" " -f1)
-        do
-                        xrandr --output "$output" --right-of "$primary"
-                        echo "$output" " set"
-        done
+reset-monitors() {
+    primary="eDP-1"
+    for output in $(xrandr | grep "con" | cut -d" " -f1); do
+        xrandr --output "$output" --right-of "$primary"
+        echo "$output" " set"
+    done
 }
 
 
- laptop () {
+laptop () {
+        bright
         primary="eDP-1"
-        for output in $(xrandr | grep "con" | cut -d" " -f1)
-        do
-                if [ "$output" = "$primary" ]
-                then
+        for output in $(xrandr | grep "con" | cut -d" " -f1); do
+                if [ "$output" = "$primary" ]; then
                         xrandr --output "$output" --auto
                 else
                         xrandr --output "$output" --off
-        echo "done"
                 fi
         done
 }
@@ -280,7 +249,6 @@ monitors() {
     done
 }
 
-
 mkd() {
   if [ -z "$1" ]; then
     echo "Usage: mkd <directory_name>"
@@ -291,10 +259,12 @@ mkd() {
 
 # Use lf to cd into dirs
 
-lfcd () {
+lfcd() {
+
     tmp="$(mktemp -uq)"
     trap 'rm -f $tmp >/dev/null 2>&1 && trap - HUP INT QUIT TERM PWR EXIT' HUP INT QUIT TERM PWR EXIT
     lf -last-dir-path="$tmp" "$@"
+
     if [ -f "$tmp" ]; then
         dir="$(cat "$tmp")"
         [ -d "$dir" ] && [ "$dir" != "$(pwd)" ] && cd "$dir"
@@ -327,6 +297,7 @@ telescope() {
 directories() {
     local selected_dir
     selected_dir=$(fdfind . /home/aaron/ -E '.cargo' -E '.rust*' -E 'n' -E '.cache' -E '.dotnet' -E 'node_modules' -E '.git' -E 'dist' -E 'build' --type d |  fzf) && cd "$selected_dir" || return 1
+    vcs_info
     zle reset-prompt
 }
 
@@ -341,13 +312,14 @@ readme() {
     else
         echo "README.md not found in the selected directory."
     fi
-
+    vcs_info
     zle reset-prompt
 }
 
 directories_all() {
     local selected_dir
     selected_dir=$(fdfind . /home/aaron/ --hidden --type d |  fzf) && cd "$selected_dir" || return 1
+    vcs_info
     zle reset-prompt
 }
 
@@ -355,6 +327,7 @@ project_directories() {
     local selected_dir
     root_dir=$(find_root_dir)
     selected_dir=$(fdfind . $root_dir -E '.cargo' -E '.rust*' -E 'n' -E '.cache' -E '.config' -E '.dotnet' -E 'node_modules' -E '.git' -E 'dist' -E 'build' --type d |  fzf) && cd "$selected_dir" || return 1
+    vcs_info
     zle reset-prompt
 }
 
@@ -364,11 +337,14 @@ project_files_for_lf() {
     root_dir=$(find_root_dir)
     selected_dir=$(fdfind . $root_dir --type d |  fzf)
     echo "$selected_dir"
+    vcs_info
+    zle reset-prompt
 }
 
 files() {
     local file
     file=$(fdfind . /home/aaron/ --hidden --type f |  fzf) && vim "$file" || return 1
+    vcs_info
     zle reset-prompt
 }
 
@@ -380,6 +356,8 @@ cheat_sh() {
         local url=$(echo "$*" | sed "s/ /%20/g")
         curl "cheat.sh/$url" | batcat --theme="Visual Studio Dark+" -p --color=always
     fi
+    vcs_info
+    zle reset-prompt
 }
 
 find_root_dir() {
@@ -405,8 +383,8 @@ find_root_dir() {
 
 # Function to select and edit from command history using fzf
 select_from_history() {
-  local choice
-  choice=$(history | fzf +s +m --tac --prompt="> " | awk '{$1=""; print substr($0,2)}')
+    local choice
+    choice=$(history | fzf +s +m --tac --prompt="> " | awk '{$1=""; print substr($0,2)}')
     LBUFFER="$choice"
     zle redisplay
 }
@@ -432,8 +410,6 @@ bindkey -s '^G' '^ulazygit\n'
 zle -N my_telescope telescope
 bindkey "^O" my_telescope
 
-
-
 bindkey '^H' backward-kill-word
 bindkey '^?' backward-delete-char
 bindkey '^p' up-line-or-history
@@ -443,9 +419,9 @@ bindkey '^[[1;5D' backward-word
 bindkey '^[[1;5C' forward-word
 bindkey '^e' autosuggest-accept
 
-precmd() {
-    vcs_info
-}
+bindkey '^I' expand-or-complete        # Tab
+bindkey '^[[Z' reverse-menu-complete   # Shift-Tab
+
 
 function zle-keymap-select {
   if [[ ${KEYMAP} == vicmd ]] ||
@@ -459,33 +435,29 @@ function zle-keymap-select {
   fi
 }
 
-function zle-alert {
-  if [[ ${KEYMAP} == vicmd ]]; then
-    echo 'beans!'
-  elif [[ ${KEYMAP} == main ]]; then
-    echo 'cheese!'
-  fi
-}
-
-
-
 zle -N zle-keymap-select
 zle-line-init() {
     zle -K viins
-    zle -N zle-alert
     echo -ne "\e[5 q"
 }
 zle -N zle-line-init
 echo -ne '\e[5 q'
 
-# preexec() { echo -ne '\e[5 q' ;zz}
-#------------------------------------------------------------------------------
+paste-from-clipboard() {
+  LBUFFER+=$(xclip -o -selection clipboard)
+  zle reset-prompt
+}
+zle -N paste-from-clipboard
+bindkey -M vicmd 'v' paste-from-clipboard
+
 # enable auto-suggestions based on the history
 if [ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
     . /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
     ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#999'
 fi
 
+
+#------------------------------------------------------------------------------
 # Generated for envman. Do not edit.
 [ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
 
