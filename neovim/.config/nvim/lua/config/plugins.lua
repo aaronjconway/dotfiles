@@ -1,11 +1,19 @@
-local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
+-- Bootstrap lazy.nvim
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+---@diagnostic disable-next-line: undefined-field
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
-  local lazyrepo = 'https://github.com/folke/lazy.nvim.git'
-  local out = vim.fn.system { 'git', 'clone', '--filter=blob:none', '--branch=stable', lazyrepo, lazypath }
+  local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+  local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
   if vim.v.shell_error ~= 0 then
-    error('Error cloning lazy.nvim:\n' .. out)
+    vim.api.nvim_echo({
+      { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
+      { out,                            "WarningMsg" },
+      { "\nPress any key to exit..." },
+    }, true, {})
+    vim.fn.getchar()
+    os.exit(1)
   end
-end ---@diagnostic disable-next-line: undefined-field
+end
 vim.opt.rtp:prepend(lazypath)
 
 require('lazy').setup({
@@ -15,6 +23,7 @@ require('lazy').setup({
   { 'vim-scripts/loremipsum' },
   { 'folke/which-key.nvim',   opts = {} },
   { 'folke/neodev.nvim' },
+  { 'folke/trouble.nvim' },
   { 'EdenEast/nightfox.nvim' },
   {
     'davidmh/mdx.nvim',
@@ -33,11 +42,11 @@ require('lazy').setup({
   -- Useful status updates for LSP
   { 'j-hui/fidget.nvim',           opts = {} },
   {
-    'mason-org/mason-lspconfig.nvim',
+    "mason-org/mason-lspconfig.nvim",
     opts = {},
     dependencies = {
-      { 'mason-org/mason.nvim', opts = {} },
-      'neovim/nvim-lspconfig',
+      { "mason-org/mason.nvim", opts = {} },
+      "neovim/nvim-lspconfig",
     },
   },
   { 'saadparwaiz1/cmp_luasnip' },
@@ -53,8 +62,9 @@ require('lazy').setup({
 
   {
     'nvim-telescope/telescope.nvim',
-    event = 'VimEnter',
+    -- event = 'VimEnter',
     branch = '0.1.x',
+    lazy = false,
     dependencies = {
       'nvim-lua/plenary.nvim',
       {

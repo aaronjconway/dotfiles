@@ -1,11 +1,6 @@
 local runtime_path = vim.split(package.path, ';')
-
-vim.lsp.config['luals'] = {
-    -- Command and arguments to start the server.
-    cmd = { 'lua-language-server' },
-    filetypes = { 'lua' },
-    root_markers = { { '.luarc.json', '.luarc.jsonc' }, '.git' },
-
+vim.lsp.config.lua_ls = {
+    root_markers = { '.luarc.json', '.luarc.jsonc' , '.git' },
     settings = {
         Lua = {
             telemetry = { enable = false },
@@ -20,12 +15,10 @@ vim.lsp.config['luals'] = {
             workspace = {
                 checkThirdParty = false,
                 library = {
-                    vim.fn.expand('$VIMRUNTIME/lua'),
-                    vim.fn.stdpath('config') .. '/lua'
-                }
-            }
-        }
-    }
+                    vim.fn.expand '$VIMRUNTIME/lua',
+                    vim.fn.stdpath 'config' .. '/lua',
+                },
+            },
+        },
+    },
 }
-
-vim.lsp.enable('luals')

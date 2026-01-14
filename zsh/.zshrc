@@ -55,6 +55,7 @@ zstyle ':completion:*:default' list-prompt '%S%M matches%s'
 zstyle ':completion::complete:*' cache-path ~/.zsh/cache
 zstyle ':completion::complete:*' use-cache on
 
+
 _comp_options+=(globdots)
 compinit -C
 
@@ -66,6 +67,7 @@ setopt nonomatch
 setopt notify
 setopt numericglobsort
 setopt promptsubst
+
 
 stty stop undef
 
@@ -84,151 +86,68 @@ precmd() { vcs_info }
 # Prompt
 PS1='${vcs_info_msg_0_} %~ $ '
 
-
 # -----------------------------------------------------------------------------
-# Alias's
+# Aliases
 # -----------------------------------------------------------------------------
-
-alias grep="grep -i"
-
-
+alias mouse="sudo modprobe -r psmouse && sudo modprobe psmouse"
 alias copy="xclip -selection clipboard"
 alias bright='sudo brightnessctl set 120000'
 alias capslock='xdotool key Caps_Lock'
 alias CAPSLOCK='xdotool key Caps_Lock'
-
 alias activate='source ~/py_envs/bin/activate'
-alias ns='nix-shell'
-
-alias caps='setxkbmap -option ctrl:nocaps'
-
-
-domain() {
-    while true; do
-        read "input?>"
-        whois "$input" | awk 'NR==1 { $1=$1; print }'
-    done
-}
-
 alias s='source ~/.zshrc'
 
-alias admin-linode='ssh root@172.235.38.138'
-
-
-# call cheat sh for info
-alias cheat='cheat_sh'
-
-# rg search filenames
-alias rgf="rg --files | rg -i"
-alias rgi="rg -i"
-
-alias ahk='cd /mnt/c/Users/ajcon/OneDrive/Documents/AutoHotkey/'
-
-
-# alias python="python3"
-# alias py="python3"
-# used for webui:stable:diffusion:ai:image:generation
-
-# ## testing temp
-# alias python_cmd="python3.11"
-# alias python="python3.11"
-# alias python3="python3.11"
-
-
-alias nvim="/usr/local/bin/nvim-linux-x86_64/bin/nvim"
 alias vim="nvim"
 alias vi="nvim"
-alias vs="vim -c \"setlocal buftype=nofile bufhidden=hide noswapfile\""
 alias supervim="sudo /usr/local/bin/nvim-linux-x86_64/bin/nvim"
-
-alias startup="~/dotfiles/tmux/.config/tmux/startup.sh"
-
-#cd into windows stuff
-alias win='cd /mnt/c/Users/ajcon'
-
 alias ls="ls -la --color=auto"
 
-#Golang
+# -----------------------------------------------------------------------------
+# PATH Setup
+# -----------------------------------------------------------------------------
+export PATH="/usr/local/bin/nvim-linux-x86_64/bin:$PATH"
+export PATH="/usr/local/go/bin:$HOME/go/bin:$PATH"
+export PATH="$HOME/Development/utils:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
+export PATH="$HOME/.dotnet:$HOME/.dotnet/tools:$PATH"
 
-# this is for libsqlite3, gcc and gclib having some conflict that produces and
-# error - unsure of how to resolve
-
-# export CGO_CFLAGS="-g -O2 -Wno-return-local-addr"
-if [ -d /usr/local/go/bin/ ]; then
-  export GOPATH=~/go
-  export GOBIN="$GOPATH/bin"
-  export PATH="/usr/local/go/bin:$GOBIN:$PATH"
-elif [ -d ~/.go/bin/ ]; then
-  export GOPATH="$HOME/.gopath"
-  export GOROOT="$HOME/.go"
-  export GOBIN="$GOPATH/bin"
-  export PATH="$GOPATH/bin:$PATH"
-fi
-
-export EDITOR="/usr/local/bin/nvim-linux-x86_64/bin/nvim"
-export VISUAL="/usr/local/bin/nvim-linux-x86_64/bin/nvim"
-export PATH=$PATH:/usr/local/bin/nvim-linux-x86_64/bin/nvim
+# -----------------------------------------------------------------------------
+# Editor / Tooling Defaults
+# -----------------------------------------------------------------------------
+export EDITOR="nvim"
+export VISUAL="nvim"
 export OPENER="xdg-open"
 
-# for making menu select in zsh only do 1 column
-export COLUMNS=1
-
+# -----------------------------------------------------------------------------
+# FZF / Terminal Settings
+# -----------------------------------------------------------------------------
 export FZF_DEFAULT_OPTS='--border --margin=1 --padding=1 --layout=reverse --height 60% --color=hl+:#b83232,bg+:#FFE5B4,fg+:#282C34,gutter:-1'
-export TERM='xterm-256color'
-export PATH="$HOME/.local/bin:$PATH"
+export TERM='tmux-256color'
 export PAGER=less
-export PATH="$HOME/Development/utils/:$PATH"
+
+# -----------------------------------------------------------------------------
+# .NET Core SDK
+# -----------------------------------------------------------------------------
+export DOTNET_ROOT="$HOME/.dotnet"
+
 
 # change the word chars so that I can backspace to a /
 export WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'
-
-export PATH=$HOME/.dotnet:$PATH
-export PATH=$HOME/.dotnet/tools:$PATH
-export DOTNET_ROOT=$HOME/.dotnet
-
-
-if [ -x /usr/bin/dircolors ]; then
-
-    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-    export LS_COLORS="$LS_COLORS:ow=30;44:" # fix ls color for folders with 777 permissions
-
-    alias grep='grep --color=auto'
-    alias fgrep='fgrep --color=auto'
-    alias egrep='egrep --color=auto'
-
-    alias diff='diff --color=auto'
-    alias ip='ip --color=auto'
-
-    export LESS_TERMCAP_mb=$'\E[1;31m'     # begin blink
-    export LESS_TERMCAP_md=$'\E[1;36m'     # begin bold
-    export LESS_TERMCAP_me=$'\E[0m'        # reset bold/blink
-    export LESS_TERMCAP_so=$'\E[01;33m'    # begin reverse video
-    export LESS_TERMCAP_se=$'\E[0m'        # reset reverse video
-    export LESS_TERMCAP_us=$'\E[1;32m'     # begin underline
-    export LESS_TERMCAP_ue=$'\E[0m'        # reset underline
-
-    # Take advantage of $LS_COLORS for completion as well
-    zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
-    zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
-fi
 
 #----------------------------------------------------------
 #-----------------------Functions--------------------------
 #----------------------------------------------------------
 
-reset-monitors() {
-    primary="eDP-1"
-    for output in $(xrandr | grep "con" | cut -d" " -f1); do
-        xrandr --output "$output" --right-of "$primary"
-        echo "$output" " set"
-    done
+docker-delete () {
+    docker rm $(docker ps -aq)
+    docker network rm $(docker network ls -q)
 }
 
 
 laptop () {
         bright
         primary="eDP-1"
-        for output in $(xrandr | grep "con" | cut -d" " -f1); do
+        for output in $(xrandr | grep "connected" | cut -d" " -f1); do
                 if [ "$output" = "$primary" ]; then
                         xrandr --output "$output" --auto
                 else
@@ -241,7 +160,6 @@ monitors() {
     prev=""
     for output in $(xrandr | grep " connected" | cut -d" " -f1); do
         if [ -n "$prev" ]; then
-            echo "setting $output right of $prev"
             xrandr --output "$output" --auto
             xrandr --output "$output" --right-of "$prev"
         fi
@@ -257,24 +175,6 @@ mkd() {
   mkdir -p "$1" && cd "$1"
 }
 
-# Use lf to cd into dirs
-
-lfcd() {
-
-    tmp="$(mktemp -uq)"
-    trap 'rm -f $tmp >/dev/null 2>&1 && trap - HUP INT QUIT TERM PWR EXIT' HUP INT QUIT TERM PWR EXIT
-    lf -last-dir-path="$tmp" "$@"
-
-    if [ -f "$tmp" ]; then
-        dir="$(cat "$tmp")"
-        [ -d "$dir" ] && [ "$dir" != "$(pwd)" ] && cd "$dir"
-    fi
-}
-
-h() {"$@" | batcat -p --theme="Visual Studio Dark+" --language=man }
-
-# I would rather move these functions to a separate folder and pick from that
-# folder. that way a new function would get automatically added to telesope
 my_array=(
     directories
     directories_all
@@ -288,19 +188,32 @@ my_array=(
 
 # Function to select from array using fzf
 telescope() {
-  local choice
-  choice=$(printf "%s\n" "${my_array[@]}" | fzf --prompt="")
-  $choice
+      local choice
+      choice=$(printf "%s\n" "${my_array[@]}" | fzf --prompt="")
+      $choice
+    zle reset-prompt
 }
-
 
 directories() {
     local selected_dir
-    selected_dir=$(fdfind . /home/aaron/ -E '.cargo' -E '.rust*' -E 'n' -E '.cache' -E '.dotnet' -E 'node_modules' -E '.git' -E 'dist' -E 'build' --type d |  fzf) && cd "$selected_dir" || return 1
+    selected_dir=$(fdfind . /home/aaron/ \
+    -E .cargo -E '.rust*' -E n -E .cache \
+    -E .dotnet -E node_modules -E .git \
+    -E dist -E build --type d | fzf)
+
+
+    if [[ -z "$selected_dir" ]]; then
+        zle reset-prompt
+        return 0
+    fi
+
+    cd "$selected_dir" || return 1
     vcs_info
     zle reset-prompt
 }
 
+zle -N directories
+bindkey '^G' directories
 
 readme() {
     local selected_dir
@@ -348,18 +261,6 @@ files() {
     zle reset-prompt
 }
 
-cheat_sh() {
-
-    if [ "$#" -eq "" ]; then
-        echo "Please provide an argument"
-    else
-        local url=$(echo "$*" | sed "s/ /%20/g")
-        curl "cheat.sh/$url" | batcat --theme="Visual Studio Dark+" -p --color=always
-    fi
-    vcs_info
-    zle reset-prompt
-}
-
 find_root_dir() {
 
     local file_list=(".git" "README.md")
@@ -403,7 +304,6 @@ obsidian() {
 #----------------------------------------------------------
 #----------------------------------------------------------
 
-
 bindkey -s '^G' '^ulazygit\n'
 
 # Define a Zsh widget that calls the function
@@ -418,7 +318,6 @@ bindkey '^e' autosuggest-accept
 bindkey '^[[1;5D' backward-word
 bindkey '^[[1;5C' forward-word
 bindkey '^e' autosuggest-accept
-
 bindkey '^I' expand-or-complete        # Tab
 bindkey '^[[Z' reverse-menu-complete   # Shift-Tab
 
@@ -436,6 +335,7 @@ function zle-keymap-select {
 }
 
 zle -N zle-keymap-select
+
 zle-line-init() {
     zle -K viins
     echo -ne "\e[5 q"

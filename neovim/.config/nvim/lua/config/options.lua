@@ -17,9 +17,9 @@ vim.o.linebreak = true
 vim.o.colorcolumn = "80"
 vim.o.number = true
 
--- Text formatting
-vim.o.textwidth = 80
-vim.o.formatoptions = "tcr" -- Enable auto-wrap (t), continue comments (c), auto-remove comment leader on Enter (r)
+-- -- Text formatting
+-- vim.o.textwidth = 80
+-- vim.o.formatoptions = "tcr" -- Enable auto-wrap (t), continue comments (c), auto-remove comment leader on Enter (r)
 
 -- Files
 vim.o.swapfile = false

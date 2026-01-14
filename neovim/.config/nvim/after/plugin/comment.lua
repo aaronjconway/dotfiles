@@ -17,11 +17,3 @@ comment.setup({
 local ft = require('Comment.ft')
 ft.set('mdx', "{/*%s*/}")
 ft.set('markdown', "{/*%s*/}")
-
-
---:h fo-table for why these letters are set.
-
-
-
---c,r allow adding comment lines on enter when in insert
---but not on "o" new line

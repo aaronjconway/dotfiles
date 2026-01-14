@@ -2,13 +2,22 @@ exec_always --no-startup-id picom
 exec --no-startup-id dex --autostart --environment i3
 exec --no-startup-id nm-applet
 exec_always --no-startup-id ~/.config/i3/capslock.sh
-# exec_always --no-startup-id unclutter --ignore-scrolling --timeout 2
+exec --no-startup-id xset s off
+exec --no-startup-id xset -dpms
 
 for_window [class=".*"] layout tabbed
 
 set $mod Mod1
 
 font pango:monospace 14
+
+# remove borders
+new_window pixel 0
+new_float  pixel 0
+# Window border colors
+client.focused          #285577 #285577 #ffffff #285577 #ffffff
+client.unfocused        #222222 #222222 #888888 #222222 #888888
+
 
 # Audio
 set $refresh_i3status killall -SIGUSR1 i3status

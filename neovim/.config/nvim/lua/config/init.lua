@@ -1,6 +1,7 @@
-require("core.options")
-require("core.keymaps")
-require("core.plugins")
+require("config.options")
+require("config.keymaps")
+require("config.plugins")
+
 
 -- add templ file config
 vim.filetype.add({ extension = { templ = "templ" } })
@@ -32,4 +33,11 @@ autocmd({ "BufWritePre" }, {
   group = CoreGroup,
   pattern = "*",
   command = [[%s/\s\+$//e]],
+})
+
+vim.api.nvim_create_autocmd("User", {
+  pattern = "TelescopePreviewerLoaded",
+  callback = function()
+    vim.wo.wrap = true
+  end,
 })
