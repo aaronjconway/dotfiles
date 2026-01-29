@@ -137,6 +137,18 @@ export WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'
 #----------------------------------------------------------
 #-----------------------Functions--------------------------
 #----------------------------------------------------------
+#
+
+function chpwd() {
+    local cwd="$PWD"
+    local file="$HOME/.path_history"
+    local timestamp="$(/bin/date '+%Y-%m-%d %H:%M:%S')"
+
+    if ! awk '{sub(/^[^\/]*\//,"/")} !seen[$0]++' "$file" | grep -Fxq "$cwd"; then
+        echo "$timestamp $cwd" >> "$file"
+    fi
+}
+
 
 docker-delete () {
     docker rm $(docker ps -aq)
@@ -145,15 +157,15 @@ docker-delete () {
 
 
 laptop () {
-        bright
-        primary="eDP-1"
-        for output in $(xrandr | grep "connected" | cut -d" " -f1); do
-                if [ "$output" = "$primary" ]; then
-                        xrandr --output "$output" --auto
-                else
-                        xrandr --output "$output" --off
-                fi
-        done
+    bright
+    primary="eDP-1"
+    for output in $(xrandr | grep "connected" | cut -d" " -f1); do
+        if [ "$output" = "$primary" ]; then
+            xrandr --output "$output" --auto
+        else
+            xrandr --output "$output" --off
+        fi
+    done
 }
 
 monitors() {
@@ -168,38 +180,53 @@ monitors() {
 }
 
 mkd() {
-  if [ -z "$1" ]; then
-    echo "Usage: mkd <directory_name>"
-    return 1
-  fi
-  mkdir -p "$1" && cd "$1"
+    if [ -z "$1" ]; then
+        echo "Usage: mkd <directory_name>"
+        return 1
+    fi
+    mkdir -p "$1" && cd "$1"
 }
 
 my_array=(
     directories
     directories_all
-    readme
-    project_directories
-    find_root_dir
     files
-    select_from_history
+    find_root_dir
     obsidian
+    paths
+    project_directories
+    readme
+    select_from_history
 )
+
+paths() {
+    local selected_dir
+
+    selected_dir=$(
+        sort -r ~/.path_history | fzf
+    )
+
+    [[ -z "$selected_dir" ]] && { zle reset-prompt; return 0 }
+
+    cd "$(cut -d' ' -f3- <<< "$selected_dir")" || return 1
+    vcs_info
+    zle reset-prompt
+}
 
 # Function to select from array using fzf
 telescope() {
-      local choice
-      choice=$(printf "%s\n" "${my_array[@]}" | fzf --prompt="")
-      $choice
+    local choice
+    choice=$(printf "%s\n" "${my_array[@]}" | fzf --prompt="")
+    $choice
     zle reset-prompt
 }
 
 directories() {
     local selected_dir
     selected_dir=$(fdfind . /home/aaron/ \
-    -E .cargo -E '.rust*' -E n -E .cache \
-    -E .dotnet -E node_modules -E .git \
-    -E dist -E build --type d | fzf)
+            -E .cargo -E '.rust*' -E n -E .cache \
+            -E .dotnet -E node_modules -E .git \
+        -E dist -E build --type d | fzf)
 
 
     if [[ -z "$selected_dir" ]]; then
@@ -323,15 +350,15 @@ bindkey '^[[Z' reverse-menu-complete   # Shift-Tab
 
 
 function zle-keymap-select {
-  if [[ ${KEYMAP} == vicmd ]] ||
-     [[ $1 = 'block' ]]; then
-    echo -ne '\e[1 q'
-  elif [[ ${KEYMAP} == main ]] ||
-       [[ ${KEYMAP} == viins ]] ||
-       [[ ${KEYMAP} = '' ]] ||
-       [[ $1 = 'beam' ]]; then
-    echo -ne '\e[5 q'
-  fi
+    if [[ ${KEYMAP} == vicmd ]] ||
+    [[ $1 = 'block' ]]; then
+        echo -ne '\e[1 q'
+    elif [[ ${KEYMAP} == main ]] ||
+    [[ ${KEYMAP} == viins ]] ||
+    [[ ${KEYMAP} = '' ]] ||
+    [[ $1 = 'beam' ]]; then
+        echo -ne '\e[5 q'
+    fi
 }
 
 zle -N zle-keymap-select
@@ -344,8 +371,8 @@ zle -N zle-line-init
 echo -ne '\e[5 q'
 
 paste-from-clipboard() {
-  LBUFFER+=$(xclip -o -selection clipboard)
-  zle reset-prompt
+    LBUFFER+=$(xclip -o -selection clipboard)
+    zle reset-prompt
 }
 zle -N paste-from-clipboard
 bindkey -M vicmd 'v' paste-from-clipboard
@@ -364,8 +391,8 @@ fi
 # pnpm
 export PNPM_HOME="/home/aaron/.local/share/pnpm"
 case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
+    *":$PNPM_HOME:"*) ;;
+    *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 # pnpm end
 
