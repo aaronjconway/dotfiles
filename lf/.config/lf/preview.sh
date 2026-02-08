@@ -3,34 +3,13 @@
 
 case "$(printf "%s\n" "$(readlink -f "$1")" | tr '[:upper:]' '[:lower:]')" in
     *)
-      batcat --theme="Visual Studio Dark+" -p --color=always  "$1"
+        batcat --theme="Visual Studio Dark+" -p --color=always  "$1"
 esac
 exit 0
 
-
-
-# batorcat() {
-#     file="$1"
-#     # shift
-#     # batcat --theme="Visual Studio Dark+" -p --color=always  "$file" "$@"
-#     batcat -p --color=always  "$file"
-# }
-#
-# case "$(printf "%s\n" "$(readlink -f "$1")" | tr '[:upper:]' '[:lower:]')" in
-#     *)
-#         batorcat "$1"
-#         ;;
-# esac
-# exit 0
-
-# draw() {
-# 	~/.config/lf/draw_img.sh "$@"
-# 	exit 1
-# }
-#
 # hash() {
 # 	printf '%s/.cache/lf/%s' "$HOME" \
-# 		"$(stat --printf '%n\0%i\0%F\0%s\0%W\0%Y' -- "$(readlink -f "$1")" | sha256sum | awk '{print $1}')"
+    # 		"$(stat --printf '%n\0%i\0%F\0%s\0%W\0%Y' -- "$(readlink -f "$1")" | sha256sum | awk '{print $1}')"
 # }
 #
 # cache() {

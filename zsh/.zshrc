@@ -122,7 +122,7 @@ export OPENER="xdg-open"
 # FZF / Terminal Settings
 # -----------------------------------------------------------------------------
 export FZF_DEFAULT_OPTS='--border --margin=1 --padding=1 --layout=reverse --height 60% --color=hl+:#b83232,bg+:#FFE5B4,fg+:#282C34,gutter:-1'
-export TERM='tmux-256color'
+# export TERM='tmux-256color'
 export PAGER=less
 
 # -----------------------------------------------------------------------------
