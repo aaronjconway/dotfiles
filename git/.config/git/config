@@ -1,9 +1,9 @@
 [user]
   name = Aaron Conway
-  email = aaron@kaseyhomeloans.com
+  email = ajconway92@gmail.com
 
 [core]
-  editor = /usr/local/bin/nvim-linux64/bin/nvim
+  editor = nvim
   excludesFile = ~/.gitignore
 
 [pull]
