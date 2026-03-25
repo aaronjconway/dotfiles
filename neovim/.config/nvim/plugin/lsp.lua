@@ -1,6 +1,6 @@
 local runtime_path = vim.split(package.path, ';')
 vim.lsp.config.lua_ls = {
-    root_markers = { '.luarc.json', '.luarc.jsonc' , '.git' },
+    -- root_markers = { '.luarc.json', '.luarc.jsonc', '.git' },
     settings = {
         Lua = {
             telemetry = { enable = false },

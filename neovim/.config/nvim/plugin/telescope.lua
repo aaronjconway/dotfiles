@@ -85,7 +85,7 @@ end
 
 local function find_files()
   require('telescope.builtin').find_files({
-    glob_pattern = glob_pattern
+    hidden = true,
   })
 end
 

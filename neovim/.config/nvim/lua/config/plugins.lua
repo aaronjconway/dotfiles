@@ -18,20 +18,18 @@ vim.opt.rtp:prepend(lazypath)
 
 require('lazy').setup({
   { 'stevearc/conform.nvim',  opts = {}, },
-  { 'stevearc/oil.nvim',      opts = {}, },
   { 'junegunn/vim-easy-align' },
   { 'vim-scripts/loremipsum' },
   { 'folke/which-key.nvim',   opts = {} },
   { 'folke/neodev.nvim' },
   { 'folke/trouble.nvim' },
   { 'EdenEast/nightfox.nvim' },
-  {
-    'davidmh/mdx.nvim',
-    config = true,
-    dependencies = { 'nvim-treesitter/nvim-treesitter' }
-  },
+  -- {
+  --   'davidmh/mdx.nvim',
+  --   config = true,
+  --   dependencies = { 'nvim-treesitter/nvim-treesitter' }
+  -- },
   { 'windwp/nvim-autopairs',  event = 'InsertEnter', opts = {} },
-  { 'ahmedkhalf/project.nvim' },
 
   --tpope
   'tpope/vim-fugitive',
@@ -50,11 +48,11 @@ require('lazy').setup({
     },
   },
   { 'saadparwaiz1/cmp_luasnip' },
+  { 'L3MON4D3/LuaSnip' },
   { 'hrsh7th/cmp-nvim-lsp' },
   { 'hrsh7th/cmp-buffer' },
   { 'hrsh7th/cmp-path' },
   { 'hrsh7th/nvim-cmp' },
-  { 'L3MON4D3/LuaSnip' },
   { 'rafamadriz/friendly-snippets' },
 
   -- 'gc' to comment visual regions/lines

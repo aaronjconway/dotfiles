@@ -20,8 +20,9 @@ set dircounts
 # set sortby time; set reverse; set info time; set preview; }}
 set preview
 set info time
-set sortby time
-set reverse
+# set sortby time
+set sortby natural
+# set reverse!
 
 set ratios '1:2:3'
 set timefmt '2006-01-02 15:04:05 -0700'
@@ -46,7 +47,7 @@ map gf $lf -remote "send $id select $(fdfind . $(git rev-parse --show-toplevel) 
 
 # map <esc> unselect; clear
 
-map sn :{{ set sortby natural; set info size; set preview; }}
+map sn :{{ set sortby natural;set reverse!; set info size; set preview; }}
 map ss :{{ set sortby size; set info size; set preview; }}
 map st :{{ set sortby time; set reverse; set info time; set preview; }}
 

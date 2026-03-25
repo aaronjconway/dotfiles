@@ -24,7 +24,7 @@ wk.add({
     { "gd",         vim.lsp.buf.definition,     desc = "go to definition" },
     { "gD",         vim.lsp.buf.declaration,    desc = "go to declaration" },
     { "gi",         vim.lsp.buf.implementation, desc = "go to declaration" },
-    { "gi",         vim.lsp.buf.references, desc = "go to declaration" },
+    { "gi",         vim.lsp.buf.references,     desc = "go to declaration" },
 
 })
 
