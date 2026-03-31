@@ -3,6 +3,11 @@ vim.o.hlsearch = false
 vim.o.ignorecase = true
 vim.o.smartcase = true
 
+
+-- Qutting
+vim.o.hidden = true
+vim.o.confirm = false
+
 -- Indentation
 vim.o.tabstop = 4
 vim.o.softtabstop = 4

@@ -4,8 +4,8 @@ if not status then print('problem with which key') end
 wk.setup()
 
 wk.add({
-    { "<leader>Q",  ":qa!<CR>",                 desc = "Quit so Hard" },
-    { "<leader>q",  ":qa!<CR>",                 desc = "Quit so Hard" },
+    { "<leader>Q",  ":q!<CR>",                  desc = "Quit so Hard" },
+    { "<leader>q",  ":q!<CR>",                  desc = "Quit so Hard" },
     { "<leader>W",  ":wq!<CR>",                 desc = "save nice" },
     { "<leader>e",  ":Texplore<CR>",            desc = "Ntree" },
     { "<leader>m",  ":Mason<CR>",               desc = "Mason" },

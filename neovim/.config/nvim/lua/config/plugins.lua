@@ -36,6 +36,7 @@ require('lazy').setup({
   'tpope/vim-rhubarb',
   'tpope/vim-sleuth',
   'tpope/vim-surround',
+  'tpope/vim-vinegar',
 
   -- Useful status updates for LSP
   { 'j-hui/fidget.nvim',           opts = {} },

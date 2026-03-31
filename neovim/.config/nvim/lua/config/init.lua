@@ -74,7 +74,6 @@ local function set_working_dir(filenames)
   local dir = find_file_upwards(filenames)
   if dir then
     vim.cmd("cd " .. dir)
-    print("Working directory set to: " .. dir)
   else
     print("No matching file found in parent directories.")
   end
@@ -82,3 +81,15 @@ end
 
 -- Example usage
 set_working_dir({ ".git", ".luarc.json" })
+
+
+-- -- Never treat buffers as modified (so :q never complains)
+-- vim.api.nvim_create_autocmd({"BufEnter", "TextChanged", "TextChangedI"}, {
+--   callback = function()
+--     vim.bo.modified = false
+--   end,
+-- })
+
+vim.cmd([[
+  cnoreabbrev <expr> q  (getcmdtype() == ':' && getcmdline() == 'q')  ? 'q!'  : 'q'
+]])
