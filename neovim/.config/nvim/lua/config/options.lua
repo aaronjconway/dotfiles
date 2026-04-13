@@ -3,7 +3,6 @@ vim.o.hlsearch = false
 vim.o.ignorecase = true
 vim.o.smartcase = true
 
-
 -- Qutting
 vim.o.hidden = true
 vim.o.confirm = false
@@ -45,7 +44,7 @@ vim.o.updatetime = 250
 vim.o.timeoutlen = 250
 
 -- Set completeopt to have a better completion experience
-vim.o.completeopt = 'menuone,noselect'
+vim.o.completeopt = 'fuzzy,menu,preview'
 vim.o.termguicolors = true
 
 vim.o.scrolloff = 8

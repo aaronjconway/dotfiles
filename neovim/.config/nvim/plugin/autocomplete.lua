@@ -1,11 +1,9 @@
-require('neodev').setup()
-
 local luasnip = require 'luasnip'
 require('luasnip.loaders.from_vscode').lazy_load()
-
 luasnip.config.setup {}
 
 local cmp = require('cmp')
+
 local cmp_autopairs = require('nvim-autopairs.completion.cmp')
 
 --experiment maybe comment out
@@ -24,6 +22,7 @@ cmp.setup {
     completeopt = 'menu,menuone,noinsert,noselect',
   },
   -- stop preselecting things
+  -- testing
   preselect = cmp.PreselectMode.None,
   mapping = cmp.mapping.preset.insert {
     ['<C-n>'] = cmp.mapping.select_next_item(),
@@ -54,12 +53,15 @@ cmp.setup {
       end
     end, { 'i', 's' }),
   },
-
-  sources = {
-    { name = 'luasnip', option = { show_autosnippets = true } },
+  sources = cmp.config.sources({
     { name = 'nvim_lsp' },
+    { name = 'luasnip', option = { show_autosnippets = true } },
     { name = 'buffer' },
-    { name = 'cmdLine' },
+    -- { name = 'cmdline' },
     { name = 'path' },
-  },
+  }),
+  window = {
+    -- completion = cmp.config.window.bordered({}),
+    -- documentation = cmp.config.window.bordered({}),
+  }
 }

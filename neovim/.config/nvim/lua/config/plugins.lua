@@ -17,18 +17,16 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require('lazy').setup({
+  { "ahmedkhalf/project.nvim" },
   { 'stevearc/conform.nvim',  opts = {}, },
   { 'junegunn/vim-easy-align' },
   { 'vim-scripts/loremipsum' },
+
   { 'folke/which-key.nvim',   opts = {} },
-  { 'folke/neodev.nvim' },
   { 'folke/trouble.nvim' },
+  { 'folke/lazydev.nvim' },
+
   { 'EdenEast/nightfox.nvim' },
-  -- {
-  --   'davidmh/mdx.nvim',
-  --   config = true,
-  --   dependencies = { 'nvim-treesitter/nvim-treesitter' }
-  -- },
   { 'windwp/nvim-autopairs',  event = 'InsertEnter', opts = {} },
 
   --tpope
@@ -48,11 +46,12 @@ require('lazy').setup({
       "neovim/nvim-lspconfig",
     },
   },
-  { 'saadparwaiz1/cmp_luasnip' },
   { 'L3MON4D3/LuaSnip' },
+  { 'saadparwaiz1/cmp_luasnip' },
   { 'hrsh7th/cmp-nvim-lsp' },
   { 'hrsh7th/cmp-buffer' },
   { 'hrsh7th/cmp-path' },
+  { 'hrsh7th/cmp-cmdline' },
   { 'hrsh7th/nvim-cmp' },
   { 'rafamadriz/friendly-snippets' },
 

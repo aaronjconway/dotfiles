@@ -22,3 +22,10 @@ vim.lsp.config.lua_ls = {
         },
     },
 }
+
+vim.lsp.config['postgres_lsp'] = {
+    root_markers = { 'postgrestools.jsonc' }
+
+}
+
+-- vim.lsp.enable('postgres_lsp')
