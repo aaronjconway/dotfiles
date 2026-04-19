@@ -118,15 +118,17 @@ end
 vim.opt.rtp:prepend(vim.env.LAZY or lazypath)
 
 require('lazy').setup({
-  {
-    lazy = false,
-    priority = 1000,
-    -- dir = "~/plugins/colorbuddy.nvim",
-    "tjdevries/colorbuddy.nvim",
-    config = function()
-      vim.cmd.colorscheme "gruvbuddy"
-    end,
-  },		{
+		{
+			lazy = false,
+			priority = 1000,
+			-- dir = "~/plugins/colorbuddy.nvim",
+			"tjdevries/colorbuddy.nvim",
+			config = function()
+				vim.cmd.colorscheme "gruvbuddy"
+			end,
+		},
+
+		{
 			'stevearc/conform.nvim',
 			opts = {
 				formatters_by_ft = {
@@ -269,7 +271,6 @@ require('lazy').setup({
 				})
 			end
 		},
->>>>>>> 95bcac3 (multiple updates)
 		{
 			'nvim-telescope/telescope.nvim',
 			-- event = 'VimEnter',
@@ -508,4 +509,3 @@ vim.api.nvim_create_autocmd('FileType', {
 		end
 	end,
 })
-
