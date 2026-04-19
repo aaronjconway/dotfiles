@@ -1,7 +1,6 @@
 -- local vim keymap
 local map = vim.keymap.set
 map("n", "<Space>", "<Nop>", { silent = true })
-
 vim.g.mapleader = " "
 vim.o.number = true
 
@@ -119,8 +118,15 @@ end
 vim.opt.rtp:prepend(vim.env.LAZY or lazypath)
 
 require('lazy').setup({
-		{ "EdenEast/nightfox.nvim" },
-		{
+  {
+    lazy = false,
+    priority = 1000,
+    -- dir = "~/plugins/colorbuddy.nvim",
+    "tjdevries/colorbuddy.nvim",
+    config = function()
+      vim.cmd.colorscheme "gruvbuddy"
+    end,
+  },		{
 			'stevearc/conform.nvim',
 			opts = {
 				formatters_by_ft = {
@@ -243,15 +249,27 @@ require('lazy').setup({
 				}
 			end
 		},
-		-- {
-		-- 	'nvim-treesitter/nvim-treesitter',
-		-- 	lazy = false,
-		-- 	build = ':TSUpdate',
-		-- 	branch = {},
-		-- 	dependencies = {
-		-- 		'nvim-treesitter/nvim-treesitter-textobjects'
-		-- 	}
-		-- },
+		{
+			'nvim-treesitter/nvim-treesitter',
+			lazy = false,
+			build = ':TSUpdate',
+			branch = {},
+			dependencies = {
+				'nvim-treesitter/nvim-treesitter-textobjects'
+			},
+			config = function()
+				require("nvim-treesitter.configs").setup({
+					auto_install = true,
+					highlight = {
+						enable = true,
+					},
+					indent = {
+						enable = true,
+					},
+				})
+			end
+		},
+>>>>>>> 95bcac3 (multiple updates)
 		{
 			'nvim-telescope/telescope.nvim',
 			-- event = 'VimEnter',
@@ -491,11 +509,3 @@ vim.api.nvim_create_autocmd('FileType', {
 	end,
 })
 
-
--- vim.api.nvim_create_autocmd('FileType', {
--- 	callback = function(args)
--- 		if vim.bo[args.buf].filetype == "fugitive" or vim.bo[args.buf].buftype == "fugitive" then
--- 			vim.cmd("wincmd T")
--- 		end
--- 	end,
--- })
