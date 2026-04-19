@@ -75,6 +75,9 @@ local glob_pattern = {
   -- Golang files
   "!go.mod",
   "!go.sum",
+
+
+
 }
 
 local function grep()

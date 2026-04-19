@@ -1,4 +1,5 @@
-local runtime_path = vim.split(package.path, ';')
+--lua
+local runtime_path    = vim.split(package.path, ';')
 vim.lsp.config.lua_ls = {
     -- root_markers = { '.luarc.json', '.luarc.jsonc', '.git' },
     settings = {
@@ -22,10 +23,3 @@ vim.lsp.config.lua_ls = {
         },
     },
 }
-
-vim.lsp.config['postgres_lsp'] = {
-    root_markers = { 'postgrestools.jsonc' }
-
-}
-
--- vim.lsp.enable('postgres_lsp')

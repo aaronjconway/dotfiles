@@ -2,8 +2,12 @@ exec_always --no-startup-id picom
 exec --no-startup-id dex --autostart --environment i3
 exec --no-startup-id nm-applet
 exec_always --no-startup-id ~/.config/i3/capslock.sh
+
+# set rate keyboard rate 300ms 40 repeate
+exec --no-startup-id xset r 300 40
 exec --no-startup-id xset s off
 exec --no-startup-id xset -dpms
+
 
 for_window [class=".*"] layout tabbed
 
@@ -32,7 +36,7 @@ tiling_drag modifier titlebar
 
 # terminal- testing kitty
 # bindsym $mod+Return exec alacritty
-bindsym $mod+Return exec kitty
+bindsym $mod+Return exec alacritty
 
 # kill focused window
 bindsym $mod+Shift+q kill

@@ -28,20 +28,27 @@ vim.o.statusline = "%{fnamemodify(expand('%:p'), ':~')}"
 vim.o.textwidth = 80
 vim.o.formatoptions = "tcr" -- Enable auto-wrap (t), continue comments (c), auto-remove comment leader on Enter (r)
 
+
+--comment
+vim.o.commentstring = "//%s"
+
 -- Files
 vim.o.swapfile = false
 vim.o.backup = false
 vim.o.undodir = os.getenv("HOME") .. "/.vim/undodir"
 vim.o.undofile = true
-vim.o.hidden = true
 
 -- Clipboard & Mouse
 vim.o.clipboard = "unnamedplus"
 vim.o.mouse = "a"
 
 -- Decrease update time
-vim.o.updatetime = 250
-vim.o.timeoutlen = 250
+vim.o.updatetime = 100
+vim.o.timeout = true
+vim.o.timeoutlen = 100
+
+vim.o.ttimeout = true
+vim.o.ttimeoutlen = 100
 
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = 'fuzzy,menu,preview'

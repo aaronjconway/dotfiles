@@ -38,7 +38,7 @@ fi
 
 # Completion system
 autoload -Uz compinit
-autoload -U colors && colors
+# autoload -U colors && colors
 
 zstyle ':completion:*' completer _complete _approximate
 zstyle ':completion:*' completion-ignore-case true
@@ -312,7 +312,7 @@ find_root_dir() {
 # Function to select and edit from command history using fzf
 select_from_history() {
     local choice
-    choice=$(history | fzf +s +m --tac --prompt="> " | awk '{$1=""; print substr($0,2)}')
+    choice=$(fc -rl 1 | sed 's/^[ ]*[0-9]\+[ ]*//' | fzf --prompt="> ")
     LBUFFER="$choice"
     zle redisplay
 }
@@ -332,6 +332,12 @@ obsidian() {
 #----------------------------------------------------------
 
 bindkey -s '^G' '^ulazygit\n'
+
+# override fzf behaviour
+bindkey '^R' select_from_history
+
+# lf
+bindkey -s '^f' 'lf\r'
 
 # Define a Zsh widget that calls the function
 zle -N my_telescope telescope

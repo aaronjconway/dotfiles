@@ -73,9 +73,21 @@ cmd extract ${{
         esac
 }}
 
-cmd trash ${{
-        rm -rf $fx
+
+cmd trash %set -f; mv -t ~/.trash -- $fx
+
+# define a custom 'delete' command
+cmd delete ${{
+        set -f
+        printf "$fx\n"
+        printf "delete? [y/N] "
+        read ans
+        [ "$ans" = "y" ] && rm -rf $fx
 }}
+
+# map <delete> trash
+map D trash
+map <delete> delete
 
 
 map o &{{xdg-open $f}}

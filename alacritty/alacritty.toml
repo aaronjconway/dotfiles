@@ -1,6 +1,6 @@
 [font]
 normal = { family = "Monospace", style = "Regular" }
-size = 12
+size = 10
 
 [window]
 # startup_mode = "windowed"
