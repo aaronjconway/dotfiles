@@ -1,6 +1,5 @@
 #!/bin/sh
 
-
 case "$(printf "%s\n" "$(readlink -f "$1")" | tr '[:upper:]' '[:lower:]')" in
     *)
         batcat --theme="Visual Studio Dark+" -p --color=always  "$1"

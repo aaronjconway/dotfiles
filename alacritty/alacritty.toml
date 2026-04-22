@@ -4,7 +4,7 @@ size = 10
 
 [window]
 # startup_mode = "windowed"
-padding = { x = 10, y = 10 }
+padding = { x = 5, y = 5 }
 
 [terminal]
 osc52 = "CopyPaste"
