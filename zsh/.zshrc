@@ -1,8 +1,6 @@
-# use pathman to edit path
-
 # Keybindings
 bindkey -v
-export KEYTIMEOUT=1
+# export KEYTIMEOUT=1
 
 # load zgenom
 source "${HOME}/.zgenom/zgenom.zsh"
@@ -37,7 +35,6 @@ autoload -Uz add-zsh-hook
 zsh_history_sync() { fc -AI }
 add-zsh-hook precmd zsh_history_sync
 
-set list-colors to enable filename colorizing
 zstyle ':completion:*' completer _complete _path_files _approximate
 zstyle ':completion:*' completion-ignore-case true
 zstyle ':completion:*' insert-unambiguous true
@@ -70,10 +67,6 @@ autoload -Uz vcs_info
 PS1='${vcs_info_msg_0_} %~ $ '
 
 _comp_options+=(globdots)
-# Completion system
-#
-#:TODO
-fpath=(~/.zsh/completions $fpath)
 
 autoload -Uz compinit
 compinit -C
@@ -84,14 +77,17 @@ alias capslock='xdotool key Caps_Lock'
 alias CAPSLOCK='xdotool key Caps_Lock'
 alias vim="nvim"
 alias vi="nvim"
+alias python='python3'
 
-# export FZF_DEFAULT_OPTS='--layout=reverse --color=hl+:#b83232,bg+:#FFE5B4,fg+:#282C34,gutter:-1'
+export FZF_CTRL_T_COMMAND=''
 export FZF_DEFAULT_OPTS='--layout=reverse --height 40%'
 export EDITOR="nvim"
 export VISUAL="nvim"
 export OPENER="xdg-open"
 export MANPAGER="batcat --plain --language=man"
-export PATH="/usr/local/go/bin:$PATH"
+
+typeset -U path
+path=(/usr/local/go/bin $HOME/go/bin $path)
 
 ## change the word chars so that I can backspace to a /
 export WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'
@@ -144,7 +140,6 @@ files() {
     zle reset-prompt
 }
 
-
 # Function to select and edit from command history using fzf
 select_from_history() {
     local choice
@@ -152,7 +147,6 @@ select_from_history() {
     LBUFFER="$choice"
     zle redisplay
 }
-
 
 ## lf
 bindkey -s '^f' 'lf\r'
@@ -207,6 +201,4 @@ esac
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 export N_PREFIX="$HOME/n"; [[ :$PATH: == *":$N_PREFIX/bin:"* ]] || PATH+=":$N_PREFIX/bin"  # Added by n-install (see http://git.io/n-install-repo).
-
-
 

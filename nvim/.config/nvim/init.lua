@@ -1,85 +1,101 @@
--- Leader key
 local map = vim.keymap.set
 
 map('n', '<Space>', '<Nop>', { silent = true })
 vim.g.mapleader = ' '
 
--- Basic UI
-vim.o.number = true
+-- Add custom filetype detection: treat *.templ files as 'templ'
+vim.filetype.add { extension = { templ = 'templ' } }
 
-local opt = vim.opt
+-- netrw (built-in file explorer) behavior
+vim.g.netrw_browse_split = 3 -- open files in a new tab
+vim.g.netrw_i = 3 -- use tree-style listing
 
--- Window behavior
-vim.wo.wrap = true
-vim.wo.linebreak = true
+-- Indentation & tabs
+vim.o.autoindent = true -- copy indent from current line
+vim.o.smartindent = true -- smarter auto-indenting
+vim.o.expandtab = true -- use spaces instead of tabs
+vim.o.shiftwidth = 4 -- indentation width for >>, <<
+vim.o.tabstop = 4 -- number of spaces a <Tab> counts for
+vim.o.softtabstop = 2 -- spaces inserted/deleted when pressing Tab/BS
 
---Netrw behaviour
---open in split
-vim.g.netrw_browse_split = 3
-vim.g.netrw_i = 3
+-- Backup / swap / undo
+vim.o.backup = false -- disable backup files
+vim.o.swapfile = false -- disable swap files
+vim.o.undofile = true -- persistent undo history
 
--- Indentation / formatting
-opt.breakindent = true
-opt.formatoptions:remove 'o'
-opt.textwidth = 80
-opt.commentstring = '//%s'
-opt.expandtab = true -- use spaces instead of tabs
-opt.shiftwidth = 2 -- indent size
-opt.tabstop = 2 -- tab display width
-opt.softtabstop = 2 -- insert/delete width
-opt.smartindent = true -- smarter auto-indenting
-opt.autoindent = true -- copy indent from current line
+-- UI / appearance
+vim.o.termguicolors = true -- enable 24-bit colors
+vim.o.colorcolumn = '80' -- highlight column at 80 chars
+vim.o.signcolumn = 'yes' -- always show sign column
+vim.o.number = true -- show absolute line numbers
+vim.o.relativenumber = true -- show relative line numbers
+vim.o.cursorline = false -- (not set, default off)
+vim.o.wrap = true -- wrap long lines
+vim.o.linebreak = true -- wrap at word boundaries
+vim.wo.wrap = true -- window-local wrap (redundant but explicit)
+vim.wo.linebreak = true -- window-local linebreak
 
---- Timing
-opt.updatetime = 200
-opt.timeout = true
-opt.timeoutlen = 500
-opt.ttimeout = true
-opt.ttimeoutlen = 0
+-- Whitespace visualization
+vim.o.listchars = 'tab:^ ,nbsp:¬,extends:»,precedes:«,trail:•'
+
+-- Search behavior
+vim.o.hlsearch = false -- don't highlight search matches
+vim.o.ignorecase = true -- case-insensitive search by default
+vim.o.smartcase = true -- case-sensitive if uppercase used
+
+-- Command / completion UI
+vim.o.inccommand = 'split' -- live preview of substitutions in split
+vim.o.cot = '' -- shortmess for completion (effectively minimal)
 
 -- Folding
-opt.foldenable = false
-opt.foldmethod = 'manual'
-opt.foldlevelstart = 99
+vim.o.foldenable = false -- disable folding by default
+vim.o.foldmethod = 'manual' -- manual folding method
+vim.o.foldlevelstart = 99 -- open all folds on startup
 
--- Search
-opt.ignorecase = true
-opt.smartcase = true
-opt.hlsearch = false
+-- Window splitting
+vim.o.splitbelow = true -- horizontal splits go below
+vim.o.splitright = true -- vertical splits go right
 
--- Splits
-opt.splitright = true
-opt.splitbelow = true
+-- Scrolling
+vim.o.scrolloff = 2 -- keep 2 lines visible above/below cursor
 
--- Buffers / editing
-opt.hidden = true
-opt.confirm = false
-opt.swapfile = false
-opt.backup = false
-opt.undofile = true
+-- Mouse
+vim.o.mouse = 'a' -- enable mouse in all modes
 
--- Clipboard / input
-opt.clipboard = 'unnamedplus'
-opt.mouse = 'a'
+-- Clipboard
+vim.o.clipboard = 'unnamedplus' -- use system clipboard
 
--- UI
-opt.termguicolors = true
-opt.colorcolumn = '80'
-opt.signcolumn = 'yes'
-opt.scrolloff = 2
-opt.listchars = 'tab:^ ,nbsp:¬,extends:»,precedes:«,trail:•'
-opt.statusline = "%{fnamemodify(expand('%:p'), ':~')}"
+-- File handling
+vim.o.hidden = true -- allow switching buffers without saving
+vim.o.confirm = false -- no confirmation prompts
+vim.o.autowrite = false
 
--- Completion / wildmenu
-opt.completeopt = 'menuone,noselect,fuzzy'
-opt.wildignorecase = true
+-- Formatting / text layout
+vim.o.textwidth = 80 -- auto-wrap text at 80 chars
+vim.o.breakindent = true -- preserve indentation in wrapped lines
+vim.o.commentstring = '//%s' -- default comment format
+vim.opt.formatoptions:remove 'o' -- don't continue comments with 'o' or 'O'
 
----- // i think this is needed for svelte
----- vim.opt.isfname:append("@,48-57,/,.,-,_,+,,,#,$,%,{,},[,],@-@,!,~,=")
----- vim.opt.iskeyword:remove("_")
+-- Timing / responsiveness
+vim.o.timeout = true -- enable mapped sequence timeout
+vim.o.timeoutlen = 500 -- time to wait for mapped sequence (ms)
+vim.o.ttimeout = true -- key code timeout
+vim.o.ttimeoutlen = 0 -- no delay for key codes
+vim.o.updatetime = 200 -- faster CursorHold / swap updates
 
--- add templ file config
-vim.filetype.add { extension = { templ = 'templ' } }
+-- Messages / prompts
+vim.o.more = false -- don't pause for long messages
+
+-- Statusline / title
+vim.o.statusline = "%{fnamemodify(expand('%:p'), ':~')}" -- show full path (~ for home)
+vim.o.title = true -- enable terminal title
+vim.o.titlestring = '%t%( %M%)%( (%{expand("%:~:h")})%)%a (nvim)' -- custom title
+
+-- Search / completion behavior
+vim.o.wildignorecase = true -- case-insensitive command-line completion
+
+-- Misc
+vim.o.incsearch = false -- (not set, default off)
 
 function R(name)
   require('plenary.reload').reload_module(name)
@@ -116,6 +132,25 @@ vim.api.nvim_create_autocmd('User', {
   end,
 })
 
+vim.api.nvim_create_user_command('SpellCheckMode', function()
+  vim.opt.spell = true
+  vim.opt.spelllang = { 'en_us' }
+  require('cmp').setup {
+    sources = {
+      {
+        name = 'spell',
+        option = {
+          keep_all_entries = true,
+          enable_in_context = function()
+            return true
+          end,
+          preselect_correct_word = true,
+        },
+      },
+    },
+  }
+end, {})
+
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
 ---@diagnostic disable-next-line: undefined-field
 if not vim.loop.fs_stat(lazypath) then
@@ -131,6 +166,25 @@ end
 vim.opt.rtp:prepend(vim.env.LAZY or lazypath)
 
 require('lazy').setup({
+  { 'vim-scripts/loremipsum' },
+  {
+    'folke/lazydev.nvim',
+    ft = 'lua',
+  },
+  {
+    'Mofiqul/vscode.nvim',
+    priority = 1000,
+    lazy = false,
+    config = function()
+      require('vscode').setup {
+        terminal_colors = true,
+        italic_comments = true,
+        italic_inlayhints = true,
+        underline_links = true,
+      }
+      vim.cmd 'colorscheme vscode'
+    end,
+  },
   {
     'stevearc/conform.nvim',
     opts = {
@@ -138,13 +192,13 @@ require('lazy').setup({
         bash = { 'beautysh' },
         go = { 'goimports' },
         html = { 'prettierd' },
-        markdown = { 'prettierd' },
+        js = { 'lsp' },
         lua = { 'lsp' },
+        markdown = { 'prettierd' },
         sh = { 'beautysh' },
         sql = { 'pg_format' },
         templ = { 'templ' },
         zsh = { 'beautysh' },
-        js = { 'lsp' },
       },
       format_on_save = function()
         return { timeout_ms = 1200, lsp_fallback = true }
@@ -163,7 +217,6 @@ require('lazy').setup({
   'tpope/vim-fugitive',
   'tpope/vim-rhubarb',
   'tpope/vim-surround',
-  'tpope/vim-commentary',
   {
     'mason-org/mason-lspconfig.nvim',
     opts = {},
@@ -175,6 +228,7 @@ require('lazy').setup({
   {
     'hrsh7th/nvim-cmp',
     dependencies = {
+      'f3fora/cmp-spell',
       'hrsh7th/cmp-nvim-lsp',
       'L3MON4D3/LuaSnip',
       'saadparwaiz1/cmp_luasnip',
@@ -201,7 +255,7 @@ require('lazy').setup({
           end,
         },
         completion = {
-          completeopt = 'menu,menuone,noinsert,noselect',
+          completeopt = 'menuone,noselect,fuzzy,preview',
         },
         -- stop preselecting things
         -- testing
@@ -237,10 +291,12 @@ require('lazy').setup({
         },
         sources = cmp.config.sources {
           { name = 'nvim_lsp' },
-          { name = 'buffer' },
           { name = 'path' },
           { name = 'luasnip', option = { show_autosnippets = true } },
+          { name = 'lazydev', group_index = 0 },
           -- { name = 'cmdline' },
+          -- { name = 'buffer' },
+          -- { name = 'spell' },
         },
       }
     end,
@@ -249,22 +305,16 @@ require('lazy').setup({
     'nvim-treesitter/nvim-treesitter',
     lazy = false,
     build = ':TSUpdate',
-  },
-  {
-    'nvim-treesitter/nvim-treesitter-textobjects',
+    dependencies = {
+      'nvim-treesitter/nvim-treesitter-textobjects',
+    },
   },
   {
     'nvim-telescope/telescope.nvim',
-    lazy = false,
+    version = '*',
     dependencies = {
       'nvim-lua/plenary.nvim',
-      {
-        'nvim-telescope/telescope-fzf-native.nvim',
-        build = 'make',
-        cond = function()
-          return vim.fn.executable 'make' == 1
-        end,
-      },
+      { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
     },
   },
 }, {
@@ -381,35 +431,32 @@ local glob_pattern = {
   '!go.sum',
 }
 
+-- roots I want to search for as the project root.
+-- default to git otherwise
+local roots = { '.luarc.json' }
+
 local function grep()
   require('telescope.builtin').live_grep {
     glob_pattern = glob_pattern,
+    cwd = vim.fs.root(0, { roots, '.git' }),
   }
 end
 
 local function find_files()
   require('telescope.builtin').find_files {
     hidden = true,
+    cwd = vim.fs.root(0, { roots, '.git' }),
   }
-end
-
-local function grep_all()
-  require('telescope.builtin').live_grep()
 end
 
 -- Search group (leader s)
 map('n', '<leader>sg', grep, { desc = 'Grep' })
-map('n', '<leader>sG', grep_all, { desc = 'Grep All' })
 map('n', '<leader>sf', find_files, { desc = 'Find Files' })
 map('n', '<leader>so', '<cmd>Telescope oldfiles<cr>', { desc = 'Old Files' })
-map('n', '<leader>sb', '<cmd>Telescope buffers<cr>', { desc = 'Buffers' })
 map('n', '<leader>st', '<cmd>Telescope<cr>', { desc = 'Telescope' })
-map('n', '<leader>sc', '<cmd>Telescope commands<cr>', { desc = 'Commands' })
 map('n', '<leader>sh', function()
   require('telescope.builtin').help_tags()
 end, { desc = 'Help Tags' })
-map('n', '<leader>sk', '<cmd>Telescope keymaps<cr>', { desc = 'Keymaps' })
-map('n', '<leader>sp', '<cmd>Telescope projects<cr>', { desc = 'Projects' })
 map('n', '<leader>sr', '<cmd>Telescope resume<cr>', { desc = 'Resume' })
 
 map('n', '<leader>/', function()
@@ -417,6 +464,7 @@ map('n', '<leader>/', function()
     previewer = false,
   })
 end, { desc = '[/] Fuzzily search in current buffer' })
+
 map('n', '<leader>w', ':w<CR>', { desc = 'save nice' })
 map('n', '<leader>q', ':q!<CR>', { desc = 'quit' })
 map('n', '<leader>g', ':tab Git<CR>', { desc = 'open Git' })
@@ -482,24 +530,29 @@ local ts = require 'nvim-treesitter'
 
 local available = ts.get_available()
 local available_set = {}
+
 for _, lang in ipairs(available) do
   available_set[lang] = true
 end
 
 vim.api.nvim_create_autocmd('FileType', {
   callback = function(args)
-    local ft = vim.bo[args.buf].filetype
+    local buf = args.buf
+    local ft = vim.bo[buf].filetype
 
     if not available_set[ft] then
+      -- start it anyways
+      pcall(vim.treesitter.start)
       return
     end
 
-    ts.install(ft)
+    ts.install(ft, { summary = true, auto_on = true })
+    pcall(vim.treesitter.start)
+  end,
+})
 
-    vim.schedule(function()
-      if vim.api.nvim_buf_is_valid(args.buf) then
-        vim.treesitter.start(args.buf)
-      end
-    end)
+vim.api.nvim_create_autocmd('FileType', {
+  callback = function()
+    vim.opt.formatoptions:remove { 'r', 'o' }
   end,
 })
