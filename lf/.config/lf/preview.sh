@@ -1,62 +1,23 @@
-#!/bin/sh
-
-case "$(printf "%s\n" "$(readlink -f "$1")" | tr '[:upper:]' '[:lower:]')" in
-    *)
-        batcat --theme="Visual Studio Dark+" -p --color=always  "$1"
-esac
-exit 0
-
-# hash() {
-# 	printf '%s/.cache/lf/%s' "$HOME" \
-    # 		"$(stat --printf '%n\0%i\0%F\0%s\0%W\0%Y' -- "$(readlink -f "$1")" | sha256sum | awk '{print $1}')"
-# }
+# #!/bin/sh
 #
-# cache() {
-# 	if [ -f "$1" ]; then
-# 		draw "$@"
-# 	fi
-# }
+# UEB_PID=$(pgrep -n ueberzug)
 #
-# file="$1"
-# shift
+# [ -z "$UEB_PID" ] && exit 1
 #
-# case "$(file -Lb --mime-type -- "$file")" in
-# image/*)
-# 	if [ -n "$FIFO_UEBERZUG" ]; then
-# 		orientation="$(identify -format '%[EXIF:Orientation]\n' -- "$file")"
-# 		if [ -n "$orientation" ] && [ "$orientation" != 1 ]; then
-# 			cache="$(hash "$file").jpg"
-# 			cache "$cache" "$@"
-# 			convert -- "$file" -auto-orient "$cache"
-# 			draw "$cache" "$@"
-# 		else
-# 			draw "$file" "$@"
-# 		fi
-# 	else
-# 		draw "$file" "$@"
-# 	fi
-# 	;;
-# video/*)
-# 	if [ -n "$FIFO_UEBERZUG" ]; then
-# 		cache="$(hash "$file").jpg"
-# 		cache "$cache" "$@"
-# 		ffmpegthumbnailer -i "$file" -o "$cache" -s 0
-# 		# mediainfo "$file"
-# 		draw "$cache" "$@"
-# 	else
-# 		#mediainfo "$file"
-# 		echo "This is a video file: $file"
-# 	fi
-# 	;;
-# text/html) w3m -dump "$file" ;;
-# text/troff) man ./ "$file" | col -b ;;
-# application/zip) atool --list -- "$file" ;;
-# audio/* | application/octet-stream) mediainfo "$file" ;;
-# */pdf) pdftotext -l 10 -nopgbrk -q -- "$file" - ;;
-# *opendocument*) odt2txt "$file" ;;
-# *) bat --style=numbers,changes --color=always "$file" || cat "$1" ;;
+# case "$(file -Lb --mime-type -- "$1")" in
+#     image/*)
+#         printf '{"action":"add","identifier":"img","path":"%s","x":0,"y":0,"width":40,"height":20}\n' "$1"
+#         ;;
+#     *)
+#         cat "$1"
+#         ;;
 # esac
-#
-# file -Lb -- "$1" | fold -s -w "$width"
-#
+# case "$(printf "%s\n" "$(readlink -f "$1")" | tr '[:upper:]' '[:lower:]')" in
+#     image/*)
+#         echo "hi I'm an image"
+#         ;;
+#     *)
+#         batcat --theme="Visual Studio Dark+" -p --color=always  "$1"
+#         ;;
+# esac
 # exit 0

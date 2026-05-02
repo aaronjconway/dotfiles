@@ -60,9 +60,9 @@ setopt promptsubst
 
 stty stop undef
 
+autoload -Uz vcs_info
 precmd() { vcs_info }
 
-autoload -Uz vcs_info
 # Prompt
 PS1='${vcs_info_msg_0_} %~ $ '
 
@@ -78,13 +78,16 @@ alias CAPSLOCK='xdotool key Caps_Lock'
 alias vim="nvim"
 alias vi="nvim"
 alias python='python3'
+alias lf='~/.config/lf/lf-ueberzug'
 
 export FZF_CTRL_T_COMMAND=''
 export FZF_DEFAULT_OPTS='--layout=reverse --height 40%'
 export EDITOR="nvim"
 export VISUAL="nvim"
 export OPENER="xdg-open"
-export MANPAGER="batcat --plain --language=man"
+export MANWIDTH="80"
+export DISPLAY=:0
+export XAUTHORITY=$HOME/.Xauthority
 
 typeset -U path
 path=(/usr/local/go/bin $HOME/go/bin $path)
@@ -96,7 +99,6 @@ my_array=(
     directories
     directories_all
     files
-    select_from_history
 )
 
 # Function to select from array using fzf
@@ -139,17 +141,6 @@ files() {
     vcs_info
     zle reset-prompt
 }
-
-# Function to select and edit from command history using fzf
-select_from_history() {
-    local choice
-    choice=$(fc -rl 1 | sed 's/^[ ]*[0-9]\+[ ]*//' | fzf --prompt="> ")
-    LBUFFER="$choice"
-    zle redisplay
-}
-
-## lf
-bindkey -s '^f' 'lf\r'
 
 ## Define a Zsh widget that calls the function
 zle -N my_telescope telescope
