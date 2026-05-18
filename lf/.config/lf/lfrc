@@ -1,15 +1,10 @@
-# set shellopts '-eu'
-# set ifs "\n"
+set shellopts '-eu'
+set ifs "\n"
 
-set color256
-set icons
 set hidden
 set incsearch
 set incfilter
-set scrolloff 4
-set tabstop 2
 set smartcase
-set dircounts
 
 set preview
 set info time
@@ -24,8 +19,6 @@ map D trash
 map . :filter
 map <esc> :quit
 
-#extract
-map e extract
 
 # create directory/file
 map ad push $mkdir<space>
@@ -38,6 +31,7 @@ map st :{{ set sortby time; set reverse; set info time; set preview; }}
 cmd mkdir %[ -n "${1}" ] && mkdir -p ${@} || echo "Argument needed"
 cmd mkfile %[ -n "${1}" ] && touch ${@} || echo "Argument needed"
 
+map e extract
 cmd extract ${{
 
         set -f
@@ -51,10 +45,12 @@ cmd extract ${{
         esac
 }}
 
-
-cmd trash %set -f; mv -t ~/.trash -- $fx
+# map <delete> trash
+map D trash
+cmd trash %set -f; mv --backup=numbered -t ~/.trash -- $fx
 
 # define a custom 'delete' command
+map <delete> delete
 cmd delete ${{
         set -f
         printf "$fx\n"
@@ -63,15 +59,9 @@ cmd delete ${{
         [ "$ans" = "y" ] && rm -rf $fx
 }}
 
-# map <delete> trash
-map D trash
-map <delete> delete
 
-
-map o &{{xdg-open $f}}
 
 map <enter> open
-
 cmd open &{{
         case $(file --mime-type -Lb $f) in
             application/pdf) for f in $fx; do $OPENER $f > /dev/null 2> /dev/null & done ;;
@@ -80,22 +70,3 @@ cmd open &{{
             *) for f in $fx; do $OPENER $f > /dev/null 2> /dev/null & done ;;
         esac
 }}
-
-
-# dynamically set info displayed based on the number of columns
-cmd resize %{{
-        w=$(tmux display-message -p '#{pane_width}' || tput cols)
-        # w=$(tput cols)
-        if [ $w -le 62 ]; then
-            lf -remote "send $id set ratios 1:4"
-            lf -remote "send $id set nopreview"
-        elif [ $w -le 80 ]; then
-            lf -remote "send $id set ratios 1:2:2"
-        elif [ $w -le 100 ]; then
-            lf -remote "send $id set ratios 1:2:3"
-        else
-            lf -remote "send $id set ratios 2:4:5"
-        fi
-        # lf -remote "send $id echo 'ui adjusted for width of $w'"
-}}
-resize

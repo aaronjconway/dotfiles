@@ -198,7 +198,7 @@ map("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
 	callback = function()
 		--- set help as a tab with q to quit
-		if vim.bo.filetype == "help" or vim.bo.filetype == "git" then
+		if vim.bo.filetype == "help" or vim.bo.filetype == "fugitive" then
 			vim.cmd("wincmd T")
 			vim.api.nvim_buf_set_keymap(0, "n", "q", ":q!<cr>", {})
 		end
@@ -220,4 +220,5 @@ require("vscode").setup({
 	underline_links = true,
 	terminal_colors = true,
 })
+
 vim.cmd("colorscheme vscode")
