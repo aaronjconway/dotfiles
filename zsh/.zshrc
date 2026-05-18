@@ -1,6 +1,10 @@
+case $- in *i*)
+        [ -z "$TMUX" ] && exec tmux
+esac
+
 # Keybindings
 bindkey -v
-# export KEYTIMEOUT=1
+export KEYTIMEOUT=1
 
 # load zgenom
 source "${HOME}/.zgenom/zgenom.zsh"
@@ -146,16 +150,15 @@ files() {
 zle -N my_telescope telescope
 bindkey "^O" my_telescope
 
-bindkey '^H' backward-kill-word
 bindkey '^?' backward-delete-char
-bindkey '^p' up-line-or-history
-bindkey '^n' down-line-or-history
-bindkey '^e' autosuggest-accept
-bindkey '^[[1;5D' backward-word
+bindkey '^H' backward-kill-word
 bindkey '^[[1;5C' forward-word
-bindkey '^e' autosuggest-accept
+bindkey '^[[1;5D' backward-word
 bindkey '^I' expand-or-complete        # Tab
 bindkey '^[[Z' reverse-menu-complete   # Shift-Tab
+bindkey '^e' autosuggest-accept
+bindkey '^n' down-line-or-history
+bindkey '^p' up-line-or-history
 
 # Beam = insert, Block = normal
 function zle-keymap-select {

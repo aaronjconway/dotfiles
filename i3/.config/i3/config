@@ -2,6 +2,7 @@ exec_always --no-startup-id picom --config ~/.config/picom/picom.conf
 exec --no-startup-id dex --autostart --environment i3
 exec --no-startup-id nm-applet
 exec_always --no-startup-id ~/.config/i3/capslock.sh
+
 # dmenu
 bindsym $mod+d exec --no-startup-id dmenu_run -fn 'pango:pixelsize=18'
 
@@ -17,11 +18,12 @@ font pango:monospace 14
 # remove borders
 new_window pixel 1
 new_float  pixel 1
-# Window border colors
-#{colorclass border background text indicator}
 
-client.focused          #285577 #285577 #ffffff #285577 #666666
-client.unfocused        #222222 #222222 #888888 #222222 #222222
+# Window border colors
+
+#{colorclass border background text indicator}
+client.focused          #285577 #285577 #ffffff #285577 #444444
+client.unfocused        #222222 #222222 #888888 #222222 #000000
 
 bindsym $mod+Return exec st
 
@@ -32,28 +34,7 @@ bindsym $mod+Shift+q kill
 
 # change focus
 bindsym $mod+Tab exec i3-cycle right
-bindsym $mod+Shift+Tab exec i3-cycle next
-
-# move focused window
-bindsym $mod+Shift+h move left
-bindsym $mod+Shift+j move left
-bindsym $mod+Shift+k move down
-bindsym $mod+Shift+l move up
-
-# split in horizontal orientato
-bindsym $mod+h split h
-
-# split in vertical orientation
-bindsym $mod+v split v
-
-bindsym $mod+t layout tabbed
-
-# toggle tiling / floating
-bindsym $mod+Shift+space floating toggle
-
-# focus the parent container
-bindsym $mod+a focus parent
-
+bindsym $mod+Shift+Tab exec i3-cycle left
 
 set $ws1 "1"
 set $ws2 "2"
@@ -94,6 +75,6 @@ bindsym $mod+Shift+r restart
 
 bar {
 	position top
-        font pango:monospace 14
+    font pango:monospace 14
 	status_command i3blocks
 }

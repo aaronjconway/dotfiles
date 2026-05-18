@@ -1,0 +1,11 @@
+[batterybar]
+command=./batterybar
+label=Battery:
+interval=2
+markup=pango
+
+[time]
+command=./time
+interval=1
+STRFTIME_FORMAT=%m/%d/%Y %I:%M %p
+TZ_LABELS=Omaha

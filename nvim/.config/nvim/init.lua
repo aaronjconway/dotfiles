@@ -44,6 +44,7 @@ end
 vim.opt.rtp:prepend(vim.env.LAZY or lazypath)
 
 require("lazy").setup({
+	{ "norcalli/nvim-colorizer.lua" },
 	{ "Mofiqul/vscode.nvim" },
 	{
 		"stevearc/conform.nvim",
