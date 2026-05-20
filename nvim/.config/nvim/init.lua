@@ -153,6 +153,13 @@ require("lazy").setup({
 }, {})
 
 require("telescope").setup({
+	defaults = {
+		mappings = {
+			i = {
+				["<esc>"] = require("telescope.actions").close,
+			},
+		},
+	},
 	vimgrep_arguments = {
 		"rg",
 		"--hidden",
@@ -175,13 +182,15 @@ require("telescope").setup({
 
 require("telescope").load_extension("fzf")
 local map = vim.keymap.set
-map("i", "<C-H>", "<c-w>")
+map("i", "<c-h>", "<c-w>")
+-- for making c-bs work in : command mode
+map("c", "<c-h>", "<c-w>")
 map("i", "kj", "<ESC>l")
-map("n", "<C-d>", "<C-d>zz")
-map("n", "<C-i>", "<C-i>zz")
-map("n", "<C-l>", "<C-w>w")
-map("n", "<C-o>", "<C-o>zz")
-map("n", "<C-u>", "<C-u>zz")
+map("n", "<c-d>", "<c-d>zz")
+map("n", "<c-i>", "<c-i>zz")
+map("n", "<c-l>", "<c-w>w")
+map("n", "<c-o>", "<c-o>zz")
+map("n", "<c-u>", "<c-u>zz")
 map("n", "<Space>", "<Nop>", { silent = true })
 map("n", "<leader>g", ":tab Git<CR>")
 map("n", "<leader>q", ":q!<CR>")
@@ -195,6 +204,8 @@ map("n", "N", "Nzzzv")
 map("n", "n", "nzzzv")
 map("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 map("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
+map("n", "<c-n>", ":try | cnext | catch | cfirst | endtry<CR>")
+map("n", "<c-p>", ":try | cprev | catch | clast | endtry<CR>")
 
 vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
 	callback = function()
