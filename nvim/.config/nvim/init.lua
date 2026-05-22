@@ -181,6 +181,7 @@ require("telescope").setup({
 })
 
 require("telescope").load_extension("fzf")
+-- local map = vim.api.nvim_set_keymap
 local map = vim.keymap.set
 map("i", "<c-h>", "<c-w>")
 -- for making c-bs work in : command mode
@@ -206,11 +207,17 @@ map("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 map("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 map("n", "<c-n>", ":try | cnext | catch | cfirst | endtry<CR>")
 map("n", "<c-p>", ":try | cprev | catch | clast | endtry<CR>")
+map("n", "gd", vim.lsp.buf.definition, { desc = "jump to definition" })
 
 vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
 	callback = function()
 		--- set help as a tab with q to quit
-		if vim.bo.filetype == "help" or vim.bo.filetype == "fugitive" then
+		if vim.bo.filetype == "help" or vim.bo.filetype == "fugitive" or vim.bo.filetype == "man" then
+			if vim.api.nvim_tabpage_list_wins(0).length == 1 then
+				vim.print("already pushed into tab - nothing to split")
+				return
+			end
+			-- else tab it
 			vim.cmd("wincmd T")
 			vim.api.nvim_buf_set_keymap(0, "n", "q", ":q!<cr>", {})
 		end
