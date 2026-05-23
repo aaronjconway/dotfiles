@@ -21,7 +21,6 @@ vim.o.textwidth = 80
 vim.o.breakindent = true
 vim.o.updatetime = 200
 vim.o.wildignorecase = true
-vim.o.splitright = true
 vim.opt.shortmess:append("I")
 
 vim.diagnostic.config({ virtual_text = true })
@@ -181,7 +180,6 @@ require("telescope").setup({
 })
 
 require("telescope").load_extension("fzf")
--- local map = vim.api.nvim_set_keymap
 local map = vim.keymap.set
 map("i", "<c-h>", "<c-w>")
 -- for making c-bs work in : command mode

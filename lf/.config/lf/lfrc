@@ -1,3 +1,4 @@
+
 set shellopts '-eu'
 set ifs "\n"
 
@@ -62,11 +63,53 @@ cmd delete ${{
 
 
 map <enter> open
+
 cmd open &{{
-        case $(file --mime-type -Lb $f) in
-            application/pdf) for f in $fx; do $OPENER $f > /dev/null 2> /dev/null & done ;;
-            application/octet-stream) for f in $fx; do $OPENER $f > /dev/null 2> /dev/null & done ;;
-            inode/x-empty | text/* | */json | */html | application/*) lf -remote "send $id \$$EDITOR \$fx" ;;
-            *) for f in $fx; do $OPENER $f > /dev/null 2> /dev/null & done ;;
-        esac
+    mime="$(file --mime-type -Lb -- "$f")"
+
+    case "$mime" in
+        # Text/code/config/logs/etc → vim
+        text/* | \
+        */json | \
+        */xml | \
+        */javascript | \
+        */x-shellscript | \
+        application/x-* | \
+        application/json | \
+        application/xml | \
+        inode/x-empty)
+            lf -remote "send $id \$$EDITOR \$fx"
+            ;;
+
+        # Video/audio/images/pdf → system opener
+        video/* | \
+        audio/* | \
+        image/* | \
+        application/pdf)
+            for f in $fx; do
+                "$OPENER" "$f" >/dev/null 2>/dev/null &
+            done
+            ;;
+
+        # Archives → vim (usually useful to inspect)
+        application/zip | \
+        application/x-tar | \
+        application/gzip | \
+        application/x-bzip2 | \
+        application/x-xz)
+            lf -remote "send $id \$$EDITOR \$fx"
+            ;;
+
+        # Unknown binaries → opener
+        application/octet-stream)
+            for f in $fx; do
+                "$OPENER" "$f" >/dev/null 2>/dev/null &
+            done
+            ;;
+
+        # Fallback → vim
+        *)
+            lf -remote "send $id \$$EDITOR \$fx"
+            ;;
+    esac
 }}

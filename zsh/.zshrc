@@ -14,7 +14,6 @@ if ! zgenom saved; then
     zgenom load zsh-users/zsh-autosuggestions
     zgenom load zsh-users/zsh-completions
     zgenom load zsh-users/zsh-syntax-highlighting
-
     zgenom save
 fi
 
@@ -90,7 +89,6 @@ export EDITOR="nvim"
 export VISUAL="nvim"
 export OPENER="xdg-open"
 export MANWIDTH="80"
-export DISPLAY=:0
 export XAUTHORITY=$HOME/.Xauthority
 
 typeset -U path
@@ -196,3 +194,4 @@ esac
 
 export N_PREFIX="$HOME/n"; [[ :$PATH: == *":$N_PREFIX/bin:"* ]] || PATH+=":$N_PREFIX/bin"  # Added by n-install (see http://git.io/n-install-repo).
 
+eval "$(zoxide init zsh)"
