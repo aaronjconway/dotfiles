@@ -1,4 +1,3 @@
-
 set shellopts '-eu'
 set ifs "\n"
 
@@ -13,8 +12,7 @@ set sortby natural
 
 set ratios '1:2:3'
 set timefmt '2006-01-02 15:04:05 -0700'
-set previewer ~/.config/lf/lf-ueberzug-previewer
-set cleaner ~/.config/lf/lf-ueberzug-cleaner
+set previewer ~/.config/lf/previewer
 
 map D trash
 map . :filter

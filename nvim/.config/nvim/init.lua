@@ -50,14 +50,14 @@ require("lazy").setup({
 		opts = {
 			formatters_by_ft = {
 				html = { "prettierd" },
-				markdown = { "prettierd" },
+				markdown = { "mdformat" },
 				go = { "goimports" },
 				bash = { "beautysh" },
 				sh = { "beautysh" },
 				sql = { "pg_format" },
 				zsh = { "beautysh" },
 			},
-			format_on_save = { timeout_ms = 500, lsp_fallback = true },
+			format_on_save = { timeout_ms = 10000, lsp_fallback = true },
 		},
 	},
 	{

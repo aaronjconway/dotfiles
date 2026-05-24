@@ -1,6 +1,4 @@
 #!/bin/bash
-
-# 1. Check if Caps Lock is ON using xset
 CAPS_STATE=$(xset q | grep "Caps Lock:" | awk '{print $4}')
 
 # 2. Turn off Caps Lock if it is ON

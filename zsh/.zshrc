@@ -81,7 +81,7 @@ alias CAPSLOCK='xdotool key Caps_Lock'
 alias vim="nvim"
 alias vi="nvim"
 alias python='python3'
-alias lf='~/.config/lf/lf-ueberzug'
+# alias lf='~/.config/lf/lf-ueberzug'
 
 export FZF_CTRL_T_COMMAND=''
 export FZF_DEFAULT_OPTS='--layout=reverse --height 40%'
@@ -89,10 +89,10 @@ export EDITOR="nvim"
 export VISUAL="nvim"
 export OPENER="xdg-open"
 export MANWIDTH="80"
-export XAUTHORITY=$HOME/.Xauthority
+# export XAUTHORITY=$HOME/.Xauthority
 
 typeset -U path
-path=(/usr/local/go/bin $HOME/go/bin $path)
+path=($HOME/.local/bin /usr/local/go/bin $HOME/go/bin $path)
 
 ## change the word chars so that I can backspace to a /
 export WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'
@@ -188,10 +188,11 @@ case ":$PATH:" in
     *":$PNPM_HOME:"*) ;;
     *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
-# pnpm end
 
+#fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-export N_PREFIX="$HOME/n"; [[ :$PATH: == *":$N_PREFIX/bin:"* ]] || PATH+=":$N_PREFIX/bin"  # Added by n-install (see http://git.io/n-install-repo).
+# Added by n-install (see http://git.io/n-install-repo).
+export N_PREFIX="$HOME/n"; [[ :$PATH: == *":$N_PREFIX/bin:"* ]] || PATH+=":$N_PREFIX/bin"
 
-eval "$(zoxide init zsh)"
+# "$(zoxide init zsh)"
