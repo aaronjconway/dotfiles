@@ -7,3 +7,5 @@ For st
 
 - had some strange alacritty problems where it died for no apparent reason
 - I think it's bc of graphics. st is just less moving parts
+
+- this is a test
