@@ -3,12 +3,10 @@ case $- in *i*)
 esac
 
 bindkey -v
-export KEYTIMEOUT=1
 
 source "${HOME}/.zgenom/zgenom.zsh"
 
 if ! zgenom saved; then
-
     zgenom load zsh-users/zsh-autosuggestions
     zgenom load zsh-users/zsh-completions
     zgenom load zsh-users/zsh-syntax-highlighting
@@ -38,12 +36,11 @@ add-zsh-hook precmd zsh_history_sync
 eval "$(dircolors -b)"
 
 zstyle ':completion:*' completer _complete _files _approximate
-zstyle ':completion:*' original true
 zstyle ':completion:*' group-name ''
-zstyle ':completion:*:descriptions' format '%F{green}-- %d --%f'
-zstyle ':completion:*:corrections' format '%F{yellow}!- %d (errors: %e) -!%f'
-zstyle ':completion:*:messages' format ' %F{purple} -- %d --%f'
-zstyle ':completion:*:warnings' format ' %F{red}-- no matches found --%f'
+zstyle ':completion:*:descriptions' format '%F{green}%d%f'
+zstyle ':completion:*:corrections' format '%F{yellow}%d (errors: %e)%f'
+zstyle ':completion:*:messages' format ' %F{purple}%d%f'
+zstyle ':completion:*:warnings' format ' %F{red}no matches found%f'
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*' verbose yes
 zstyle ':completion:*' menu select
@@ -76,20 +73,21 @@ PS1='${vcs_info_msg_0_} %~ $ '
 autoload -Uz compinit
 compinit -C
 
-alias copy="xclip -selection clipboard"
+alias copy="wl-copy"
 alias bright='sudo brightnessctl set 120000'
-alias capslock='xdotool key Caps_Lock'
-alias CAPSLOCK='xdotool key Caps_Lock'
 alias vim="nvim"
 alias vi="nvim"
 alias python='python3'
 
+
+
+export KEYTIMEOUT=1
+export LISTMAX=500
 export FZF_CTRL_T_COMMAND=''
 export FZF_DEFAULT_OPTS='--layout=reverse --height 40%'
 export EDITOR="nvim"
 export VISUAL="nvim"
 export OPENER="xdg-open"
-export XAUTHORITY=$HOME/.Xauthority
 export MANWIDTH="80"
 export LESS_TERMCAP_mb=$'\e[1;31m'     # begin bold
 export LESS_TERMCAP_md=$'\e[1;33m'     # begin blink
