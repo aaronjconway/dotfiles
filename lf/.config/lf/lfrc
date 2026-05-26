@@ -18,7 +18,6 @@ map D trash
 map . :filter
 map <esc> :quit
 
-
 # create directory/file
 map ad push $mkdir<space>
 map af push $touch<space>

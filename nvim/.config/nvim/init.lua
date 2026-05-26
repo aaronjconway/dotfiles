@@ -55,7 +55,7 @@ require("lazy").setup({
 		opts = {
 			formatters_by_ft = {
 				html = { "prettierd" },
-				markdown = { "mdformat" },
+				-- markdown = { "mdformat" },
 				go = { "goimports" },
 				bash = { "beautysh" },
 				sh = { "beautysh" },
@@ -210,6 +210,7 @@ map("n", "<c-n>", ":try | cnext | catch | cfirst | endtry<CR>")
 map("n", "<c-p>", ":try | cprev | catch | clast | endtry<CR>")
 map("n", "gd", vim.lsp.buf.definition, { desc = "jump to definition" })
 map("n", "-", ":Oil<CR>", { desc = "Open Oil" })
+map("n", "<s-r>", "<Nop>", { silent = true })
 
 vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
 	callback = function()
@@ -249,6 +250,12 @@ require("oil").setup({
 	view_options = {
 		show_hidden = true,
 	},
+})
+
+vim.lsp.config("panache", {
+	filetypes = { "markdown" },
+	root_markers = { ".panache.toml", "panache.toml", ".git" },
+	settings = {},
 })
 
 vim.cmd("colorscheme vscode")
