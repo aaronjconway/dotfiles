@@ -1,9 +1,0 @@
-[batterybar]
-command=./batterybar
-label=Battery:
-interval=2
-markup=pango
-
-[time]
-command=./time.sh
-interval=1
