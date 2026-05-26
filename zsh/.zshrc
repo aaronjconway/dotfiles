@@ -2,11 +2,9 @@ case $- in *i*)
         [ -z "$TMUX" ] && exec tmux
 esac
 
-# Keybindings
 bindkey -v
 export KEYTIMEOUT=1
 
-# load zgenom
 source "${HOME}/.zgenom/zgenom.zsh"
 
 if ! zgenom saved; then
@@ -17,7 +15,6 @@ if ! zgenom saved; then
     zgenom save
 fi
 
-# History
 HISTSIZE=100000000
 SAVEHIST=100000000
 HISTFILE=~/.zsh_history
@@ -38,21 +35,29 @@ autoload -Uz add-zsh-hook
 zsh_history_sync() { fc -AI }
 add-zsh-hook precmd zsh_history_sync
 
-zstyle ':completion:*' completer _complete _path_files _approximate
+eval "$(dircolors -b)"
+
+zstyle ':completion:*' completer _complete _files _approximate
+zstyle ':completion:*' original true
+zstyle ':completion:*' group-name ''
+zstyle ':completion:*:descriptions' format '%F{green}-- %d --%f'
+zstyle ':completion:*:corrections' format '%F{yellow}!- %d (errors: %e) -!%f'
+zstyle ':completion:*:messages' format ' %F{purple} -- %d --%f'
+zstyle ':completion:*:warnings' format ' %F{red}-- no matches found --%f'
+zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*' verbose yes
+zstyle ':completion:*' menu select
 zstyle ':completion:*' completion-ignore-case true
+zstyle ':completion:*' file-patterns '*:all-files'
 zstyle ':completion:*' insert-unambiguous true
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}' 'r:|[._-]=**' 'l:|=* r:|=*'
-zstyle ':completion:*' menu select
 zstyle ':completion:*:git-checkout:*' sort false
-zstyle ':completion::complete:*' cache-path ~/.zsh/cache
-zstyle ':completion::complete:*' use-cache on
-
-# Git prompt via vcs_info
 zstyle ':vcs_info:*' enable git
 zstyle ':vcs_info:git*' formats "[%F{yellow}%b%f]"
 zstyle ':vcs_info:git*:*' get-revision true
+zstyle ':completion::complete:*' cache-path ~/.zsh/cache
+zstyle ':completion::complete:*' use-cache on
 
-# Shell options
 setopt autocd
 setopt interactivecomments
 setopt magicequalsubst
@@ -60,16 +65,13 @@ setopt nonomatch
 setopt notify
 setopt numericglobsort
 setopt promptsubst
-
+setopt globdots
 stty stop undef
 
 autoload -Uz vcs_info
 precmd() { vcs_info }
 
-# Prompt
 PS1='${vcs_info_msg_0_} %~ $ '
-
-_comp_options+=(globdots)
 
 autoload -Uz compinit
 compinit -C
@@ -81,21 +83,27 @@ alias CAPSLOCK='xdotool key Caps_Lock'
 alias vim="nvim"
 alias vi="nvim"
 alias python='python3'
-# alias lf='~/.config/lf/lf-ueberzug'
 
 export FZF_CTRL_T_COMMAND=''
 export FZF_DEFAULT_OPTS='--layout=reverse --height 40%'
 export EDITOR="nvim"
 export VISUAL="nvim"
 export OPENER="xdg-open"
+export XAUTHORITY=$HOME/.Xauthority
 export MANWIDTH="80"
-# export XAUTHORITY=$HOME/.Xauthority
+export LESS_TERMCAP_mb=$'\e[1;31m'     # begin bold
+export LESS_TERMCAP_md=$'\e[1;33m'     # begin blink
+export LESS_TERMCAP_so=$'\e[01;44;37m' # begin reverse video
+export LESS_TERMCAP_us=$'\e[01;37m'    # begin underline
+export LESS_TERMCAP_me=$'\e[0m'        # reset bold/blink
+export LESS_TERMCAP_se=$'\e[0m'        # reset reverse video
+export LESS_TERMCAP_ue=$'\e[0m'        # reset underline
+export GROFF_NO_SGR=1                  # for konsole and gnome-terminal
+export MANPAGER='less -s -M +Gg'
+export WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'
 
 typeset -U path
 path=($HOME/.local/bin /usr/local/go/bin $HOME/go/bin $path)
-
-## change the word chars so that I can backspace to a /
-export WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'
 
 my_array=(
     directories
@@ -103,7 +111,6 @@ my_array=(
     files
 )
 
-# Function to select from array using fzf
 telescope() {
     local choice
     choice=$(printf "%s\n" "${my_array[@]}" | fzf --prompt="")
@@ -136,7 +143,6 @@ directories_all() {
     zle reset-prompt
 }
 
-
 files() {
     local file
     file=$(fdfind . /home/aaron/ --hidden --type f |  fzf) && vim "$file" || return 1
@@ -158,41 +164,34 @@ bindkey '^e' autosuggest-accept
 bindkey '^n' down-line-or-history
 bindkey '^p' up-line-or-history
 
-# Beam = insert, Block = normal
 function zle-keymap-select {
     if [[ $KEYMAP == vicmd ]]; then
-        printf '\e[2 q'   # block cursor
+        printf '\e[2 q'
     else
-        printf '\e[6 q'   # beam cursor
+        printf '\e[6 q'
     fi
 }
 zle -N zle-keymap-select
 
-# Run on line init + force insert mode
 function zle-line-init {
-    zle -K viins       # start in insert mode
-    printf '\e[6 q'    # ensure beam cursor
+    zle -K viins
+    printf '\e[6 q'
 }
 zle -N zle-line-init
 
-# Optional: reset cursor on exit (so it doesn't stay block)
 function zle-line-finish {
     printf '\e[6 q'
 }
 zle -N zle-line-finish
 
-
-# pnpm
 export PNPM_HOME="/home/aaron/.local/share/pnpm"
 case ":$PATH:" in
     *":$PNPM_HOME:"*) ;;
     *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 
-#fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-# Added by n-install (see http://git.io/n-install-repo).
 export N_PREFIX="$HOME/n"; [[ :$PATH: == *":$N_PREFIX/bin:"* ]] || PATH+=":$N_PREFIX/bin"
 
-# "$(zoxide init zsh)"
+eval "$(zoxide init zsh)"

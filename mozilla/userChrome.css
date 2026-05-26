@@ -1,0 +1,26 @@
+:root {
+	--tab-min-height: 12px;
+	--toolbarbutton-border-radius: 0px !important;
+	--tab-border-radius: 0px !important;
+	--arrowpanel-border-radius: 0px !important;
+	--arrowpanel-menuitem-border-radius: 0px !important;
+	--urlbar-border-radius: 0px !important;
+	--button-border-radius: 0px !important;
+	--button-border: 0;
+	--button-border-radius: 0;
+	--button-background-color: 0;
+	--urlbarView-favicon-width: 0;
+	/* --tab-label-height: 2.7em !important; */
+	/* --tab-min-height: 29px !important; */
+}
+
+.alltabs-button,
+.tab-icon-image,
+.tab-audio-button,
+.urlbarView-type-icon,
+.urlbarView-favicon,
+.tab-icon-image,
+.tab-close-button,
+#tabs-newtab-button {
+	display: none !important;
+}
