@@ -1,22 +1,24 @@
-exec_always --no-startup-id picom --config ~/.config/picom/picom.conf
-exec_always --no-startup-id ~/.config/i3/capslock.sh
-exec --no-startup-id nm-applet
-exec --no-startup-id xset s off
-exec --no-startup-id xset -dpms
-
 font pango:monospace 14
 for_window [class=".*"] layout tabbed
+output * bg #000000 solid_color
+
+# smart_borders off
+hide_edge_borders --i3 none
 default_border pixel 1
+
+for_window [class="st-256color"] title_format "st"
+for_window [app_id="tmux"] border pixel 10
 
 set $mod Mod1
 
-bindsym $mod+Tab exec /home/aaron/.local/bin/i3-cycle right 
-bindsym $mod+Shift+Tab exec /home/aaron/.local/bin/i3-cycle left
-bindsym $mod+d exec --no-startup-id dmenu_run -fn 'pango:pixelsize=18'
-bindsym $mod+Shift+r restart
+bindsym $mod+d exec bemenu-run -H "30px" -i --fn 'pango:monospace 14' --tb "#000000" --tf "#ffffff" --fb "#000000" --ff "#ffffff" --nb "#000000" --nf "#888888" --hb "#285577" --hf "#ffffff" --sb "#000000" --sf "#888888" --prompt ""
+
+bindsym $mod+Shift+r reload
 bindsym $mod+Return exec st
 bindsym $mod+w layout toggle tabbed splith
 bindsym $mod+Shift+q kill
+bindsym $mod+Tab focus next
+bindsym $mod+Shift+Tab focus prev
 
 set $ws1 "1"
 set $ws2 "2"
@@ -24,18 +26,28 @@ set $ws3 "3"
 set $ws4 "4"
 
 # switch to workspace
-bindsym $mod+1 workspace number $ws1
-bindsym $mod+2 workspace number $ws2
-bindsym $mod+3 workspace number $ws3
-bindsym $mod+4 workspace number $ws4
+bindsym $mod+1 workspace  $ws1
+bindsym $mod+2 workspace  $ws2
+bindsym $mod+3 workspace  $ws3
+bindsym $mod+4 workspace  $ws4
 
 # move focused container to workspace
-bindsym $mod+Shift+1 move container to workspace number $ws1
-bindsym $mod+Shift+2 move container to workspace number $ws2
-bindsym $mod+Shift+3 move container to workspace number $ws3
-bindsym $mod+Shift+4 move container to workspace number $ws4
+bindsym $mod+Shift+1 move container to workspace  $ws1
+bindsym $mod+Shift+2 move container to workspace  $ws2
+bindsym $mod+Shift+3 move container to workspace  $ws3
+bindsym $mod+Shift+4 move container to workspace  $ws4
+
+input "type:keyboard" {
+    xkb_options ctrl:nocaps,caps:swapalt
+}
+
+input "type:touchpad" {
+    natural_scroll enabled
+    pointer_accel 0.25
+    accel_profile adaptive
+}
 
 bar {
-	position top
-	status_command i3status
+    position top
+    status_command ~/.config/sway/status.sh
 }
