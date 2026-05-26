@@ -21,6 +21,7 @@ vim.o.textwidth = 80
 vim.o.breakindent = true
 vim.o.updatetime = 200
 vim.o.wildignorecase = true
+vim.o.foldenable = false
 vim.opt.shortmess:append("I")
 
 vim.diagnostic.config({ virtual_text = true })
@@ -43,8 +44,12 @@ end
 vim.opt.rtp:prepend(vim.env.LAZY or lazypath)
 
 require("lazy").setup({
+	--plugins
+
 	{ "norcalli/nvim-colorizer.lua" },
 	{ "Mofiqul/vscode.nvim" },
+
+	{ "stevearc/oil.nvim", lazy = false },
 	{
 		"stevearc/conform.nvim",
 		opts = {
@@ -181,9 +186,7 @@ require("telescope").setup({
 
 require("telescope").load_extension("fzf")
 local map = vim.keymap.set
-map("i", "<c-h>", "<c-w>")
--- for making c-bs work in : command mode
-map("c", "<c-h>", "<c-w>")
+map({ "c", "i" }, "<c-h>", "<c-w>")
 map("i", "kj", "<ESC>l")
 map("n", "<c-d>", "<c-d>zz")
 map("n", "<c-i>", "<c-i>zz")
@@ -206,6 +209,7 @@ map("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 map("n", "<c-n>", ":try | cnext | catch | cfirst | endtry<CR>")
 map("n", "<c-p>", ":try | cprev | catch | clast | endtry<CR>")
 map("n", "gd", vim.lsp.buf.definition, { desc = "jump to definition" })
+map("n", "-", ":Oil<CR>", { desc = "Open Oil" })
 
 vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
 	callback = function()
@@ -236,6 +240,15 @@ require("vscode").setup({
 	italic_inlayhints = true,
 	underline_links = true,
 	terminal_colors = true,
+})
+
+require("oil").setup({
+	columns = {},
+	skip_confirm_for_simple_edits = true,
+	prompt_save_on_select_new_entry = false,
+	view_options = {
+		show_hidden = true,
+	},
 })
 
 vim.cmd("colorscheme vscode")
