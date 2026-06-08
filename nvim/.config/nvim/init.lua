@@ -1,6 +1,11 @@
+vim.loader.enable()
 vim.g.mapleader = " "
+vim.g.maplocalleader = " "
+vim.o.scrolloff = 10
+vim.o.confirm = true
 vim.o.autoindent = true
 vim.o.smartindent = true
+vim.o.showmode = false
 vim.opt.shiftwidth = 4
 vim.opt.softtabstop = 4
 vim.opt.tabstop = 4
@@ -11,24 +16,29 @@ vim.o.undofile = true
 vim.o.signcolumn = "yes"
 vim.o.number = true
 vim.o.relativenumber = true
-vim.o.wrap = true
-vim.o.linebreak = true
 vim.o.ignorecase = true
 vim.o.smartcase = true
-vim.o.termguicolors = true
-vim.o.clipboard = "unnamedplus"
+vim.schedule(function()
+	vim.o.clipboard = "unnamedplus"
+end)
+
 vim.o.textwidth = 80
-vim.o.breakindent = true
 vim.o.updatetime = 200
+
 vim.o.wildignorecase = true
 vim.o.foldenable = false
 vim.opt.shortmess:append("I")
 
 vim.diagnostic.config({ virtual_text = true })
 
-function R(name)
-	require("plenary.reload").reload_module(name)
-end
+-- make .zshrc use bash/sh filetype
+vim.filetype.add({
+	filename = {
+		[".zshrc"] = "sh",
+		[".zshenv"] = "sh",
+		[".zprofile"] = "sh",
+	},
+})
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
@@ -42,27 +52,23 @@ if not vim.loop.fs_stat(lazypath) then
 	})
 end
 vim.opt.rtp:prepend(vim.env.LAZY or lazypath)
-
 require("lazy").setup({
 	--plugins
-
+	{ "mbbill/undotree" },
 	{ "norcalli/nvim-colorizer.lua" },
 	{ "Mofiqul/vscode.nvim" },
-
 	{ "stevearc/oil.nvim", lazy = false },
 	{
 		"stevearc/conform.nvim",
 		opts = {
 			formatters_by_ft = {
-				html = { "prettierd" },
-				-- markdown = { "mdformat" },
 				go = { "goimports" },
-				bash = { "beautysh" },
-				sh = { "beautysh" },
-				sql = { "pg_format" },
-				zsh = { "beautysh" },
+				lua = { "stylua" },
+				sh = { "bashls" },
 			},
-			format_on_save = { timeout_ms = 10000, lsp_fallback = true },
+			format_on_save = {
+				timeout_ms = 10000,
+			},
 		},
 	},
 	{
@@ -101,8 +107,6 @@ require("lazy").setup({
 			luasnip.config.setup({})
 
 			local cmp = require("cmp")
-			local cmp_autopairs = require("nvim-autopairs.completion.cmp")
-			cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
 
 			cmp.setup({
 				snippet = {
@@ -163,16 +167,13 @@ require("telescope").setup({
 				["<esc>"] = require("telescope.actions").close,
 			},
 		},
-	},
-	vimgrep_arguments = {
-		"rg",
-		"--hidden",
-		"--color=never",
-		"--no-heading",
-		"--with-filename",
-		"--line-number",
-		"--column",
-		"--smart-case",
+
+		vimgrep_arguments = {
+			"rg",
+			"--hidden",
+			-- "--color=never",
+			"--smart-case",
+		},
 	},
 	extensions = {
 		fzf = {
@@ -186,6 +187,12 @@ require("telescope").setup({
 
 require("telescope").load_extension("fzf")
 local map = vim.keymap.set
+
+local builtin = require("telescope.builtin")
+
+vim.keymap.set("n", "<leader>sh", builtin.help_tags, { desc = "[S]earch [H]elp" })
+
+map("n", "<Esc>", "<cmd>nohlsearch<CR>")
 map({ "c", "i" }, "<c-h>", "<c-w>")
 map("i", "kj", "<ESC>l")
 map("n", "<c-d>", "<c-d>zz")
@@ -197,11 +204,13 @@ map("n", "<Space>", "<Nop>", { silent = true })
 map("n", "<leader>g", ":tab Git<CR>")
 map("n", "<leader>q", ":q!<CR>")
 map("n", "<leader>sf", "<cmd>Telescope find_files hidden=true<cr>")
-map("n", "<leader>sg", "<cmd>Telescope live_grep<cr>")
+-- map("n", "<leader>sg", "<cmd>Telescope live_grep<cr>")
+map("n", "<leader>sg", builtin.live_grep)
 map("n", "<leader>sh", "<cmd>Telescope help_tags<cr>")
 map("n", "<leader>so", "<cmd>Telescope oldfiles<cr>")
 map("n", "<leader>st", "<cmd>Telescope<cr>")
 map("n", "<leader>w", ":w<CR>")
+map("n", "<leader>/", ":Telescope current_buffer_fuzzy_find<CR>")
 map("n", "N", "Nzzzv")
 map("n", "n", "nzzzv")
 map("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
@@ -214,7 +223,7 @@ map("n", "<s-r>", "<Nop>", { silent = true })
 
 vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
 	callback = function()
-		--- set help as a tab with q to quit
+		--- set help as separate tab with q to quit
 		if vim.bo.filetype == "help" or vim.bo.filetype == "fugitive" or vim.bo.filetype == "man" then
 			if vim.api.nvim_tabpage_list_wins(0).length == 1 then
 				vim.print("already pushed into tab - nothing to split")
@@ -224,13 +233,14 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
 			vim.cmd("wincmd T")
 			vim.api.nvim_buf_set_keymap(0, "n", "q", ":q!<cr>", {})
 		end
+
 		--- set root cwd
 		local roots = { ".luarc.json" }
 		local root = vim.fs.root(0, { roots, ".git" })
 		if root then
 			vim.fn.chdir(root)
 		end
-		-- start ts
+
 		pcall(vim.treesitter.start)
 	end,
 })
@@ -240,7 +250,6 @@ require("vscode").setup({
 	italic_comments = true,
 	italic_inlayhints = true,
 	underline_links = true,
-	terminal_colors = true,
 })
 
 require("oil").setup({
@@ -252,10 +261,5 @@ require("oil").setup({
 	},
 })
 
-vim.lsp.config("panache", {
-	filetypes = { "markdown" },
-	root_markers = { ".panache.toml", "panache.toml", ".git" },
-	settings = {},
-})
-
+-- Special Lua Config, as recommended by neovim help docs
 vim.cmd("colorscheme vscode")
