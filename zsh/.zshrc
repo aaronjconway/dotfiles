@@ -1,6 +1,7 @@
+#vim ft=sh
 case $- in *i*)
         [ -z "$TMUX" ] && exec tmux
-esac
+  esac
 
 bindkey -v
 
@@ -74,12 +75,13 @@ autoload -Uz compinit
 compinit -C
 
 alias copy="wl-copy"
-alias bright='sudo brightnessctl set 120000'
+alias cd="z"
 alias vim="nvim"
-alias vi="nvim"
-alias python='python3'
 
-
+# for sway
+export QT_QPA_PLATFORM=wayland
+export GSK_RENDERER=ngl
+export GDK_BACKEND=wayland
 
 export KEYTIMEOUT=1
 export LISTMAX=500
@@ -88,20 +90,9 @@ export FZF_DEFAULT_OPTS='--layout=reverse --height 40%'
 export EDITOR="nvim"
 export VISUAL="nvim"
 export OPENER="xdg-open"
-export MANWIDTH="80"
-export LESS_TERMCAP_mb=$'\e[1;31m'     # begin bold
-export LESS_TERMCAP_md=$'\e[1;33m'     # begin blink
-export LESS_TERMCAP_so=$'\e[01;44;37m' # begin reverse video
-export LESS_TERMCAP_us=$'\e[01;37m'    # begin underline
-export LESS_TERMCAP_me=$'\e[0m'        # reset bold/blink
-export LESS_TERMCAP_se=$'\e[0m'        # reset reverse video
-export LESS_TERMCAP_ue=$'\e[0m'        # reset underline
-export GROFF_NO_SGR=1                  # for konsole and gnome-terminal
-export MANPAGER='less -s -M +Gg'
-export WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'
 
 typeset -U path
-path=($HOME/.local/bin /usr/local/go/bin $HOME/go/bin $path)
+path=($HOME/.local/bin /usr/local/go/bin $HOME/go/bin $HOME/cmus/bin $HOME/.config/emacs/bin $path)
 
 my_array=(
     directories
@@ -134,19 +125,66 @@ directories() {
     zle reset-prompt
 }
 
-directories_all() {
-    local selected_dir
-    selected_dir=$(fdfind . /home/aaron/ --hidden --type d |  fzf) && cd "$selected_dir" || return 1
-    vcs_info
-    zle reset-prompt
+vpn() {
+    local cmd="$1"
+    local output=""
+    local file="/tmp/swaybar.fifo"
+
+    case "$cmd" in
+        "up")
+            output=$(protonvpn connect 2>&1)
+            ;;
+        "down")
+            output=$(protonvpn disconnect 2>&1)
+            ;;
+        "info")
+            output=$(protonvpn status 2>&1)
+            ;;
+        *)
+            echo "Usage: vpn {up|down|info}"
+            return 1
+            ;;
+    esac
+
+    if [ -p "$file" ]; then
+        echo "$output" > "$file"
+    fi
 }
 
-files() {
-    local file
-    file=$(fdfind . /home/aaron/ --hidden --type f |  fzf) && vim "$file" || return 1
-    vcs_info
-    zle reset-prompt
+lfm-search () {
+    if [ -z "$1" ]; then
+        echo "Error: Missing artist name." >&2
+        echo "Usage: lfm-search \"Artist Name\"" >&2
+        return 1
+    fi
+
+    local artist="$1"
+    local api_key="8bb0050df47bc66ff2c41a4144f5eacd"
+
+    curl -s -G "http://ws.audioscrobbler.com/2.0/" \
+        --data-urlencode "method=artist.gettopalbums" \
+        --data-urlencode "artist=$artist" \
+        --data-urlencode "api_key=$api_key" \
+        --data-urlencode "format=json" | \
+        jq -r '.topalbums as $ta | $ta["@attr"].artist, ($ta.album | sort_by(.playcount | tonumber) | reverse | .[] | "\(.name),\(.playcount)")'
 }
+
+function select-to-last-prompt() {
+    local prompt_text
+
+    # must strip ansi
+    prompt_text=$(
+        print -P "$PS1" |  sed $'s/\x1b\\[[0-9;]*[[:alpha:]]//g'
+    )
+
+    tmux copy-mode
+    tmux send-keys -X begin-selection
+    tmux send-keys -X search-backward-text "$prompt_text"
+    tmux send-keys -X "n"
+}
+
+zle -N select-to-last-prompt
+bindkey '^y' select-to-last-prompt
 
 ## Define a Zsh widget that calls the function
 zle -N my_telescope telescope
