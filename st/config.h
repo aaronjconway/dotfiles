@@ -1,4 +1,4 @@
-static char *font = "monospace:pixelsize=20:antialias=true:autohint=true";
+static char *font = "monospace:size=14:antialias=true:autohint=true";
 static int borderpx = 2;
 
 static char *shell = "/usr/bin/zsh";
@@ -17,63 +17,20 @@ wchar_t *worddelimiters = L" ";
 static unsigned int doubleclicktimeout = 300;
 static unsigned int tripleclicktimeout = 600;
 
-/* alt screens */
 int allowaltscreen = 1;
-
-/* allow certain non-interactive (insecure) window operations such as:
-   setting the clipboard text */
 int allowwindowops = 0;
-
-/*
- * draw latency range in ms - from new content/keypress/etc until drawing.
- * within this range, st draws when content stops arriving (idle). mostly it's
- * near minlatency, but it waits longer for slow updates to avoid partial draw.
- * low minlatency will tear/flicker more, as it can "detect" idle too early.
- */
 static double minlatency = 2;
 static double maxlatency = 33;
-
-/*
- * blinking timeout (set to 0 to disable blinking) for the terminal blinking
- * attribute.
- */
 static unsigned int blinktimeout = 800;
-
-/*
- * thickness of underline and bar cursors
- */
 static unsigned int cursorthickness = 2;
-
-/*
- * bell volume. It must be a value between -100 and 100. Use 0 for disabling
- * it
- */
 static int bellvolume = 0;
-
-/* default TERM value */
 char *termname = "st-256color";
-
-/*
- * spaces per tab
- *
- * When you are changing this value, don't forget to adapt the »it« value in
- * the st.info and appropriately install the st.info in the environment where
- * you use this st version.
- *
- *	it#$tabspaces,
- *
- * Secondly make sure your kernel is not expanding tabs. When running `stty
- * -a` »tab0« should appear. You can tell the terminal to not expand tabs by
- *  running following command:
- *
- *	stty tabs
- */
 unsigned int tabspaces = 8;
 
 /* VS Code–like colors */
 static const char *colorname[] = {
     /* 8 normal colors */
-    "#1e1e1e", /* black (background) */
+    "#1c1c1c", /* black (background) */
     "#f44747", /* red */
     "#6a9955", /* green */
     "#dcdcaa", /* yellow */
@@ -96,9 +53,9 @@ static const char *colorname[] = {
 
     /* extended / defaults */
     "#d4d4d4", /* foreground */
-    "#1e1e1e", /* background */
+    "#1c1c1c", /* black (background) */
     "#d4d4d4", /* default foreground */
-    "#1e1e1e", /* default background */
+    "#1c1c1c", /* black (background) */
 };
 
 /* Default colors */
@@ -107,48 +64,18 @@ unsigned int defaultbg = 259;
 unsigned int defaultcs = 256;
 static unsigned int defaultrcs = 257;
 
-/*
- * Default shape of cursor
- * 2: Block ("█")
- * 4: Underline ("_")
- * 6: Bar ("|")
- * 7: Snowman ("☃")
- */
-static unsigned int cursorshape = 2;
-
-/*
- * Default columns and rows numbers
- */
+static unsigned int cursorshape = 1;
 
 static unsigned int cols = 80;
 static unsigned int rows = 24;
 
-/*
- * Default colour and shape of the mouse cursor
- */
 static unsigned int mouseshape = XC_xterm;
 static unsigned int mousefg = 7;
 static unsigned int mousebg = 0;
-
-/*
- * Color used to display font attributes when fontconfig selected a font which
- * doesn't match the ones requested.
- */
 static unsigned int defaultattr = 11;
-
-/*
- * Force mouse select/shortcuts while mask is active (when MODE_MOUSE is set).
- * Note that if you want to use ShiftMask with selmasks, set this to an other
- * modifier, set to 0 to not use it.
- */
 static uint forcemousemod = ShiftMask;
 
-/*
- * Internal mouse shortcuts.
- * Beware that overloading Button1 will disable the selection.
- */
 static MouseShortcut mshortcuts[] = {
-    /* mask                 button   function        argument       release */
     {XK_ANY_MOD, Button2, selpaste, {.i = 0}, 1},
     {ShiftMask, Button4, ttysend, {.s = "\033[5;2~"}},
     {XK_ANY_MOD, Button4, ttysend, {.s = "\031"}},
@@ -156,18 +83,19 @@ static MouseShortcut mshortcuts[] = {
     {XK_ANY_MOD, Button5, ttysend, {.s = "\005"}},
 };
 
-/* Internal keyboard shortcuts. */
 #define MODKEY Mod1Mask
 #define TERMMOD (ControlMask | ShiftMask)
 
 static Shortcut shortcuts[] = {
-    /* mask                 keysym          function        argument */
     {XK_ANY_MOD, XK_Break, sendbreak, {.i = 0}},
     {ControlMask, XK_Print, toggleprinter, {.i = 0}},
     {ShiftMask, XK_Print, printscreen, {.i = 0}},
     {XK_ANY_MOD, XK_Print, printsel, {.i = 0}},
-    {TERMMOD, XK_Prior, zoom, {.f = +1}},
-    {TERMMOD, XK_Next, zoom, {.f = -1}},
+
+    {ControlMask, XK_equal, zoom, {.f = +2}},
+    {ControlMask, XK_minus, zoom, {.f = -2}},
+    {ControlMask, XK_0, zoomreset, {.f = 0}},
+
     {TERMMOD, XK_Home, zoomreset, {.f = 0}},
     {TERMMOD, XK_C, clipcopy, {.i = 0}},
     {TERMMOD, XK_V, clippaste, {.i = 0}},
@@ -176,24 +104,11 @@ static Shortcut shortcuts[] = {
     {TERMMOD, XK_Num_Lock, numlock, {.i = 0}},
 };
 
-/*
- * If you want keys other than the X11 function keys (0xFD00 - 0xFFFF)
- * to be mapped below, add them to this array.
- */
 static KeySym mappedkeys[] = {-1};
 
-/*
- * State bits to ignore when matching key or button events.  By default,
- * numlock (Mod2Mask) and keyboard layout (XK_SWITCH_MOD) are ignored.
- */
 static uint ignoremod = Mod2Mask | XK_SWITCH_MOD;
 
-/*
- * This is the huge key array which defines all compatibility to the Linux
- * world. Please decide about changes wisely.
- */
 static Key key[] = {
-    /* keysym           mask            string      appkey appcursor */
     {XK_KP_Home, ShiftMask, "\033[2J", 0, -1},
     {XK_KP_Home, ShiftMask, "\033[1;2H", 0, +1},
     {XK_KP_Home, XK_ANY_MOD, "\033[H", 0, -1},

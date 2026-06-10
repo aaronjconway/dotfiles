@@ -29,6 +29,8 @@ map st :{{ set sortby time; set reverse; set info time; set preview; }}
 cmd mkdir %[ -n "${1}" ] && mkdir -p ${@} || echo "Argument needed"
 cmd mkfile %[ -n "${1}" ] && touch ${@} || echo "Argument needed"
 
+map - ${{nvim $PWD}}
+
 map e extract
 cmd extract ${{
 
@@ -56,8 +58,6 @@ cmd delete ${{
         read ans
         [ "$ans" = "y" ] && rm -rf $fx
 }}
-
-
 
 map <enter> open
 
