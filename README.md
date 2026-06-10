@@ -1,11 +1,5 @@
 # README
 
-2026-05-26
-    - moved over to sway.
-        - we'll find out if this is an issue when I do multi monitors
-    - no longer need picom
-    - no longer need i3
-
 ## st
 
 - remove the default config.def.h

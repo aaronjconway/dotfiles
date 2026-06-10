@@ -41,6 +41,7 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(vim.env.LAZY or lazypath)
 require("lazy").setup({
+	{ "folke/which-key.nvim" },
 	{ "MagicDuck/grug-far.nvim" },
 	{ "lewis6991/gitsigns.nvim" },
 	{ "norcalli/nvim-colorizer.lua" },
@@ -186,8 +187,9 @@ require("telescope").setup({
 require("telescope").load_extension("fzf")
 
 local map = vim.keymap.set
-local builtin = require("telescope.builtin")
 
+map("n", "]h", require("gitsigns").next_hunk)
+map("n", "[h", require("gitsigns").prev_hunk)
 map("n", "<Esc>", "<cmd>nohlsearch<CR>")
 map({ "c", "i" }, "<c-h>", "<c-w>")
 map("i", "kj", "<ESC>l")
@@ -201,10 +203,10 @@ map("n", "<leader>g", ":tab Git<CR>")
 map("n", "<leader>q", ":q!<CR>")
 map("n", "<leader>st", "<cmd>Telescope<cr>")
 map("n", "<leader>sf", "<cmd>Telescope find_files hidden=true<cr>")
-map("n", "<leader>sg", builtin.live_grep)
-map("n", "<leader>sh", builtin.help_tags)
-map("n", "<leader>so", builtin.oldfiles)
-map("n", "<leader>/", builtin.current_buffer_fuzzy_find)
+map("n", "<leader>sg", require("telescope.builtin").live_grep)
+map("n", "<leader>sh", require("telescope.builtin").help_tags)
+map("n", "<leader>so", require("telescope.builtin").oldfiles)
+map("n", "<leader>/", require("telescope.builtin").current_buffer_fuzzy_find)
 map("n", "<leader>w", ":w<CR>")
 map("n", "N", "Nzzzv")
 map("n", "n", "nzzzv")
@@ -221,7 +223,6 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
 		--- set help as separate tab with q to quit
 		if vim.bo.filetype == "help" or vim.bo.filetype == "fugitive" or vim.bo.filetype == "man" then
 			if #vim.api.nvim_tabpage_list_wins(0) == 1 then
-				vim.print("already pushed into tab - nothing to split")
 				return
 			end
 			-- else tab it
