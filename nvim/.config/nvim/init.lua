@@ -2,7 +2,6 @@ vim.loader.enable()
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 vim.o.scrolloff = 10
-vim.o.confirm = true
 vim.o.autoindent = true
 vim.o.smartindent = true
 vim.o.showmode = false
@@ -17,28 +16,17 @@ vim.o.signcolumn = "yes"
 vim.o.number = true
 vim.o.relativenumber = true
 vim.o.ignorecase = true
+vim.o.wildignorecase = true
 vim.o.smartcase = true
 vim.schedule(function()
 	vim.o.clipboard = "unnamedplus"
 end)
-
-vim.o.textwidth = 80
 vim.o.updatetime = 200
-
-vim.o.wildignorecase = true
+vim.o.colorcolumn = "80"
 vim.o.foldenable = false
-vim.opt.shortmess:append("I")
+vim.opt.shortmess:append("Ia")
 
 vim.diagnostic.config({ virtual_text = true })
-
--- make .zshrc use bash/sh filetype
-vim.filetype.add({
-	filename = {
-		[".zshrc"] = "sh",
-		[".zshenv"] = "sh",
-		[".zprofile"] = "sh",
-	},
-})
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
@@ -53,8 +41,8 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(vim.env.LAZY or lazypath)
 require("lazy").setup({
-	--plugins
-	{ "mbbill/undotree" },
+	{ "MagicDuck/grug-far.nvim" },
+	{ "lewis6991/gitsigns.nvim" },
 	{ "norcalli/nvim-colorizer.lua" },
 	{ "Mofiqul/vscode.nvim" },
 	{ "stevearc/oil.nvim", lazy = false },
@@ -65,6 +53,7 @@ require("lazy").setup({
 				go = { "goimports" },
 				lua = { "stylua" },
 				sh = { "bashls" },
+				markdown = { "prettierd" },
 			},
 			format_on_save = {
 				timeout_ms = 10000,
@@ -162,16 +151,25 @@ require("lazy").setup({
 
 require("telescope").setup({
 	defaults = {
+		layout_config = {
+			horizontal = {
+				preview_width = 0.5,
+			},
+		},
 		mappings = {
 			i = {
 				["<esc>"] = require("telescope.actions").close,
 			},
 		},
-
+		preview = { wrap = true },
 		vimgrep_arguments = {
 			"rg",
-			"--hidden",
-			-- "--color=never",
+			-- "-uuu",
+			"--color=never",
+			"--no-heading",
+			"--with-filename",
+			"--line-number",
+			"--column",
 			"--smart-case",
 		},
 	},
@@ -186,11 +184,9 @@ require("telescope").setup({
 })
 
 require("telescope").load_extension("fzf")
+
 local map = vim.keymap.set
-
 local builtin = require("telescope.builtin")
-
-vim.keymap.set("n", "<leader>sh", builtin.help_tags, { desc = "[S]earch [H]elp" })
 
 map("n", "<Esc>", "<cmd>nohlsearch<CR>")
 map({ "c", "i" }, "<c-h>", "<c-w>")
@@ -203,14 +199,13 @@ map("n", "<c-u>", "<c-u>zz")
 map("n", "<Space>", "<Nop>", { silent = true })
 map("n", "<leader>g", ":tab Git<CR>")
 map("n", "<leader>q", ":q!<CR>")
-map("n", "<leader>sf", "<cmd>Telescope find_files hidden=true<cr>")
--- map("n", "<leader>sg", "<cmd>Telescope live_grep<cr>")
-map("n", "<leader>sg", builtin.live_grep)
-map("n", "<leader>sh", "<cmd>Telescope help_tags<cr>")
-map("n", "<leader>so", "<cmd>Telescope oldfiles<cr>")
 map("n", "<leader>st", "<cmd>Telescope<cr>")
+map("n", "<leader>sf", "<cmd>Telescope find_files hidden=true<cr>")
+map("n", "<leader>sg", builtin.live_grep)
+map("n", "<leader>sh", builtin.help_tags)
+map("n", "<leader>so", builtin.oldfiles)
+map("n", "<leader>/", builtin.current_buffer_fuzzy_find)
 map("n", "<leader>w", ":w<CR>")
-map("n", "<leader>/", ":Telescope current_buffer_fuzzy_find<CR>")
 map("n", "N", "Nzzzv")
 map("n", "n", "nzzzv")
 map("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
@@ -225,7 +220,7 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
 	callback = function()
 		--- set help as separate tab with q to quit
 		if vim.bo.filetype == "help" or vim.bo.filetype == "fugitive" or vim.bo.filetype == "man" then
-			if vim.api.nvim_tabpage_list_wins(0).length == 1 then
+			if #vim.api.nvim_tabpage_list_wins(0) == 1 then
 				vim.print("already pushed into tab - nothing to split")
 				return
 			end
@@ -261,5 +256,19 @@ require("oil").setup({
 	},
 })
 
--- Special Lua Config, as recommended by neovim help docs
-vim.cmd("colorscheme vscode")
+vim.cmd.colorscheme("vscode")
+
+vim.api.nvim_create_autocmd("User", {
+	pattern = "TelescopePreviewerLoaded",
+	callback = function()
+		vim.wo.wrap = true
+		vim.wo.breakindent = true
+	end,
+})
+
+vim.lsp.config("clangd", {
+	cmd = {
+		"clangd",
+		"--compile-commands-dir=build",
+	},
+})
