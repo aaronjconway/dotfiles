@@ -1,0 +1,31 @@
+set resume=true
+set auto_reshuffle=false
+set shuffle=false
+
+set format_playlist=%-12%A %-12%l %t%= %y %d %{?X!=0?%3X ?    }
+set format_playlist_va=%-12%A %-12%l %t (%a)%= %y %d %{?X!=0?%3X ?    }
+
+unbind -f common v 
+unbind -f common x
+unbind -f common t
+unbind -f common c
+unbind -f common space
+unbind -f common t
+unbind -f common a
+unbind -f common y
+unbind -f common z
+unbind -f common b
+
+bind -f common space player-pause
+bind -f common l win-next
+bind -f common t win-toggle
+bind -f browser t win-activate
+bind -f common a shell cmus-remote -C "win-add-p -n"; cmus-remote -C "added to playlist"
+bind -f common q shell cmus-remote -C "player-pause-playback" -C "quit"
+bind -f common ^H seek -5
+bind -f common ^L seek +5
+
+fset new=play_count=0
+factivate
+add ~/Music/
+colorscheme gruvbox-warm
