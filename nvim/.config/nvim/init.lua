@@ -234,6 +234,7 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
 		local roots = { ".luarc.json" }
 		local root = vim.fs.root(0, { roots, ".git" })
 		if root then
+			-- TODO: add in a place to save projects
 			vim.fn.chdir(root)
 		end
 
@@ -258,18 +259,3 @@ require("oil").setup({
 })
 
 vim.cmd.colorscheme("vscode")
-
-vim.api.nvim_create_autocmd("User", {
-	pattern = "TelescopePreviewerLoaded",
-	callback = function()
-		vim.wo.wrap = true
-		vim.wo.breakindent = true
-	end,
-})
-
-vim.lsp.config("clangd", {
-	cmd = {
-		"clangd",
-		"--compile-commands-dir=build",
-	},
-})

@@ -82,11 +82,10 @@ alias vim="nvim"
 export QT_QPA_PLATFORM=wayland
 export GSK_RENDERER=ngl
 export GDK_BACKEND=wayland
-
 export KEYTIMEOUT=1
 export LISTMAX=500
 export FZF_CTRL_T_COMMAND=''
-export FZF_DEFAULT_OPTS='--layout=reverse --height 40%'
+export FZF_DEFAULT_OPTS='--layout=reverse'
 export EDITOR="nvim"
 export VISUAL="nvim"
 export OPENER="xdg-open"
@@ -125,50 +124,6 @@ directories() {
     zle reset-prompt
 }
 
-vpn() {
-    local cmd="$1"
-    local output=""
-    local file="/tmp/swaybar.fifo"
-
-    case "$cmd" in
-        "up")
-            output=$(protonvpn connect 2>&1)
-            ;;
-        "down")
-            output=$(protonvpn disconnect 2>&1)
-            ;;
-        "info")
-            output=$(protonvpn status 2>&1)
-            ;;
-        *)
-            echo "Usage: vpn {up|down|info}"
-            return 1
-            ;;
-    esac
-
-    if [ -p "$file" ]; then
-        echo "$output" > "$file"
-    fi
-}
-
-lfm-search () {
-    if [ -z "$1" ]; then
-        echo "Error: Missing artist name." >&2
-        echo "Usage: lfm-search \"Artist Name\"" >&2
-        return 1
-    fi
-
-    local artist="$1"
-    local api_key="8bb0050df47bc66ff2c41a4144f5eacd"
-
-    curl -s -G "http://ws.audioscrobbler.com/2.0/" \
-        --data-urlencode "method=artist.gettopalbums" \
-        --data-urlencode "artist=$artist" \
-        --data-urlencode "api_key=$api_key" \
-        --data-urlencode "format=json" | \
-        jq -r '.topalbums as $ta | $ta["@attr"].artist, ($ta.album | sort_by(.playcount | tonumber) | reverse | .[] | "\(.name),\(.playcount)")'
-}
-
 function select-to-last-prompt() {
     local prompt_text
 
@@ -192,10 +147,7 @@ bindkey "^O" my_telescope
 
 bindkey '^?' backward-delete-char
 bindkey '^H' backward-kill-word
-bindkey '^[[1;5C' forward-word
-bindkey '^[[1;5D' backward-word
 bindkey '^I' expand-or-complete        # Tab
-bindkey '^[[Z' reverse-menu-complete   # Shift-Tab
 bindkey '^e' autosuggest-accept
 bindkey '^n' down-line-or-history
 bindkey '^p' up-line-or-history
