@@ -1,29 +1,17 @@
 vim.loader.enable()
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
-vim.o.scrolloff = 10
 vim.o.autoindent = true
 vim.o.smartindent = true
-vim.o.showmode = false
-vim.opt.shiftwidth = 4
-vim.opt.softtabstop = 4
-vim.opt.tabstop = 4
-vim.opt.expandtab = false
 vim.o.backup = false
 vim.o.swapfile = false
 vim.o.undofile = true
 vim.o.signcolumn = "yes"
 vim.o.number = true
-vim.o.relativenumber = true
 vim.o.ignorecase = true
 vim.o.wildignorecase = true
 vim.o.smartcase = true
-vim.schedule(function()
-	vim.o.clipboard = "unnamedplus"
-end)
-vim.o.updatetime = 200
-vim.o.colorcolumn = "80"
-vim.o.foldenable = false
+vim.o.clipboard = "unnamedplus"
 vim.opt.shortmess:append("Ia")
 
 vim.diagnostic.config({ virtual_text = true })
@@ -41,23 +29,37 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(vim.env.LAZY or lazypath)
 require("lazy").setup({
-	{ "folke/which-key.nvim" },
-	{ "MagicDuck/grug-far.nvim" },
+
+	{ "tpope/vim-fugitive" },
+	{ "tpope/vim-surround" },
+	{ "j-hui/fidget.nvim", opts = {} },
 	{ "lewis6991/gitsigns.nvim" },
 	{ "norcalli/nvim-colorizer.lua" },
-	{ "Mofiqul/vscode.nvim" },
 	{ "stevearc/oil.nvim", lazy = false },
+	{
+		"Mofiqul/vscode.nvim",
+		lazy = false,
+		priority = 1000,
+		config = function()
+			require("vscode").setup({
+				transparent = true,
+				italic_comments = true,
+				italic_inlayhints = true,
+				underline_links = true,
+			})
+		end,
+	},
 	{
 		"stevearc/conform.nvim",
 		opts = {
 			formatters_by_ft = {
 				go = { "goimports" },
 				lua = { "stylua" },
-				sh = { "bashls" },
 				markdown = { "prettierd" },
+				toml = { "prettierd" },
 			},
 			format_on_save = {
-				timeout_ms = 10000,
+				timeout_ms = 4000,
 			},
 		},
 	},
@@ -67,18 +69,6 @@ require("lazy").setup({
 		config = function()
 			require("nvim-autopairs").setup()
 		end,
-	},
-
-	--tpope
-	"tpope/vim-fugitive",
-	"tpope/vim-surround",
-	{
-		"mason-org/mason-lspconfig.nvim",
-		opts = {},
-		dependencies = {
-			{ "mason-org/mason.nvim", opts = {} },
-			"neovim/nvim-lspconfig",
-		},
 	},
 	{
 		"hrsh7th/nvim-cmp",
@@ -137,10 +127,7 @@ require("lazy").setup({
 			})
 		end,
 	},
-	{
-		"nvim-treesitter/nvim-treesitter",
-		build = ":TSUpdate",
-	},
+	{ "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
 	{
 		"nvim-telescope/telescope.nvim",
 		dependencies = {
@@ -165,7 +152,6 @@ require("telescope").setup({
 		preview = { wrap = true },
 		vimgrep_arguments = {
 			"rg",
-			-- "-uuu",
 			"--color=never",
 			"--no-heading",
 			"--with-filename",
@@ -242,13 +228,6 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
 	end,
 })
 
-require("vscode").setup({
-	transparent = true,
-	italic_comments = true,
-	italic_inlayhints = true,
-	underline_links = true,
-})
-
 require("oil").setup({
 	columns = {},
 	skip_confirm_for_simple_edits = true,
@@ -259,3 +238,6 @@ require("oil").setup({
 })
 
 vim.cmd.colorscheme("vscode")
+
+vim.lsp.enable("lua_ls")
+vim.lsp.enable("gopls")

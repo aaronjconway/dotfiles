@@ -18,37 +18,31 @@ HISTSIZE=100000000
 SAVEHIST=100000000
 HISTFILE=~/.zsh_history
 
-setopt inc_append_history
 setopt share_history
 setopt extended_history
-setopt hist_expire_dups_first
-setopt hist_find_no_dups
-setopt hist_ignore_dups
 setopt hist_ignore_all_dups
 setopt hist_ignore_space
 setopt hist_reduce_blanks
-setopt hist_save_no_dups
 setopt hist_verify
 
 autoload -Uz add-zsh-hook
 zsh_history_sync() { fc -AI }
 add-zsh-hook precmd zsh_history_sync
 
-eval "$(dircolors -b)"
-
-zstyle ':completion:*' completer _complete _files _approximate
+zstyle ':completion:*' auto-description 'specify: %d'
+zstyle ':completion:*' completer _expand _complete _correct _approximate
+zstyle ':completion:*' format 'Completing %d'
 zstyle ':completion:*' group-name ''
-zstyle ':completion:*:descriptions' format '%F{green}%d%f'
-zstyle ':completion:*:corrections' format '%F{yellow}%d (errors: %e)%f'
-zstyle ':completion:*:messages' format ' %F{purple}%d%f'
-zstyle ':completion:*:warnings' format ' %F{red}no matches found%f'
+zstyle ':completion:*' menu select=2
+eval "$(dircolors -b)"
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
-zstyle ':completion:*' verbose yes
-zstyle ':completion:*' menu select
-zstyle ':completion:*' completion-ignore-case true
-zstyle ':completion:*' file-patterns '*:all-files'
-zstyle ':completion:*' insert-unambiguous true
-zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}' 'r:|[._-]=**' 'l:|=* r:|=*'
+zstyle ':completion:*' list-colors ''
+zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
+zstyle ':completion:*' matcher-list '' 'm:{a-z}={A-Z}' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=* l:|=*'
+zstyle ':completion:*' menu select=long
+zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
+zstyle ':completion:*' use-compctl false
+zstyle ':completion:*' verbose true
 zstyle ':completion:*:git-checkout:*' sort false
 zstyle ':vcs_info:*' enable git
 zstyle ':vcs_info:git*' formats "[%F{yellow}%b%f]"
@@ -56,7 +50,9 @@ zstyle ':vcs_info:git*:*' get-revision true
 zstyle ':completion::complete:*' cache-path ~/.zsh/cache
 zstyle ':completion::complete:*' use-cache on
 
-setopt autocd
+zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
+zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
+
 setopt interactivecomments
 setopt magicequalsubst
 setopt nonomatch
@@ -82,10 +78,11 @@ alias vim="nvim"
 export QT_QPA_PLATFORM=wayland
 export GSK_RENDERER=ngl
 export GDK_BACKEND=wayland
+
 export KEYTIMEOUT=1
 export LISTMAX=500
 export FZF_CTRL_T_COMMAND=''
-export FZF_DEFAULT_OPTS='--layout=reverse'
+export FZF_DEFAULT_OPTS='--layout=reverse --height 40%'
 export EDITOR="nvim"
 export VISUAL="nvim"
 export OPENER="xdg-open"
@@ -138,6 +135,11 @@ function select-to-last-prompt() {
     tmux send-keys -X "n"
 }
 
+make-prettierrc ()
+{
+	echo "# .prettierrc.toml\nprintWidth = 80\nproseWrap = \"always\" " > ./.prettierrc.toml
+}
+
 zle -N select-to-last-prompt
 bindkey '^y' select-to-last-prompt
 
@@ -147,7 +149,10 @@ bindkey "^O" my_telescope
 
 bindkey '^?' backward-delete-char
 bindkey '^H' backward-kill-word
+bindkey '^[[1;5C' forward-word
+bindkey '^[[1;5D' backward-word
 bindkey '^I' expand-or-complete        # Tab
+bindkey '^[[Z' reverse-menu-complete   # Shift-Tab
 bindkey '^e' autosuggest-accept
 bindkey '^n' down-line-or-history
 bindkey '^p' up-line-or-history
@@ -171,12 +176,6 @@ function zle-line-finish {
     printf '\e[6 q'
 }
 zle -N zle-line-finish
-
-export PNPM_HOME="/home/aaron/.local/share/pnpm"
-case ":$PATH:" in
-    *":$PNPM_HOME:"*) ;;
-    *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 

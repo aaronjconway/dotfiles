@@ -26,37 +26,65 @@ static unsigned int cursorthickness = 2;
 static int bellvolume = 0;
 char *termname = "st-256color";
 unsigned int tabspaces = 8;
-
-/* VS Code–like colors */
 static const char *colorname[] = {
     /* 8 normal colors */
-    "#1c1c1c", /* black (background) */
-    "#f44747", /* red */
-    "#6a9955", /* green */
-    "#dcdcaa", /* yellow */
-    "#569cd6", /* blue */
-    "#c586c0", /* magenta */
-    "#4ec9b0", /* cyan */
-    "#d4d4d4", /* white / light gray */
+    "#000000", /* black (bg-main) */
+    "#ff5f59", /* red */
+    "#44bc44", /* green */
+    "#d0bc00", /* yellow */
+    "#2fafff", /* blue */
+    "#feacd0", /* magenta */
+    "#00d3d0", /* cyan */
+    "#ffffff", /* white (fg-main) */
 
     /* 8 bright colors */
-    "#808080", /* bright black (gray) */
-    "#f44747", /* bright red */
-    "#6a9955", /* bright green */
-    "#dcdcaa", /* bright yellow */
-    "#569cd6", /* bright blue */
-    "#c586c0", /* bright magenta */
-    "#4ec9b0", /* bright cyan */
+    "#646464", /* bright black (border / UI dim accent) */
+    "#ff6b55", /* bright red */
+    "#70b900", /* bright green */
+    "#fec43f", /* bright yellow */
+    "#79a8ff", /* bright blue */
+    "#f78fe7", /* bright magenta */
+    "#4ae2f0", /* bright cyan */
     "#ffffff", /* bright white */
 
     [255] = 0,
 
     /* extended / defaults */
-    "#d4d4d4", /* foreground */
-    "#1c1c1c", /* black (background) */
-    "#d4d4d4", /* default foreground */
-    "#1c1c1c", /* black (background) */
+    "#ffffff", /* foreground (fg-main) */
+    "#000000", /* background (bg-main) */
+    "#ffffff", /* default foreground */
+    "#000000", /* black (background) */
 };
+
+// static const char *colorname[] = {
+//     /* 8 normal colors */
+//     "#1c1c1c", /* black (background) */
+//     "#f44747", /* red */
+//     "#6a9955", /* green */
+//     "#dcdcaa", /* yellow */
+//     "#569cd6", /* blue */
+//     "#c586c0", /* magenta */
+//     "#4ec9b0", /* cyan */
+//     "#d4d4d4", /* white / light gray */
+//
+//     /* 8 bright colors */
+//     "#808080", /* bright black (gray) */
+//     "#f44747", /* bright red */
+//     "#6a9955", /* bright green */
+//     "#dcdcaa", /* bright yellow */
+//     "#569cd6", /* bright blue */
+//     "#c586c0", /* bright magenta */
+//     "#4ec9b0", /* bright cyan */
+//     "#ffffff", /* bright white */
+//
+//     [255] = 0,
+//
+//     /* extended / defaults */
+//     "#d4d4d4", /* foreground */
+//     "#1c1c1c", /* black (background) */
+//     "#d4d4d4", /* default foreground */
+//     "#1c1c1c", /* black (background) */
+// };
 
 /* Default colors */
 unsigned int defaultfg = 258;

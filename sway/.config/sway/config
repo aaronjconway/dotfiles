@@ -1,11 +1,10 @@
 # sway config file
 exec systemctl --user import-environment XDG_SESSION_TYPE XDG_CURRENT_DESKTOP
-exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
-
 exec systemctl --user import-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK
 exec dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK
+exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
 
-
+for_window [class="st-256color"] title_format "st"
 font pango:monospace 14
 for_window [class=".*"] layout tabbed
 output * bg #000000 solid_color
@@ -14,13 +13,8 @@ output * bg #000000 solid_color
 hide_edge_borders --i3 none
 default_border pixel 1
 
-for_window [class="st-256color"] title_format "st"
-for_window [app_id="tmux"] border pixel 10
-
 set $mod Mod1
-
 bindsym $mod+d exec bemenu-run -H "30px" -i --fn 'pango:monospace 14' --tb "#000000" --tf "#ffffff" --fb "#000000" --ff "#ffffff" --nb "#000000" --nf "#888888" --hb "#285577" --hf "#ffffff" --sb "#000000" --sf "#888888" --prompt ""
-
 bindsym $mod+Shift+r reload
 bindsym $mod+Return exec st
 bindsym $mod+w layout toggle tabbed splith
@@ -31,7 +25,6 @@ bindsym $mod+Shift+Tab focus prev
 bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5% && bash -c `echo "$(pactl get-sink-volume @DEFAULT_SINK@ | cut -d/ -f2)" > /tmp/swaybar.fifo`
 bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5% && bash -c `echo "$(pactl get-sink-volume @DEFAULT_SINK@ | cut -d/ -f2)" > /tmp/swaybar.fifo`
 bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle && bash -c `echo "$(pactl get-sink-mute @DEFAULT_SINK@)" > /tmp/swaybar.fifo`
-
 bindsym XF86AudioMicMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
 bindsym XF86MonBrightnessDown exec brightnessctl set 10%-
 bindsym XF86MonBrightnessUp exec brightnessctl set +100%

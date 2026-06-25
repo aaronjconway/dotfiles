@@ -1,16 +1,18 @@
 [user]
-  name = Aaron Conway
-  email = ajconway92@gmail.com
+	name = Aaron Conway
+	email = ajconway92@gmail.com
 
 [core]
-  editor = nvim
-  excludesFile = ~/.gitignore
+	editor = nvim
+	excludesFile = ~/.gitignore
+	autocrlf = false
+	eol = lf
 
 [pull]
-  rebase = true
+   rebase = true
 
 [rebase]
-  autoStash = true
+   autoStash = true
 
 [push]
   default = current

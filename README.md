@@ -18,7 +18,7 @@
 > just keeping track of things that I use so I can install in the future
 
 - sway --unsupported-gpu as Exec=
-    - need to create and put into /usr/local/share/wayland-sessions/sway.desktop 
-    - from /usr/share/wayland-sessions/sway.desktop 
+  - need to create and put into /usr/local/share/wayland-sessions/sway.desktop
+  - from /usr/share/wayland-sessions/sway.desktop
 - bemenu
 - wayland
