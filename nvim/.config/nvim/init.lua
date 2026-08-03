@@ -1,17 +1,28 @@
-vim.loader.enable()
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
+vim.loader.enable()
 vim.o.autoindent = true
-vim.o.smartindent = true
 vim.o.backup = false
-vim.o.swapfile = false
-vim.o.undofile = true
-vim.o.signcolumn = "yes"
-vim.o.number = true
-vim.o.ignorecase = true
-vim.o.wildignorecase = true
-vim.o.smartcase = true
 vim.o.clipboard = "unnamedplus"
+vim.o.ignorecase = true
+vim.o.linebreak = true
+vim.o.more = false
+vim.o.number = true
+vim.o.shiftwidth = 4
+vim.o.signcolumn = "yes"
+vim.o.smartcase = true
+vim.o.smartindent = true
+vim.o.splitbelow = true
+vim.o.splitright = true
+vim.o.swapfile = false
+vim.o.tabstop = 4
+vim.o.title = true
+vim.o.titlestring = '%t%( %M%)%( (%{expand("%:~:h")})%)%a (nvim)'
+vim.o.undofile = true
+vim.o.wildignorecase = true
+vim.o.wrap = true
+vim.opt.formatoptions:remove("o")
+vim.opt.inccommand = "split"
 vim.opt.shortmess:append("Ia")
 
 vim.diagnostic.config({ virtual_text = true })
@@ -30,6 +41,14 @@ end
 vim.opt.rtp:prepend(vim.env.LAZY or lazypath)
 require("lazy").setup({
 
+	{
+		"mason-org/mason-lspconfig.nvim",
+		opts = {},
+		dependencies = {
+			{ "mason-org/mason.nvim", opts = {} },
+			"neovim/nvim-lspconfig",
+		},
+	},
 	{ "tpope/vim-fugitive" },
 	{ "tpope/vim-surround" },
 	{ "j-hui/fidget.nvim", opts = {} },
@@ -57,9 +76,13 @@ require("lazy").setup({
 				lua = { "stylua" },
 				markdown = { "prettierd" },
 				toml = { "prettierd" },
+				html = { "prettierd" },
+				json = { "prettierd" },
+				xml = { "prettierd" },
 			},
 			format_on_save = {
 				timeout_ms = 4000,
+				lsp_format = "fallback",
 			},
 		},
 	},
@@ -120,6 +143,7 @@ require("lazy").setup({
 					end, { "i", "s" }),
 				}),
 				sources = cmp.config.sources({
+					{ name = "spell" },
 					{ name = "nvim_lsp" },
 					{ name = "path" },
 					{ name = "luasnip", option = { show_autosnippets = true } },
@@ -200,6 +224,19 @@ map("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 map("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 map("n", "<c-n>", ":try | cnext | catch | cfirst | endtry<CR>")
 map("n", "<c-p>", ":try | cprev | catch | clast | endtry<CR>")
+
+-- local function JumpTo()
+-- 	vim.lsp.buf.definition({
+-- 		on_list = function(opts)
+-- 			vim.print(opts)
+-- 			-- if not opts.items or #opts.items == 0 then
+-- 			-- 	vim.cmd("normal! gf")
+-- 			-- end
+-- 		end,
+-- 	})
+-- end
+
+-- map("n", "gd", JumpTo, { desc = "jump to definition" })
 map("n", "gd", vim.lsp.buf.definition, { desc = "jump to definition" })
 map("n", "-", ":Oil<CR>", { desc = "Open Oil" })
 map("n", "<s-r>", "<Nop>", { silent = true })
@@ -228,6 +265,11 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
 	end,
 })
 
+vim.api.nvim_create_user_command("Spellcheck", function()
+	vim.wo.spell = not vim.wo.spell
+	vim.notify("Spellcheck " .. (vim.wo.spell and "enabled" or "disabled"))
+end, {})
+
 require("oil").setup({
 	columns = {},
 	skip_confirm_for_simple_edits = true,
@@ -239,5 +281,17 @@ require("oil").setup({
 
 vim.cmd.colorscheme("vscode")
 
-vim.lsp.enable("lua_ls")
-vim.lsp.enable("gopls")
+vim.lsp.config("lua_ls", {
+	settings = {
+		Lua = {
+			runtime = {
+				version = "LuaJIT",
+			},
+			workspace = {
+				library = {
+					vim.env.VIMRUNTIME,
+				},
+			},
+		},
+	},
+})

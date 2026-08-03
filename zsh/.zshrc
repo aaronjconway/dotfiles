@@ -1,9 +1,7 @@
 #vim ft=sh
 case $- in *i*)
         [ -z "$TMUX" ] && exec tmux
-  esac
-
-bindkey -v
+esac
 
 source "${HOME}/.zgenom/zgenom.zsh"
 
@@ -29,29 +27,24 @@ autoload -Uz add-zsh-hook
 zsh_history_sync() { fc -AI }
 add-zsh-hook precmd zsh_history_sync
 
+eval "$(dircolors -b)"
 zstyle ':completion:*' auto-description 'specify: %d'
 zstyle ':completion:*' completer _expand _complete _correct _approximate
 zstyle ':completion:*' format 'Completing %d'
 zstyle ':completion:*' group-name ''
-zstyle ':completion:*' menu select=2
-eval "$(dircolors -b)"
-zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
-zstyle ':completion:*' list-colors ''
 zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
 zstyle ':completion:*' matcher-list '' 'm:{a-z}={A-Z}' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=* l:|=*'
 zstyle ':completion:*' menu select=long
 zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
 zstyle ':completion:*' use-compctl false
 zstyle ':completion:*' verbose true
+zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*:git-checkout:*' sort false
+zstyle ':completion::complete:*' cache-path ~/.zsh/cache
+zstyle ':completion::complete:*' use-cache on
 zstyle ':vcs_info:*' enable git
 zstyle ':vcs_info:git*' formats "[%F{yellow}%b%f]"
 zstyle ':vcs_info:git*:*' get-revision true
-zstyle ':completion::complete:*' cache-path ~/.zsh/cache
-zstyle ':completion::complete:*' use-cache on
-
-zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
-zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 
 setopt interactivecomments
 setopt magicequalsubst
@@ -72,13 +65,14 @@ compinit -C
 
 alias copy="wl-copy"
 alias cd="z"
+alias ..="cd .."
 alias vim="nvim"
 
 # for sway
 export QT_QPA_PLATFORM=wayland
 export GSK_RENDERER=ngl
 export GDK_BACKEND=wayland
-
+export WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'
 export KEYTIMEOUT=1
 export LISTMAX=500
 export FZF_CTRL_T_COMMAND=''
@@ -89,19 +83,6 @@ export OPENER="xdg-open"
 
 typeset -U path
 path=($HOME/.local/bin /usr/local/go/bin $HOME/go/bin $HOME/cmus/bin $HOME/.config/emacs/bin $path)
-
-my_array=(
-    directories
-    directories_all
-    files
-)
-
-telescope() {
-    local choice
-    choice=$(printf "%s\n" "${my_array[@]}" | fzf --prompt="")
-    $choice
-    zle reset-prompt
-}
 
 directories() {
     local selected_dir
@@ -121,61 +102,9 @@ directories() {
     zle reset-prompt
 }
 
-function select-to-last-prompt() {
-    local prompt_text
-
-    # must strip ansi
-    prompt_text=$(
-        print -P "$PS1" |  sed $'s/\x1b\\[[0-9;]*[[:alpha:]]//g'
-    )
-
-    tmux copy-mode
-    tmux send-keys -X begin-selection
-    tmux send-keys -X search-backward-text "$prompt_text"
-    tmux send-keys -X "n"
-}
-
-make-prettierrc ()
-{
-	echo "# .prettierrc.toml\nprintWidth = 80\nproseWrap = \"always\" " > ./.prettierrc.toml
-}
-
-zle -N select-to-last-prompt
-bindkey '^y' select-to-last-prompt
-
 ## Define a Zsh widget that calls the function
-zle -N my_telescope telescope
-bindkey "^O" my_telescope
-
-bindkey '^?' backward-delete-char
-bindkey '^H' backward-kill-word
-bindkey '^[[1;5C' forward-word
-bindkey '^[[1;5D' backward-word
-bindkey '^I' expand-or-complete        # Tab
-bindkey '^[[Z' reverse-menu-complete   # Shift-Tab
-bindkey '^e' autosuggest-accept
-bindkey '^n' down-line-or-history
-bindkey '^p' up-line-or-history
-
-function zle-keymap-select {
-    if [[ $KEYMAP == vicmd ]]; then
-        printf '\e[2 q'
-    else
-        printf '\e[6 q'
-    fi
-}
-zle -N zle-keymap-select
-
-function zle-line-init {
-    zle -K viins
-    printf '\e[6 q'
-}
-zle -N zle-line-init
-
-function zle-line-finish {
-    printf '\e[6 q'
-}
-zle -N zle-line-finish
+zle -N my_dir dir
+bindkey "^O" my_dir
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 

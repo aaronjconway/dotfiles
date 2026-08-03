@@ -10,7 +10,6 @@ swaybar-msg() {
     echo "$msg" > "$file"
 }
 
-# Clean up existing instances and files
 pkill -f "swaybar.fifo" 2>/dev/null
 rm -f "$FIFO"
 mkfifo "$FIFO"
@@ -27,7 +26,6 @@ render() {
         rx_speed=$(iw dev "$WIRELESS_INTF" link | grep rx | cut -d" "  -f3)
         tx_speed=$(iw dev "$WIRELESS_INTF" link | grep tx | cut -d" "  -f3)
         frequency=$(iwconfig "$WIRELESS_INTF" 2>/dev/null | grep -o 'Frequency:[0-9.]* [A-Za-z]*' | cut -d: -f2)
-        vpn=$(ip link show dev proton0 >/dev/null 2>&1 && echo "[VPN]" || echo "")
 
         wifi_str="$essid ($quality) rx:$rx_speed tx:$tx_speed $frequency $vpn"
     else
@@ -85,7 +83,7 @@ while true; do
             STATE="$msg"
             last=$current_time
         else
-            if [ $((current_time - last)) -ge 1 ]; then
+            if [ $((current_time - last)) -ge 2 ]; then
                 STATE=""
             fi
         fi

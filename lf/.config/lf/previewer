@@ -8,7 +8,6 @@ case "$(basename "$file" | tr '[:upper:]' '[:lower:]')" in
     *.rar) unrar l "$file" ;;
     *.7z) 7z l "$file" ;;
     *)
-        ext="${file##*.}"
         batcat -p "$file"
         ;;
 esac

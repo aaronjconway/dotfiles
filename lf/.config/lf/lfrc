@@ -97,11 +97,9 @@ cmd open &{{
             lf -remote "send $id \$$EDITOR \$fx"
             ;;
 
-        # Unknown binaries → opener
+        # Unknown binaries → editor you stupid fuck.
         application/octet-stream)
-            for f in $fx; do
-                "$OPENER" "$f" >/dev/null 2>/dev/null &
-            done
+            lf -remote "send $id \$$EDITOR \$fx"
             ;;
 
         # Fallback → vim
